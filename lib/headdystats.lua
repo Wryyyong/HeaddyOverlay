@@ -11,18 +11,18 @@ local ToInt = math.tointeger
 
 local function UpdateHealth()
 	-- Headdy technically has a max health of 32, but this only ever gets
-	-- incremented/decremented in multiples of 2, effectively halving his health. 
+	-- incremented/decremented in multiples of 2, effectively halving his health.
 	local newVal = ToInt(ReadU16BE(0xFFD200) * 0.5)
 
-	Headdy["Health"] = newVal
+	Headdy.Health = newVal
 end
 
 local function UpdateLives()
-	Headdy["Lives"] = ReadU16BE(0xFFE8EC)
+	Headdy.Lives = ReadU16BE(0xFFE8EC)
 end
 
 local function UpdateContinues()
-	Headdy["Continues"] = ReadU16BE(0xFFE93C)
+	Headdy.Continues = ReadU16BE(0xFFE93C)
 end
 
 UpdateHealth()
