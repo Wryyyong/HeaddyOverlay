@@ -25,16 +25,10 @@ local function UpdateContinues()
 	Headdy["Continues"] = ReadU16BE(0xFFE93C)
 end
 
-local function UpdateCurrentLevel()
-	Headdy["CurrentLevel"] = ReadU16BE(0xFFE8AA)
-end
-
 UpdateHealth()
 UpdateLives()
 UpdateContinues()
-UpdateCurrentLevel()
 
 MemoryMonitor.RegisterMonitor("Headdy.Health",0xFFD200,UpdateHealth)
 MemoryMonitor.RegisterMonitor("Headdy.Lives",0xFFE8EC,UpdateLives)
 MemoryMonitor.RegisterMonitor("Headdy.Continues",0xFFE93C,UpdateContinues)
-MemoryMonitor.RegisterMonitor("Headdy.CurrentLevel",0xFFE8AA,UpdateCurrentLevel)

@@ -1,6 +1,56 @@
+-- Set up globals and local references
 local Overlay = HeaddyOverlay
+local MemoryMonitor = Overlay.MemoryMonitor
+local BossHealth = Overlay.BossHealth
 
-local LevelData = {
+Overlay.LevelMonitor = Overlay.LevelMonitor or {}
+local LevelMonitor = Overlay.LevelMonitor
+
+local LevelDataDefault = {
+	["LevelName"] = [[!! INVALID LEVEL !!]],
+
+	["LevelInit"] = function()
+	end,
+
+	["LevelScript"] = function()
+	end,
+}
+
+LevelMonitor.LevelData = {}
+local LevelData = LevelMonitor.LevelData
+setmetatable(LevelData,{
+	["__index"] = function()
+		return LevelDataDefault
+	end,
+})
+
+-- Commonly-used functions
+local ReadU16BE = memory.read_u16_be
+
+local DrawRectangle = gui.drawRectangle
+local DrawString = gui.drawString
+
+local function UpdateCurrentLevel()
+	local newLevel = LevelData[ReadU16BE(0xFFE8AA)]
+
+	LevelMonitor.CurrentLevel = newLevel
+
+	BossHealth.DestroyAll()
+
+	newLevel.LevelInit()
+	newLevel.LevelScript()
+end
+
+UpdateCurrentLevel()
+
+MemoryMonitor.RegisterMonitor("LevelMonitor.CurrentLevel",0xFFE8AA,UpdateCurrentLevel)
+
+function LevelMonitor.DrawGUI()
+	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)
+	DrawString(Overlay.BufferWidth * 0.5,Overlay.BufferHeight - 9,LevelMonitor.CurrentLevel.LevelName,nil,nil,12,"Courier New","regular","center","middle")
+end
+
+local LevelDataOld = {
 	[0x00] = [[Scene 1-1 ("The Getaway")]],
 	[0x02] = [[Scene 2-2 ("Toys N The Hood")]],
 	[0x04] = [[Scene 4-1 ("Terminate Her Too")]],

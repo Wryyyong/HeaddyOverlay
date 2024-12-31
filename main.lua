@@ -25,5 +25,6 @@ while true do
 
 	Overlay.BufferWidth,Overlay.BufferHeight = BufferWidth(),BufferHeight()
 
+	Overlay.LevelMonitor.DrawGUI()
 	Overlay.BossHealth.DrawAll()
 end
