@@ -10,9 +10,6 @@ local ActiveMonitors = MemoryMonitor.ActiveMonitors
 local MonitorLookup = MemoryMonitor.MonitorLookup
 local CallbacksToExec = {}
 
--- Commonly-used functions
-local unpack = table.unpack
-
 --[[
 	As of writing, the Genplus-gx core only returns '0' for all read/write/exec callbacks.
 
@@ -31,13 +28,8 @@ event.on_bus_write(function(address)
 	local monitors = ActiveMonitors[address]
 	if not monitors then return end
 
-	local args = {address}
-
-	for _,callback in pairs(monitors) do
-		CallbacksToExec[#CallbacksToExec + 1] = {
-			["func"] = callback,
-			["args"] = args,
-		}
+	for id,data in pairs(monitors) do
+		CallbacksToExec[id] = data
 	end
 end,nil,"HeaddyOverlay.MemoryMonitor")
 
@@ -45,38 +37,43 @@ end,nil,"HeaddyOverlay.MemoryMonitor")
 	[TODO: Explain this]
 --]]
 
-function MemoryMonitor.RegisterMonitor(id,address,callback)
+function MemoryMonitor.RegisterMonitor(id,address,callback,persist)
 	id = tostring(id)
 	address = tonumber(address)
+	persist = type(persist) == "boolean" and persist or false
 
 	if not ActiveMonitors[address] then
 		ActiveMonitors[address] = {}
 	end
 
-	ActiveMonitors[address][id] = callback
-	MonitorLookup[id] = address
+	local monitorData = {
+		["Address"] = address,
+		["Callback"] = callback,
+		["Persistence"] = persist,
+	}
+
+	MonitorLookup[id] = monitorData
+	ActiveMonitors[address][id] = monitorData
 end
 
 function MemoryMonitor.UnregisterMonitor(id)
 	id = tostring(id)
 
-	local address = MonitorLookup[id]
-	local monitorTbl = ActiveMonitors[address]
+	local monitorTbl = MonitorLookup[id]
 	if not monitorTbl then return end
 
-	local monitor = monitorTbl[id]
-	if not monitor then return end
-
-	ActiveMonitors[address][id] = nil
+	ActiveMonitors[monitorTbl.Address][id] = nil
 	MonitorLookup[id] = nil
 end
 
 function MemoryMonitor.ExecuteCallbacks()
-	if #CallbacksToExec <= 0 then return end
+	for id,data in pairs(CallbacksToExec) do
+		local result = data.Callback(data.Address)
 
-	for idx,data in ipairs(CallbacksToExec) do
-		data.func(unpack(data.args))
+		if not data.Persistence and result ~= false then
+			MemoryMonitor.UnregisterMonitor(id)
+		end
 
-		CallbacksToExec[idx] = nil
+		CallbacksToExec[id] = nil
 	end
 end

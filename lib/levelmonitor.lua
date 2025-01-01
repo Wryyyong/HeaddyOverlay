@@ -43,7 +43,7 @@ end
 
 UpdateCurrentLevel()
 
-MemoryMonitor.RegisterMonitor("LevelMonitor.CurrentLevel",0xFFE8AA,UpdateCurrentLevel)
+MemoryMonitor.RegisterMonitor("LevelMonitor.CurrentLevel",0xFFE8AA,UpdateCurrentLevel,true)
 
 function LevelMonitor.DrawGUI()
 	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)
