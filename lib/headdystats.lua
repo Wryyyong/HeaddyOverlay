@@ -2,8 +2,8 @@
 local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 
-Overlay.Headdy = Overlay.Headdy or {}
-local Headdy = Overlay.Headdy
+local Headdy = Overlay.Headdy or {}
+Overlay.Headdy = Headdy
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be

@@ -2,8 +2,12 @@
 local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 
-Overlay.BossHealth = Overlay.BossHealth or {}
-local BossHealth = Overlay.BossHealth
+local BossHealth = Overlay.BossHealth or {}
+BossHealth.__index = BossHealth
+Overlay.BossHealth = BossHealth
+
+local ActiveBars = BossHealth.ActiveBars or {}
+BossHealth.ActiveBars = ActiveBars
 
 local HealthColorVals = {
 	["Max"] = 0xFF00FF00,
@@ -25,9 +29,9 @@ function BossHealth.Create(bossName,bossData)
 
 	newBar:UpdateBoss(bossName,bossData)
 
-	local activeIndex = #BossHealth.ActiveBars + 1
+	local activeIndex = #ActiveBars + 1
 	newBar.ActiveIndex = activeIndex
-	BossHealth.ActiveBars[activeIndex] = newBar
+	ActiveBars[activeIndex] = newBar
 
 	return newBar
 end
@@ -127,24 +131,21 @@ end
 function BossHealth:Destroy()
 	MemoryMonitor.Unregister(self.MonitorID)
 
-	BossHealth.ActiveBars[self.ActiveIndex] = nil
+	ActiveBars[self.ActiveIndex] = nil
 end
 
 function BossHealth.DestroyAll()
-	if #BossHealth.ActiveBars <= 0 then return end
+	if #ActiveBars <= 0 then return end
 
-	for _,bar in ipairs(BossHealth.ActiveBars) do
+	for _,bar in ipairs(ActiveBars) do
 		bar:Destroy()
 	end
 end
 
 function BossHealth.DrawAll()
-	if #BossHealth.ActiveBars <= 0 then return end
+	if #ActiveBars <= 0 then return end
 
-	for _,bar in ipairs(BossHealth.ActiveBars) do
+	for _,bar in ipairs(ActiveBars) do
 		bar:Draw()
 	end
 end
-
-BossHealth.__index = BossHealth
-BossHealth.ActiveBars = {}

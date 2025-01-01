@@ -3,8 +3,8 @@ local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 local BossHealth = Overlay.BossHealth
 
-Overlay.LevelMonitor = Overlay.LevelMonitor or {}
-local LevelMonitor = Overlay.LevelMonitor
+local LevelMonitor = Overlay.LevelMonitor or {}
+Overlay.LevelMonitor = LevelMonitor
 
 local LevelDataDefault = {
 	["LevelName"] = [[!! INVALID LEVEL !!]],

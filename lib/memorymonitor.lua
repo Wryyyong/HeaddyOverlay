@@ -1,13 +1,14 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
 
-Overlay.MemoryMonitor = Overlay.MemoryMonitor or {}
-local MemoryMonitor = Overlay.MemoryMonitor
+local MemoryMonitor = Overlay.MemoryMonitor or {}
+Overlay.MemoryMonitor = MemoryMonitor
 
-MemoryMonitor.ActiveMonitors = MemoryMonitor.ActiveMonitors or {}
-MemoryMonitor.MonitorLookup = MemoryMonitor.MonitorLookup or {}
-local ActiveMonitors = MemoryMonitor.ActiveMonitors
-local MonitorLookup = MemoryMonitor.MonitorLookup
+local ActiveMonitors = MemoryMonitor.ActiveMonitors or {}
+local MonitorLookup = MemoryMonitor.MonitorLookup or {}
+MemoryMonitor.ActiveMonitors = ActiveMonitors
+MemoryMonitor.MonitorLookup = MonitorLookup
+
 local CallbacksToExec = {}
 
 --[[

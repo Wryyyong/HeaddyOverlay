@@ -2,8 +2,8 @@
 console.clear()
 
 -- Set up global table
-HeaddyOverlay = HeaddyOverlay or {}
-local Overlay = HeaddyOverlay
+local Overlay = HeaddyOverlay or {}
+HeaddyOverlay = Overlay
 
 -- Include sub-scripts
 local LibPath = "lib/"
