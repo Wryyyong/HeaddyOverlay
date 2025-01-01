@@ -24,6 +24,10 @@ setmetatable(LevelData,{
 	end,
 })
 
+-- Include sub-scripts
+local ScenePath = "lib/scenes/"
+dofile(ScenePath .. "scene64.lua")
+
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
