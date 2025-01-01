@@ -35,7 +35,7 @@ end
 function BossHealth:UpdateBoss(bossName,bossData)
 	if self.BossData == bossData then return end
 
-	MemoryMonitor.UnregisterMonitor(self.MonitorID)
+	MemoryMonitor.Unregister(self.MonitorID)
 
 	self.BossData = bossData
 
@@ -46,7 +46,7 @@ function BossHealth:UpdateBoss(bossName,bossData)
 	self.ReadFunc = bossData.AddressLength or BossHealth.Width.U16
 	self:UpdateHealth()
 
-	MemoryMonitor.RegisterMonitor(monitorID,bossData.Address,function()
+	MemoryMonitor.Register(monitorID,bossData.Address,function()
 		self:UpdateHealth()
 	end,true)
 end
@@ -125,7 +125,7 @@ function BossHealth:Draw()
 end
 
 function BossHealth:Destroy()
-	MemoryMonitor.UnregisterMonitor(self.MonitorID)
+	MemoryMonitor.Unregister(self.MonitorID)
 
 	BossHealth.ActiveBars[self.ActiveIndex] = nil
 end

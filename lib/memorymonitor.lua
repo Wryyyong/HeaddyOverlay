@@ -37,7 +37,7 @@ end,nil,"HeaddyOverlay.MemoryMonitor")
 	[TODO: Explain this]
 --]]
 
-function MemoryMonitor.RegisterMonitor(id,address,callback,persist)
+function MemoryMonitor.Register(id,address,callback,persist)
 	id = tostring(id)
 	address = tonumber(address)
 	persist = type(persist) == "boolean" and persist or false
@@ -56,7 +56,7 @@ function MemoryMonitor.RegisterMonitor(id,address,callback,persist)
 	ActiveMonitors[address][id] = monitorData
 end
 
-function MemoryMonitor.UnregisterMonitor(id)
+function MemoryMonitor.Unregister(id)
 	id = tostring(id)
 
 	local monitorTbl = MonitorLookup[id]
@@ -71,7 +71,7 @@ function MemoryMonitor.ExecuteCallbacks()
 		local result = data.Callback(data.Address)
 
 		if not data.Persistence and result ~= false then
-			MemoryMonitor.UnregisterMonitor(id)
+			MemoryMonitor.Unregister(id)
 		end
 
 		CallbacksToExec[id] = nil

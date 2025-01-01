@@ -57,8 +57,8 @@ end
 UpdateCurrentLevel()
 UpdateInStageTransition()
 
-MemoryMonitor.RegisterMonitor("LevelMonitor.CurrentLevel",0xFFE8AA,UpdateCurrentLevel,true)
-MemoryMonitor.RegisterMonitor("LevelMonitor.InStageTransition",0xFFE8CC,UpdateInStageTransition,true)
+MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,UpdateCurrentLevel,true)
+MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,UpdateInStageTransition,true)
 
 function LevelMonitor.DrawGUI()
 	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)

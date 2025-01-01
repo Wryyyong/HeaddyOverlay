@@ -62,7 +62,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 			"Scene64.BossPhase5Pre",
 			"Scene64.BossPhase5",
 		}) do
-			MemoryMonitor.UnregisterMonitor(id)
+			MemoryMonitor.Unregister(id)
 		end
 	end,
 
@@ -76,7 +76,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 
 			HealthBar:Destroy()
 
-			MemoryMonitor.UnregisterMonitor("Scene64.BossPhase5Pre")
+			MemoryMonitor.Unregister("Scene64.BossPhase5Pre")
 		end
 
 		local function BossPhase5Pre(address)
@@ -90,7 +90,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 
 			HealthBar:UpdateBoss("BabyFaceBino",BinoData)
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase5",0xFFD050,BossEnd)
+			MemoryMonitor.Register("Scene64.BossPhase5",0xFFD050,BossEnd)
 		end
 
 		local function BossPhase4(address)
@@ -98,8 +98,8 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase5Pre",0xFFD050,BossPhase5Pre)
-			MemoryMonitor.UnregisterMonitor("Scene64.BossPhase4EarlyEnd")
+			MemoryMonitor.Register("Scene64.BossPhase5Pre",0xFFD050,BossPhase5Pre)
+			MemoryMonitor.Unregister("Scene64.BossPhase4EarlyEnd")
 		end
 
 		local function BossPhase4Pre(address)
@@ -109,8 +109,8 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 
 			HealthBar:UpdateBoss("BabyFaceD",BossData["BabyFaceD"])
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase4",0xFFD050,BossPhase4)
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase4EarlyEnd",0xFFD030,BossEnd)
+			MemoryMonitor.Register("Scene64.BossPhase4",0xFFD050,BossPhase4)
+			MemoryMonitor.Register("Scene64.BossPhase4EarlyEnd",0xFFD030,BossEnd)
 		end
 
 		local function BossPhase3(address)
@@ -118,7 +118,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase4Pre",0xFFD050,BossPhase4Pre)
+			MemoryMonitor.Register("Scene64.BossPhase4Pre",0xFFD050,BossPhase4Pre)
 		end
 
 		local function BossPhase3Pre(address)
@@ -128,7 +128,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 
 			HealthBar:UpdateBoss("BabyFaceC",BossData["BabyFaceC"])
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase3",0xFFD050,BossPhase3)
+			MemoryMonitor.Register("Scene64.BossPhase3",0xFFD050,BossPhase3)
 		end
 
 		local function BossPhase2(address)
@@ -136,7 +136,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase3Pre",0xFFD050,BossPhase3Pre)
+			MemoryMonitor.Register("Scene64.BossPhase3Pre",0xFFD050,BossPhase3Pre)
 		end
 
 		local function BossPhase2Pre(address)
@@ -146,7 +146,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 
 			HealthBar:UpdateBoss("BabyFaceB",BossData["BabyFaceB"])
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase2",0xFFD050,BossPhase2)
+			MemoryMonitor.Register("Scene64.BossPhase2",0xFFD050,BossPhase2)
 		end
 
 		local function BossPhase1(address)
@@ -154,7 +154,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase2Pre",0xFFD050,BossPhase2Pre)
+			MemoryMonitor.Register("Scene64.BossPhase2Pre",0xFFD050,BossPhase2Pre)
 		end
 
 		local function BossPhase1Pre(address)
@@ -164,9 +164,9 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 
 			HealthBar = BossHealth.Create("BabyFaceA",BossData["BabyFaceA"])
 
-			MemoryMonitor.RegisterMonitor("Scene64.BossPhase1",0xFFD050,BossPhase1)
+			MemoryMonitor.Register("Scene64.BossPhase1",0xFFD050,BossPhase1)
 		end
 
-		MemoryMonitor.RegisterMonitor("Scene64.BossPhase1Pre",0xFFD060,BossPhase1Pre)
+		MemoryMonitor.Register("Scene64.BossPhase1Pre",0xFFD060,BossPhase1Pre)
 	end,
 }
