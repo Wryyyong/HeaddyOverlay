@@ -15,6 +15,7 @@ dofile(LibPath .. "levelmonitor.lua")
 -- Commonly-used functions
 local EmuYield = emu.yield
 local GuiClearGraphics = gui.clearGraphics
+local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
 
 -- Main loop
 while true do
@@ -22,10 +23,12 @@ while true do
 
 	Overlay.MemoryMonitor.ExecuteCallbacks()
 
-	Overlay.BufferWidth,Overlay.BufferHeight = BufferWidth(),BufferHeight()
+	if not Overlay.LevelMonitor.InStageTransition then
+		Overlay.BufferWidth,Overlay.BufferHeight = ClientBufferWidth(),ClientBufferHeight()
 
-	Overlay.LevelMonitor.DrawGUI()
-	Overlay.BossHealth.DrawAll()
+		Overlay.LevelMonitor.DrawGUI()
+		Overlay.BossHealth.DrawAll()
+	end
 
 	EmuYield()
 end
