@@ -1,6 +1,5 @@
 -- Debugging
 console.clear()
-gui.clearGraphics()
 
 -- Set up global table
 HeaddyOverlay = HeaddyOverlay or {}
@@ -14,12 +13,12 @@ dofile(LibPath .. "bosshealth.lua")
 dofile(LibPath .. "levelmonitor.lua")
 
 -- Commonly-used functions
-local Yield = emu.yield
-local BufferWidth,BufferHeight = client.bufferwidth,client.bufferheight
+local EmuYield = emu.yield
+local GuiClearGraphics = gui.clearGraphics
 
 -- Main loop
 while true do
-	Yield()
+	GuiClearGraphics()
 
 	Overlay.MemoryMonitor.ExecuteCallbacks()
 
@@ -27,4 +26,6 @@ while true do
 
 	Overlay.LevelMonitor.DrawGUI()
 	Overlay.BossHealth.DrawAll()
+
+	EmuYield()
 end
