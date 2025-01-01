@@ -20,27 +20,35 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 function BossHealth.Create(bossName,bossData)
-	if type(bossData) ~= "table" then return end
-
 	local newBar = {}
 	setmetatable(newBar,BossHealth)
-	newBar.BossData = bossData
 
-	local monitorID = "BossHealth." .. bossName
+	newBar:UpdateBoss(bossName,bossData)
 
-	newBar.ActiveIndex = #BossHealth.ActiveBars + 1
-	newBar.MonitorID = monitorID
-	newBar.HealthTotal = bossData.HealthInit - bossData.HealthDeath
-	newBar.ReadFunc = bossData.AddressLength or BossHealth.Width.U16
-	newBar:UpdateHealth()
-
-	MemoryMonitor.RegisterMonitor(monitorID,bossData.Address,function()
-		newBar:UpdateHealth()
-	end)
-
-	BossHealth.ActiveBars[newBar.ActiveIndex] = newBar
+	local activeIndex = #BossHealth.ActiveBars + 1
+	newBar.ActiveIndex = activeIndex
+	BossHealth.ActiveBars[activeIndex] = newBar
 
 	return newBar
+end
+
+function BossHealth:UpdateBoss(bossName,bossData)
+	if self.BossData == bossData then return end
+
+	MemoryMonitor.UnregisterMonitor(self.MonitorID)
+
+	self.BossData = bossData
+
+	local monitorID = "BossHealth." .. bossName
+	self.MonitorID = monitorID
+
+	self.HealthTotal = bossData.HealthInit - bossData.HealthDeath
+	self.ReadFunc = bossData.AddressLength or BossHealth.Width.U16
+	self:UpdateHealth()
+
+	MemoryMonitor.RegisterMonitor(monitorID,bossData.Address,function()
+		self:UpdateHealth()
+	end,true)
 end
 
 function BossHealth:UpdateHealth()
@@ -73,8 +81,47 @@ end
 function BossHealth:Draw()
 	local x,y = Overlay.BufferWidth * 0.5 - 33,Overlay.BufferHeight * 0.1
 
-	DrawRectangle(x,y,64,8,0xFFFFFFFF,0xFF000000) -- Outline + Background
-	DrawRectangle(x,y,self.HealthPercent * 64,8,0,self.HealthColor) -- Fill
+	self.PosX = Overlay.BufferWidth * 0.25
+	self.PosY = -1
+
+	DrawRectangle(
+		self.PosX,
+		self.PosY,
+		Overlay.BufferWidth * 0.5,
+		16,
+		0,
+		0xFF000000
+	)
+	DrawRectangle(
+		self.PosX + 4,
+		self.PosY + 4,
+		72,
+		8,
+		0xFFFFFFFF,
+		0
+	)
+	DrawRectangle(
+		self.PosX + 4,
+		self.PosY + 4,
+		self.HealthPercent * 72,
+		8,
+		0,
+		self.HealthColor
+	)
+	DrawString(
+		Overlay.BufferWidth - self.PosX - 2,
+		self.PosY + 8,
+		self.BossData.PrintName,
+		nil,
+		nil,
+		10,
+		"MS Gothic",
+		nil,
+		"right",
+		"middle"
+	)
+	--DrawRectangle(x,y,64,8,0xFFFFFFFF,0xFF000000) -- Outline + Background
+	--DrawRectangle(x,y,self.HealthPercent * 64,8,0,self.HealthColor) -- Fill
 end
 
 function BossHealth:Destroy()
