@@ -21,7 +21,7 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 		"Scene64.BossPhase4EarlyEnd",
 		"Scene64.BossPhase5Pre",
 		"Scene64.BossPhase5",
-	}
+	},
 
 	["LevelScript"] = function()
 		local HealthBar

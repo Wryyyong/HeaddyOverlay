@@ -8,7 +8,7 @@ Overlay.LevelMonitor = LevelMonitor
 
 local LevelDataDefault = {
 	["LevelName"] = [[!! INVALID LEVEL !!]],
-	["LevelMonitorIDList"] = {}
+	["LevelMonitorIDList"] = {},
 
 	["LevelScript"] = function()
 	end,
