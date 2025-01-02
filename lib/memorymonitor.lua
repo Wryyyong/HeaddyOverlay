@@ -55,6 +55,7 @@ function MemoryMonitor.Register(id,address,callback,persist)
 
 	MonitorLookup[id] = monitorData
 	ActiveMonitors[address][id] = monitorData
+	CallbacksToExec[id] = monitorData
 end
 
 function MemoryMonitor.Unregister(id)

@@ -32,9 +32,9 @@ local ReadU16BE = memory.read_u16_be
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
-local function UpdateCurrentLevel()
+MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(address)
 	local oldLevel = LevelMonitor.CurrentLevel
-	local newLevel = LevelData[ReadU16BE(0xFFE8AA)]
+	local newLevel = LevelData[ReadU16BE(address)]
 
 	LevelMonitor.CurrentLevel = newLevel
 
@@ -45,17 +45,11 @@ local function UpdateCurrentLevel()
 	end
 
 	newLevel.LevelScript()
-end
+end,true)
 
-local function UpdateInStageTransition()
-	LevelMonitor.InStageTransition = ReadU16BE(0xFFE8CC) ~= 0x9200
-end
-
-UpdateCurrentLevel()
-UpdateInStageTransition()
-
-MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,UpdateCurrentLevel,true)
-MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,UpdateInStageTransition,true)
+MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,function(address)
+	LevelMonitor.InStageTransition = ReadU16BE(address) ~= 0x9200
+end,true)
 
 function LevelMonitor.DrawGUI()
 	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)

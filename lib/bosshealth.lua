@@ -48,7 +48,6 @@ function BossHealth:UpdateBoss(bossName,bossData)
 
 	self.HealthTotal = bossData.HealthInit - bossData.HealthDeath
 	self.ReadFunc = bossData.AddressLength or BossHealth.Width.U16
-	self:UpdateHealth()
 
 	MemoryMonitor.Register(monitorID,bossData.Address,function()
 		self:UpdateHealth()
