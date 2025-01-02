@@ -13,6 +13,8 @@ HeaddyOverlay.LevelMonitor.LevelData[0x14] = {
 	},
 
 	["LevelScript"] = function()
+		local KeepOn
+
 		local WoodenDresser = BossHealth.Create("WoodenDresser",{
 			["PrintName"] = "Wooden Dresser",
 			["Address"] = 0xFFD279,
@@ -24,12 +26,18 @@ HeaddyOverlay.LevelMonitor.LevelData[0x14] = {
 			local newVal = ReadU16BE(address)
 
 			if
-				newVal >= 0x0A
-			and	newVal < 0x28
+				(
+					not KeepOn
+				and	newVal < 0x0A
+			)
+			or	newVal >= 0x28
 			then
-				WoodenDresser:Show()
-			else
 				WoodenDresser:Hide()
+			else
+				WoodenDresser:Show()
+
+				-- Disable hiding when going under threshold after first success
+				KeepOn = true
 			end
 		end,true)
 	end,
