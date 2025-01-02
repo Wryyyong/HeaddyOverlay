@@ -7,44 +7,6 @@ local Width = BossHealth.Width
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-local BossData = {
-	["BabyFaceA"] = {
-		["PrintName"]     = "Baby Face",
-		["Address"]       = 0xFFD235,
-		["AddressLength"] = Width.U8,
-		["HealthInit"]    = 0x80,
-		["HealthDeath"]   = 0x60,
-	},
-	["BabyFaceB"] = {
-		["PrintName"]     = "Boy Face",
-		["Address"]       = 0xFFD235,
-		["AddressLength"] = Width.U8,
-		["HealthInit"]    = 0x80,
-		["HealthDeath"]   = 0x60,
-	},
-	["BabyFaceC"] = {
-		["PrintName"]     = "Man Face",
-		["Address"]       = 0xFFD235,
-		["AddressLength"] = Width.U8,
-		["HealthInit"]    = 0x80,
-		["HealthDeath"]   = 0x60,
-	},
-	["BabyFaceD"] = {
-		["PrintName"]     = "Grandpa Face",
-		["Address"]       = 0xFFD235,
-		["AddressLength"] = Width.U8,
-		["HealthInit"]    = 0x80,
-		["HealthDeath"]   = 0x5F,
-	},
-	["BabyFaceBino"] = {
-		["PrintName"]     = "Bino",
-		["Address"]       = 0xFFD26D,
-		["AddressLength"] = Width.U8,
-		["HealthInit"]    = 0x80,
-		["HealthDeath"]   = 0x7F,
-	},
-}
-
 HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 	["LevelName"] = [[Scene 6-4 ("Baby Face")]],
 	["LevelMonitorIDList"] = {
@@ -79,11 +41,17 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			local BinoData = BossData["BabyFaceBino"]
-			BinoData.HealthInit = BinoData.AddressLength(BinoData.Address)
-			BinoData.HealthDeath = BinoData.HealthInit - 1
+			local binoData = {
+				["PrintName"]     = "Bino",
+				["Address"]       = 0xFFD26D,
+				["AddressLength"] = Width.U8,
+				["HealthInit"]    = 0x80,
+				["HealthDeath"]   = 0x7F,
+			}
+			binoData.HealthInit = binoData.AddressLength(binoData.Address)
+			binoData.HealthDeath = binoData.HealthInit - 1
 
-			HealthBar:UpdateBoss("BabyFaceBino",BinoData)
+			HealthBar:UpdateBoss("BabyFaceBino",binoData)
 
 			MemoryMonitor.Register("Scene64.BossPhase5",0xFFD050,BossEnd)
 		end
@@ -102,7 +70,13 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			HealthBar:UpdateBoss("BabyFaceD",BossData["BabyFaceD"])
+			HealthBar:UpdateBoss("BabyFaceD",{
+				["PrintName"] = "Grandpa Face",
+				["Address"] = 0xFFD235,
+				["AddressLength"] = Width.U8,
+				["HealthInit"] = 0x80,
+				["HealthDeath"] = 0x5F,
+			})
 
 			MemoryMonitor.Register("Scene64.BossPhase4",0xFFD050,BossPhase4)
 			MemoryMonitor.Register("Scene64.BossPhase4EarlyEnd",0xFFD030,BossEnd)
@@ -121,7 +95,13 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			HealthBar:UpdateBoss("BabyFaceC",BossData["BabyFaceC"])
+			HealthBar:UpdateBoss("BabyFaceC",{
+				["PrintName"] = "Man Face",
+				["Address"] = 0xFFD235,
+				["AddressLength"] = Width.U8,
+				["HealthInit"] = 0x80,
+				["HealthDeath"] = 0x60,
+			})
 
 			MemoryMonitor.Register("Scene64.BossPhase3",0xFFD050,BossPhase3)
 		end
@@ -139,7 +119,13 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			HealthBar:UpdateBoss("BabyFaceB",BossData["BabyFaceB"])
+			HealthBar:UpdateBoss("BabyFaceB",{
+				["PrintName"] = "Boy Face",
+				["Address"] = 0xFFD235,
+				["AddressLength"] = Width.U8,
+				["HealthInit"] = 0x80,
+				["HealthDeath"] = 0x60,
+			})
 
 			MemoryMonitor.Register("Scene64.BossPhase2",0xFFD050,BossPhase2)
 		end
@@ -157,7 +143,13 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 				return false
 			end
 
-			HealthBar = BossHealth.Create("BabyFaceA",BossData["BabyFaceA"])
+			HealthBar = BossHealth.Create("BabyFaceA",{
+				["PrintName"] = "Baby Face",
+				["Address"] = 0xFFD235,
+				["AddressLength"] = Width.U8,
+				["HealthInit"] = 0x80,
+				["HealthDeath"] = 0x60,
+			})
 
 			MemoryMonitor.Register("Scene64.BossPhase1",0xFFD050,BossPhase1)
 		end
