@@ -15,10 +15,7 @@ local HealthColorVals = {
 }
 
 -- Commonly-used functions
-BossHealth.Width = {
-	["U8"] = memory.read_u8,
-	["U16"] = memory.read_u16_be,
-}
+local ReadU8 = memory.read_u8
 
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
@@ -45,9 +42,7 @@ function BossHealth:UpdateBoss(bossName,bossData)
 
 	local monitorID = "BossHealth." .. bossName
 	self.MonitorID = monitorID
-
 	self.HealthTotal = bossData.HealthInit - bossData.HealthDeath
-	self.ReadFunc = bossData.AddressLength or BossHealth.Width.U16
 
 	MemoryMonitor.Register(monitorID,bossData.Address,function()
 		self:UpdateHealth()
@@ -57,7 +52,7 @@ end
 function BossHealth:UpdateHealth()
 	local bossData = self.BossData
 
-	self.Health = self.ReadFunc(bossData.Address) - bossData.HealthDeath
+	self.Health = ReadU8(bossData.Address) - bossData.HealthDeath
 	self.HealthPercent = self.Health / self.HealthTotal
 	self:UpdateColor()
 end

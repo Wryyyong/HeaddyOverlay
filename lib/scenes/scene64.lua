@@ -2,9 +2,9 @@
 local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 local BossHealth = Overlay.BossHealth
-local Width = BossHealth.Width
 
 -- Commonly-used functions
+local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
 HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
@@ -44,11 +44,10 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 			local binoData = {
 				["PrintName"]     = "Bino",
 				["Address"]       = 0xFFD26D,
-				["AddressLength"] = Width.U8,
 				["HealthInit"]    = 0x80,
 				["HealthDeath"]   = 0x7F,
 			}
-			binoData.HealthInit = binoData.AddressLength(binoData.Address)
+			binoData.HealthInit = ReadU8(binoData.Address)
 			binoData.HealthDeath = binoData.HealthInit - 1
 
 			HealthBar:UpdateBoss("BabyFaceBino",binoData)
@@ -73,7 +72,6 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 			HealthBar:UpdateBoss("BabyFaceD",{
 				["PrintName"] = "Grandpa Face",
 				["Address"] = 0xFFD235,
-				["AddressLength"] = Width.U8,
 				["HealthInit"] = 0x80,
 				["HealthDeath"] = 0x5F,
 			})
@@ -98,7 +96,6 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 			HealthBar:UpdateBoss("BabyFaceC",{
 				["PrintName"] = "Man Face",
 				["Address"] = 0xFFD235,
-				["AddressLength"] = Width.U8,
 				["HealthInit"] = 0x80,
 				["HealthDeath"] = 0x60,
 			})
@@ -122,7 +119,6 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 			HealthBar:UpdateBoss("BabyFaceB",{
 				["PrintName"] = "Boy Face",
 				["Address"] = 0xFFD235,
-				["AddressLength"] = Width.U8,
 				["HealthInit"] = 0x80,
 				["HealthDeath"] = 0x60,
 			})
@@ -146,7 +142,6 @@ HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 			HealthBar = BossHealth.Create("BabyFaceA",{
 				["PrintName"] = "Baby Face",
 				["Address"] = 0xFFD235,
-				["AddressLength"] = Width.U8,
 				["HealthInit"] = 0x80,
 				["HealthDeath"] = 0x60,
 			})
