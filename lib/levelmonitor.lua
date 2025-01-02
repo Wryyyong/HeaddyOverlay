@@ -33,7 +33,7 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(address)
-	local oldLevel = LevelMonitor.CurrentLevel
+	local oldLevel = LevelMonitor.CurrentLevel or LevelDataDefault
 	local newLevel = LevelData[ReadU16BE(address)]
 
 	LevelMonitor.CurrentLevel = newLevel
