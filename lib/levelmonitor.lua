@@ -8,9 +8,7 @@ Overlay.LevelMonitor = LevelMonitor
 
 local LevelDataDefault = {
 	["LevelName"] = [[!! INVALID LEVEL !!]],
-
-	["LevelInit"] = function()
-	end,
+	["LevelMonitorIDList"] = {}
 
 	["LevelScript"] = function()
 	end,
@@ -42,11 +40,10 @@ local function UpdateCurrentLevel()
 
 	BossHealth.DestroyAll()
 
-	if oldLevel ~= newLevel then
-		oldLevel.LevelInit()
+	for _,id in ipairs(oldLevel.LevelMonitorIDList) do
+		MemoryMonitor.Unregister(id)
 	end
 
-	newLevel.LevelInit()
 	newLevel.LevelScript()
 end
 

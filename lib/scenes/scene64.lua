@@ -47,24 +47,19 @@ local BossData = {
 
 HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
 	["LevelName"] = [[Scene 6-4 ("Baby Face")]],
-
-	["LevelInit"] = function()
-		for _,id in ipairs({
-			"Scene64.BossPhase1Pre",
-			"Scene64.BossPhase1",
-			"Scene64.BossPhase2Pre",
-			"Scene64.BossPhase2",
-			"Scene64.BossPhase3Pre",
-			"Scene64.BossPhase3",
-			"Scene64.BossPhase4Pre",
-			"Scene64.BossPhase4",
-			"Scene64.BossPhase4EarlyEnd",
-			"Scene64.BossPhase5Pre",
-			"Scene64.BossPhase5",
-		}) do
-			MemoryMonitor.Unregister(id)
-		end
-	end,
+	["LevelMonitorIDList"] = {
+		"Scene64.BossPhase1Pre",
+		"Scene64.BossPhase1",
+		"Scene64.BossPhase2Pre",
+		"Scene64.BossPhase2",
+		"Scene64.BossPhase3Pre",
+		"Scene64.BossPhase3",
+		"Scene64.BossPhase4Pre",
+		"Scene64.BossPhase4",
+		"Scene64.BossPhase4EarlyEnd",
+		"Scene64.BossPhase5Pre",
+		"Scene64.BossPhase5",
+	}
 
 	["LevelScript"] = function()
 		local HealthBar
