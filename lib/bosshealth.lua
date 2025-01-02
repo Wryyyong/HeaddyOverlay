@@ -9,6 +9,14 @@ Overlay.BossHealth = BossHealth
 local ActiveBars = BossHealth.ActiveBars or {}
 BossHealth.ActiveBars = ActiveBars
 
+local BossDataDefault = {
+	["PrintName"] = "N/A",
+	["Address"] = 0xFFFFFF,
+	["HealthInit"] = 0xFF,
+	["HealthDeath"] = 0,
+	["StartHidden"] = true,
+}
+
 local HealthColorVals = {
 	["Max"] = 0xFF00FF00,
 	["Min"] = 0xFFFF0000,
@@ -20,17 +28,40 @@ local ReadU8 = memory.read_u8
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
-function BossHealth.Create(bossName,bossData)
+function BossHealth.Create(bossName,bossData,startHidden)
+	bossName = tostring(bossName)
+	bossData = bossData or BossDataDefault
+	startHidden =
+			(
+				startHidden ~= nil
+			and	startHidden
+		)
+		or	(
+				bossData["StartHidden"] ~= nil
+			and	bossData["StartHidden"]
+		)
+		or	false
+
 	local newBar = {}
 	setmetatable(newBar,BossHealth)
 
 	newBar:UpdateBoss(bossName,bossData)
+
+	newBar.Render = not startHidden
 
 	local activeIndex = #ActiveBars + 1
 	newBar.ActiveIndex = activeIndex
 	ActiveBars[activeIndex] = newBar
 
 	return newBar
+end
+
+function BossHealth:Show()
+	self.Render = true
+end
+
+function BossHealth:Hide()
+	self.Render = false
 end
 
 function BossHealth:UpdateBoss(bossName,bossData)
@@ -77,6 +108,8 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:Draw()
+	if not self.Render then return end
+
 	local x,y = Overlay.BufferWidth * 0.5 - 33,Overlay.BufferHeight * 0.1
 
 	self.PosX = Overlay.BufferWidth * 0.25
