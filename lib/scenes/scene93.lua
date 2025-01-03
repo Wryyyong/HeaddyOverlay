@@ -9,8 +9,8 @@ local ReadU16BE = memory.read_u16_be
 HeaddyOverlay.LevelMonitor.LevelData[0x30] = {
 	["LevelName"] = [[Scene 9-3 ("Finale Analysis")]],
 	["LevelMonitorIDList"] = {
-		"Scene93.BossIntro",
-		"Scene93.BossOutro",
+		"Scene93.BossMonitorA",
+		"Scene93.BossMonitorB",
 	},
 
 	["LevelScript"] = function()
@@ -21,21 +21,22 @@ HeaddyOverlay.LevelMonitor.LevelData[0x30] = {
 			["HealthDeath"] = 0x3F,
 		},true)
 
-		-- [TODO: Find a better address to monitor]
-		MemoryMonitor.Register("Scene34.BossIntro",0xFFD10A,function(address)
-			if ReadU16BE(address) ~= 0x4 then
-				return false
-			end
-
-			DarkDemon:Show()
-
-			MemoryMonitor.Register("Scene34.BossOutro",0xFFD106,function(address)
-				if ReadU16BE(address) ~= 0x10 then
-					return false
-				end
-
+		local function BossMonitor()
+			if
+				ReadU16BE(0xFFD106) == 0x10
+			or	ReadU16BE(0xFFD10A) < 0x4
+			then
 				DarkDemon:Hide()
-			end)
-		end)
+			else
+				DarkDemon:Show()
+			end
+		end
+
+		for address,append in pairs({
+			[0xFFD106] = "A",
+			[0xFFD10A] = "B",
+		}) do
+			MemoryMonitor.Register("Scene93.BossMonitor" .. append,address,BossMonitor,true)
+		end
 	end,
 }
