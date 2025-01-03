@@ -58,10 +58,15 @@ function BossHealth.Create(bossName,bossData,startHidden)
 end
 
 function BossHealth:Show()
+	if self.Render then return end
+
+	self:UpdateHealth()
 	self.Render = true
 end
 
 function BossHealth:Hide()
+	if not self.Render then return end
+
 	self.Render = false
 end
 
