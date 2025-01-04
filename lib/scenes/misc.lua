@@ -26,7 +26,6 @@ for sceneID,sceneName in pairs({
 	[0x2A] = [[Scene 8-5 — "Twin Freaks"]],
 	[0x2C] = [[Scene 9-1 — "Fatal Contrapion"]],
 	[0x2E] = [[Scene 9-2 — "Far Trek"]],
-	[0x32] = [[Scene 3-3 — "The Green Room"]],
 	[0x34] = [[Scene 4-4 — "Heathernapped"]],
 	[0x36] = [[Scene 5-1 — "Go Headdy Go"]],
 	[0x38] = [[Scene ?-?]],
