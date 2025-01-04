@@ -9,6 +9,8 @@ Overlay.BossHealth = BossHealth
 local ActiveBars = BossHealth.ActiveBars or {}
 BossHealth.ActiveBars = ActiveBars
 
+local BossGlobals = {}
+
 -- Commonly-used functions
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
@@ -116,39 +118,38 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:Draw()
-	if not self.Render then return end
+	local PosY_InnerUp = self.PosY + 4
 
-	local x,y = Overlay.BufferWidth * 0.5 - 33,Overlay.BufferHeight * 0.1
-
-	self.PosX = Overlay.BufferWidth * 0.25
-	self.PosY = -1
-
+	-- Black background
 	DrawRectangle(
-		self.PosX,
+		BossGlobals.PosX,
 		self.PosY,
-		Overlay.BufferWidth * 0.5,
+		BossGlobals.BarLength,
 		16,
 		0,
 		0xFF000000
 	)
+	-- Health bar outline
 	DrawRectangle(
-		self.PosX + 4,
-		self.PosY + 4,
+		BossGlobals.PosX_InnerLeft,
+		PosY_InnerUp,
 		72,
 		8,
 		0xFFFFFFFF,
 		0
 	)
+	-- Health bar fill
 	DrawRectangle(
-		self.PosX + 4,
-		self.PosY + 4,
+		BossGlobals.PosX_InnerLeft,
+		PosY_InnerUp,
 		self.HealthPercent * 72,
 		8,
 		0,
 		self.HealthColor
 	)
+
 	DrawString(
-		Overlay.BufferWidth - self.PosX - 2,
+		BossGlobals.PosX_InnerRight,
 		self.PosY + 8,
 		self.BossData.PrintName,
 		nil,
@@ -159,8 +160,6 @@ function BossHealth:Draw()
 		"right",
 		"middle"
 	)
-	--DrawRectangle(x,y,64,8,0xFFFFFFFF,0xFF000000) -- Outline + Background
-	--DrawRectangle(x,y,self.HealthPercent * 64,8,0,self.HealthColor) -- Fill
 end
 
 function BossHealth:Destroy()
@@ -180,7 +179,19 @@ end
 function BossHealth.DrawAll()
 	if #ActiveBars <= 0 then return end
 
+	BossGlobals.BarLength = Overlay.BufferWidth * 0.575
+	BossGlobals.PosX = Overlay.BufferWidth * 0.2125
+	BossGlobals.PosX_InnerLeft = BossGlobals.PosX + 4
+	BossGlobals.PosX_InnerRight = Overlay.BufferWidth - BossGlobals.PosX - 4
+
+	local barCounter = -1
+
 	for _,bar in ipairs(ActiveBars) do
-		bar:Draw()
+		if bar.Render then
+			barCounter = barCounter + 1
+			bar.PosY = (barCounter * 16) - (barCounter > 0 and 2 or 1)
+
+			bar:Draw()
+		end
 	end
 end
