@@ -5,17 +5,17 @@ console.clear()
 local Overlay = HeaddyOverlay or {}
 HeaddyOverlay = Overlay
 
+-- Commonly-used functions
+local EmuYield = emu.yield
+local GuiClearGraphics = gui.clearGraphics
+local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
+
 -- Include sub-scripts
 local LibPath = "lib/"
 dofile(LibPath .. "memorymonitor.lua")
 dofile(LibPath .. "headdystats.lua")
 dofile(LibPath .. "bosshealth.lua")
 dofile(LibPath .. "levelmonitor.lua")
-
--- Commonly-used functions
-local EmuYield = emu.yield
-local GuiClearGraphics = gui.clearGraphics
-local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
 
 -- Main loop
 while true do

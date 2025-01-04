@@ -6,21 +6,15 @@ local BossHealth = Overlay.BossHealth
 local LevelMonitor = Overlay.LevelMonitor or {}
 Overlay.LevelMonitor = LevelMonitor
 
-local LevelDataDefault = {
-	["LevelName"] = [[!! INVALID LEVEL !!]],
-	["LevelMonitorIDList"] = {},
+local LevelData = {}
+LevelMonitor.LevelData = LevelData
 
-	["LevelScript"] = function()
-	end,
-}
+-- Commonly-used functions
+local SetMetaTable = setmetatable
+local ReadU16BE = memory.read_u16_be
 
-LevelMonitor.LevelData = {}
-local LevelData = LevelMonitor.LevelData
-setmetatable(LevelData,{
-	["__index"] = function()
-		return LevelDataDefault
-	end,
-})
+local DrawRectangle = gui.drawRectangle
+local DrawString = gui.drawString
 
 -- Include sub-scripts
 local ScenePath = "lib/scenes/"
@@ -29,11 +23,29 @@ dofile(ScenePath .. "scene64.lua")
 dofile(ScenePath .. "scene71.lua")
 dofile(ScenePath .. "scene93.lua")
 
--- Commonly-used functions
-local ReadU16BE = memory.read_u16_be
+-- Default/fallback values for LevelData entries so we
+-- don't need to specify them in every single subtable
+local LevelDataDefault = {
+	["LevelName"] = [[!! UNRECOGNISED LEVEL !!]],
+	["LevelMonitorIDList"] = {},
 
-local DrawRectangle = gui.drawRectangle
-local DrawString = gui.drawString
+	["LevelScript"] = function()
+	end,
+}
+
+SetMetaTable(LevelData,{
+	["__index"] = function()
+		return LevelDataDefault
+	end,
+})
+
+local LevelDataMeta = {
+	["__index"] = LevelDataDefault,
+}
+
+for _,sceneTbl in pairs(LevelData) do
+	SetMetaTable(sceneTbl,LevelDataMeta)
+end
 
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(address)
 	local oldLevel = LevelMonitor.CurrentLevel or LevelDataDefault

@@ -9,6 +9,13 @@ Overlay.BossHealth = BossHealth
 local ActiveBars = BossHealth.ActiveBars or {}
 BossHealth.ActiveBars = ActiveBars
 
+-- Commonly-used functions
+local ReadU8 = memory.read_u8
+local ReadU16BE = memory.read_u16_be
+
+local DrawRectangle = gui.drawRectangle
+local DrawString = gui.drawString
+
 local BossDataDefault = {
 	["PrintName"] = "N/A",
 	["Address"] = 0xFFFFFF,
@@ -21,13 +28,6 @@ local HealthColorVals = {
 	["Max"] = 0xFF00FF00,
 	["Min"] = 0xFFFF0000,
 }
-
--- Commonly-used functions
-local ReadU8 = memory.read_u8
-local ReadU16BE = memory.read_u16_be
-
-local DrawRectangle = gui.drawRectangle
-local DrawString = gui.drawString
 
 function BossHealth.Create(bossName,bossData,startHidden)
 	bossName = tostring(bossName)
