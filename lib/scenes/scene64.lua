@@ -7,7 +7,7 @@ local BossHealth = Overlay.BossHealth
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
-HeaddyOverlay.LevelMonitor.LevelData[0x56] = {
+Overlay.LevelMonitor.LevelData[0x56] = {
 	["LevelName"] = [[Scene 6-4 ("Baby Face")]],
 	["LevelMonitorIDList"] = {
 		"Scene64.BossPhaseMonitor",

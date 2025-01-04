@@ -6,7 +6,7 @@ local BossHealth = Overlay.BossHealth
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-HeaddyOverlay.LevelMonitor.LevelData[0x14] = {
+Overlay.LevelMonitor.LevelData[0x14] = {
 	["LevelName"] = [[Scene 3-4 ("Clothes Encounter")]],
 	["LevelMonitorIDList"] = {
 		"Scene34.BossMonitor",
