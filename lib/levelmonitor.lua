@@ -22,6 +22,7 @@ dofile(ScenePath .. "scene34.lua")
 dofile(ScenePath .. "scene64.lua")
 dofile(ScenePath .. "scene71.lua")
 dofile(ScenePath .. "scene93.lua")
+dofile(ScenePath .. "misc.lua")
 
 -- Default/fallback values for LevelData entries so we
 -- don't need to specify them in every single subtable
