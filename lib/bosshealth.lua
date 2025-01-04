@@ -118,21 +118,21 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:Draw()
-	local PosY_InnerUp = self.PosY + 4
+	local innerBoundaryUp = self.PosY + 4
 
 	-- Black background
 	DrawRectangle(
-		BossGlobals.PosX,
+		BossGlobals.BarWidth,
 		self.PosY,
-		BossGlobals.BarLength,
+		BossGlobals.ElementWidth,
 		16,
 		0,
 		0xFF000000
 	)
 	-- Health bar outline
 	DrawRectangle(
-		BossGlobals.PosX_InnerLeft,
-		PosY_InnerUp,
+		BossGlobals.InnerBoundaryLeft,
+		innerBoundaryUp,
 		72,
 		8,
 		0xFFFFFFFF,
@@ -140,8 +140,8 @@ function BossHealth:Draw()
 	)
 	-- Health bar fill
 	DrawRectangle(
-		BossGlobals.PosX_InnerLeft,
-		PosY_InnerUp,
+		BossGlobals.InnerBoundaryLeft,
+		innerBoundaryUp,
 		self.HealthPercent * 72,
 		8,
 		0,
@@ -149,7 +149,7 @@ function BossHealth:Draw()
 	)
 
 	DrawString(
-		BossGlobals.PosX_InnerRight,
+		BossGlobals.InnerBoundaryRight,
 		self.PosY + 8,
 		self.BossData.PrintName,
 		nil,
@@ -179,10 +179,10 @@ end
 function BossHealth.DrawAll()
 	if #ActiveBars <= 0 then return end
 
-	BossGlobals.BarLength = Overlay.BufferWidth * 0.575
-	BossGlobals.PosX = Overlay.BufferWidth * 0.2125
-	BossGlobals.PosX_InnerLeft = BossGlobals.PosX + 4
-	BossGlobals.PosX_InnerRight = Overlay.BufferWidth - BossGlobals.PosX - 4
+	BossGlobals.ElementWidth = Overlay.BufferWidth * 0.575
+	BossGlobals.BarWidth = Overlay.BufferWidth * 0.2125
+	BossGlobals.InnerBoundaryLeft = BossGlobals.BarWidth + 4
+	BossGlobals.InnerBoundaryRight = Overlay.BufferWidth - BossGlobals.BarWidth - 4
 
 	local barCounter = -1
 
