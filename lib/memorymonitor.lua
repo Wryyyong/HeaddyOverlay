@@ -30,7 +30,7 @@ event.on_bus_write(function(address)
 	if not monitors then return end
 
 	for id,data in pairs(monitors) do
-		CallbacksToExec[id] = data
+		CallbacksToExec[data.Callback] = data
 	end
 end,nil,"HeaddyOverlay.MemoryMonitor")
 
@@ -55,7 +55,7 @@ function MemoryMonitor.Register(id,address,callback,persist)
 
 	MonitorLookup[id] = monitorData
 	ActiveMonitors[address][id] = monitorData
-	CallbacksToExec[id] = monitorData
+	CallbacksToExec[monitorData.Callback] = monitorData
 end
 
 function MemoryMonitor.Unregister(id)
@@ -76,6 +76,6 @@ function MemoryMonitor.ExecuteCallbacks()
 			MemoryMonitor.Unregister(id)
 		end
 
-		CallbacksToExec[id] = nil
+		CallbacksToExec[data.Callback] = nil
 	end
 end
