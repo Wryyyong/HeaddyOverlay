@@ -23,24 +23,24 @@ Overlay.LevelMonitor.LevelData[0x20] = {
 		local Gatekeeper = BossHealth.Create()
 
 		local DataGatekeeper = {
-			["PrintName"]   = {
+			["PrintName"] = {
 				["Int"] = "Gatekeeper",
 				["Jpn"] = "Yayoi",
 			},
-			["Address"]     = 0xFFCC14,
-			["HealthInit"]  = {
+			["Address"] = 0xFFCC14,
+			["HealthInit"] = {
 				["Int"] = 0x5,
 			},
 			["HealthDeath"] = 0,
-			["Use16Bit"]    = true,
+			["Use16Bit"] = true,
 		}
 		local DataNastyGatekeeper = {
-			["PrintName"]   = {
+			["PrintName"] = {
 				["Int"] = "Nasty Gatekeeper",
 				["Jpn"] = "Izayoi",
 			},
-			["Address"]     = 0xFFD269,
-			["HealthInit"]  = {
+			["Address"] = 0xFFD269,
+			["HealthInit"] = {
 				["Int"] = 0x50,
 				["Jpn"] = 0x48,
 			},

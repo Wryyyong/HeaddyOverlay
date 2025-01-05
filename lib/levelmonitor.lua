@@ -22,6 +22,7 @@ local DrawString = gui.drawString
 local ScenePath = "lib/scenes/"
 dofile(ScenePath .. "scene33.lua")
 dofile(ScenePath .. "scene34.lua")
+dofile(ScenePath .. "scene52.lua")
 dofile(ScenePath .. "scene64.lua")
 dofile(ScenePath .. "scene71.lua")
 dofile(ScenePath .. "scene93.lua")

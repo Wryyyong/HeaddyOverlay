@@ -6,49 +6,50 @@ local BossHealth = Overlay.BossHealth
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x14] = {
+Overlay.LevelMonitor.LevelData[0x1A] = {
 	["LevelName"] = {
-		["Main"] = [[Scene 3-4]],
+		["Main"] = [[Scene 5-2]],
 		["Sub"] = {
-			["Int"] = [["CLOTHES ENCOUNTERS"]],
-			["Jpn"] = [["STARLIGHT STORM"]],
+			["Int"] = [["STAIR WARS"]],
+			["Jpn"] = [["GO UP!"]],
 		},
 	},
 	["LevelMonitorIDList"] = {
-		"Scene34.BossMonitor",
+		"Scene52.BossMonitor",
 	},
 
 	["LevelScript"] = function()
 		-- Disable hiding when going under threshold after first success
 		local KeepOn
 
-		local WoodenDresser = BossHealth.Create("WoodenDresser",{
+		local FlyingScythe = BossHealth.Create("FlyingScythe",{
 			["PrintName"] = {
-				["Int"] = "Wooden Dresser",
-				["Jpn"] = "Jacquline Dressy",
+				["Int"] = "Flying Scythe",
+				["Jpn"] = "Tower Crasher",
 			},
-			["Address"] = 0xFFD279,
+			["Address"] = 0xFFD261,
 			["HealthInit"] = {
-				["Int"] = 0x48,
+				["Int"] = 0x40,
+				["Jpn"] = 0x3C,
 			},
-			["HealthDeath"] = 0x3F,
+			["HealthDeath"] = 0x38,
 		},true)
 
-		MemoryMonitor.Register("Scene34.BossMonitor",0xFFD17A,function(address)
+		MemoryMonitor.Register("Scene52.BossMonitor",0xFFD162,function(address)
 			local newVal = ReadU16BE(address)
 
 			if
 				(
 					not KeepOn
-				and	newVal < 0xA
+				and	newVal < 0x8
 			)
-			or	newVal >= 0x28
+			or	newVal >= 0x1A
 			then
-				WoodenDresser:Hide()
+				FlyingScythe:Hide()
 
 				KeepOn = false
 			else
-				WoodenDresser:Show()
+				FlyingScythe:Show()
 
 				KeepOn = true
 			end
