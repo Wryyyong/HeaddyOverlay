@@ -7,7 +7,13 @@ local BossHealth = Overlay.BossHealth
 local ReadU16BE = memory.read_u16_be
 
 Overlay.LevelMonitor.LevelData[0x20] = {
-	["LevelName"] = [[Scene 7-1 — "Headdy Wonderland"]],
+	["LevelName"] = {
+		["Main"] = [[Scene 7-1]],
+		["Sub"] = {
+			["Int"] = [["HEADDY WONDERLAND"]],
+			["Jpn"] = [["PARADISE?"]],
+		},
+	},
 	["LevelMonitorIDList"] = {
 		"Scene71.BossMonitorA",
 		"Scene71.BossMonitorB",
@@ -17,16 +23,27 @@ Overlay.LevelMonitor.LevelData[0x20] = {
 		local Gatekeeper = BossHealth.Create()
 
 		local DataGatekeeper = {
-			["PrintName"]   = "Gatekeeper",
+			["PrintName"]   = {
+				["Int"] = "Gatekeeper",
+				["Jpn"] = "Yayoi",
+			},
 			["Address"]     = 0xFFCC14,
-			["HealthInit"]  = 0x5,
+			["HealthInit"]  = {
+				["Int"] = 0x5,
+			},
 			["HealthDeath"] = 0,
 			["Use16Bit"]    = true,
 		}
 		local DataNastyGatekeeper = {
-			["PrintName"]   = "Nasty Gatekeeper",
+			["PrintName"]   = {
+				["Int"] = "Nasty Gatekeeper",
+				["Jpn"] = "Izayoi",
+			},
 			["Address"]     = 0xFFD269,
-			["HealthInit"]  = 0x50,
+			["HealthInit"]  = {
+				["Int"] = 0x50,
+				["Jpn"] = 0x48,
+			},
 			["HealthDeath"] = 0x3F,
 		}
 

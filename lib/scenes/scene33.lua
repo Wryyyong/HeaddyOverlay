@@ -7,7 +7,13 @@ local BossHealth = Overlay.BossHealth
 local ReadU16BE = memory.read_u16_be
 
 Overlay.LevelMonitor.LevelData[0x32] = {
-	["LevelName"] = [[Scene 3-3 — "The Green Room"]],
+	["LevelName"] = {
+		["Main"] = [[Scene 3-3]],
+		["Sub"] = {
+			["Int"] = [["THE GREEN ROOM"]],
+			["Jpn"] = [["GUEST AREA"]],
+		},
+	},
 	["LevelMonitorIDList"] = {
 		"Scene33.BossMonitorA",
 		"Scene33.BossMonitorB",
@@ -15,15 +21,25 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 
 	["LevelScript"] = function()
 		local Puppeteer = BossHealth.Create("Puppeteer",{
-			["PrintName"] = "Puppeteer",
+			["PrintName"] = {
+				["Int"] = "Puppeteer",
+				["Jpn"] = "Marrio",
+			},
 			["Address"] = 0xFFD241,
-			["HealthInit"] = 0x10,
+			["HealthInit"] = {
+				["Int"] = 0x10,
+			},
 			["HealthDeath"] = 0,
 		},true)
 		local GentlemanJim = BossHealth.Create("GentlemanJim",{
-			["PrintName"] = "Gentleman Jim",
+			["PrintName"] = {
+				["Int"] = "Gentleman Jim",
+				["Jpn"] = "Nettoh",
+			},
 			["Address"] = 0xFFD245,
-			["HealthInit"] = 0x10,
+			["HealthInit"] = {
+				["Int"] = 0x10,
+			},
 			["HealthDeath"] = 0,
 		},true)
 

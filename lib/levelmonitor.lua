@@ -9,6 +9,8 @@ Overlay.LevelMonitor = LevelMonitor
 local LevelData = {}
 LevelMonitor.LevelData = LevelData
 
+local LevelNameString = ""
+
 -- Commonly-used functions
 local SetMetaTable = setmetatable
 local ReadU16BE = memory.read_u16_be
@@ -28,7 +30,13 @@ dofile(ScenePath .. "misc.lua")
 -- Default/fallback values for LevelData entries so we
 -- don't need to specify them in every single subtable
 local LevelDataDefault = {
-	["LevelName"] = [[!! UNRECOGNISED LEVEL !!]],
+	["LevelName"] = {
+		["Main"] = [[!! UNRECOGNISED LEVEL !!]],
+		["Sub"] = {
+			["Int"] = [[]],
+			["Jpn"] = [[]],
+		},
+	},
 	["LevelMonitorIDList"] = {},
 
 	["LevelScript"] = function()
@@ -45,8 +53,31 @@ local LevelDataMeta = {
 	["__index"] = LevelDataDefault,
 }
 
+local LevelNameMeta = {
+	["__index"] = LevelDataDefault.LevelName,
+}
+
 for _,sceneTbl in pairs(LevelData) do
 	SetMetaTable(sceneTbl,LevelDataMeta)
+
+	local levelName = sceneTbl.LevelName
+	SetMetaTable(levelName,LevelNameMeta)
+	SetMetaTable(levelName.Sub,Overlay.LangFallback)
+end
+
+local function UpdateLevelNameString()
+	local levelName = LevelMonitor.CurrentLevel.LevelName
+
+	local newStr,strSub = levelName.Main,levelName.Sub[Overlay.Lang]
+	local doesStrMainExist = #levelName.Main > 0
+
+	if not doesStrMainExist then
+		newStr = strSub
+	elseif #strSub > 0 then
+		newStr = newStr .. (doesStrMainExist and " — " or "") .. strSub
+	end
+
+	LevelNameString = newStr
 end
 
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(address)
@@ -54,6 +85,7 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(address)
 	local newLevel = LevelData[ReadU16BE(address)]
 
 	LevelMonitor.CurrentLevel = newLevel
+	UpdateLevelNameString()
 
 	BossHealth.DestroyAll()
 

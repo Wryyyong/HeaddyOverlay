@@ -12,6 +12,7 @@ BossHealth.ActiveBars = ActiveBars
 local BossGlobals = {}
 
 -- Commonly-used functions
+local SetMetaTable = setmetatable
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
@@ -19,9 +20,15 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 local BossDataDefault = {
-	["PrintName"] = "N/A",
+	["PrintName"] = {
+		["Int"] = "N/A",
+		["Jpn"] = "N/A",
+	},
 	["Address"] = 0xFFFFFF,
-	["HealthInit"] = 0xFF,
+	["HealthInit"] = {
+		["Int"] = 0xFF,
+		["Jpn"] = 0xFF,
+	},
 	["HealthDeath"] = 0,
 	["StartHidden"] = true,
 }
@@ -46,7 +53,7 @@ function BossHealth.Create(bossName,bossData,startHidden)
 		or	false
 
 	local newBar = {}
-	setmetatable(newBar,BossHealth)
+	SetMetaTable(newBar,BossHealth)
 
 	newBar:UpdateBoss(bossName,bossData)
 
@@ -78,10 +85,12 @@ function BossHealth:UpdateBoss(bossName,bossData)
 	MemoryMonitor.Unregister(self.MonitorID)
 
 	self.BossData = bossData
+	SetMetaTable(bossData.PrintName,Overlay.LangFallback)
+	SetMetaTable(bossData.HealthInit,Overlay.LangFallback)
 
 	local monitorID = "BossHealth." .. bossName
 	self.MonitorID = monitorID
-	self.HealthTotal = bossData.HealthInit - bossData.HealthDeath
+	self.HealthTotal = bossData.HealthInit[Overlay.Lang] - bossData.HealthDeath
 
 	self.ReadFunc = bossData.Use16Bit and ReadU16BE or ReadU8
 
@@ -102,7 +111,7 @@ function BossHealth:UpdateColor()
 	local healthPercent,newColor = self.HealthPercent
 
 	if healthPercent > .8 then
-		newColor = 0x00FF00
+		newColor = 0xFF00
 	elseif healthPercent > .6 then
 		newColor = 0x7FFF00
 	elseif healthPercent > .4 then
@@ -151,7 +160,7 @@ function BossHealth:Draw()
 	DrawString(
 		BossGlobals.InnerBoundaryRight,
 		self.PosY + 8,
-		self.BossData.PrintName,
+		self.BossData.PrintName[Overlay.Lang],
 		nil,
 		nil,
 		10,

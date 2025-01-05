@@ -7,7 +7,13 @@ local BossHealth = Overlay.BossHealth
 local ReadU16BE = memory.read_u16_be
 
 Overlay.LevelMonitor.LevelData[0x14] = {
-	["LevelName"] = [[Scene 3-4 — "Clothes Encounter"]],
+	["LevelName"] = {
+		["Main"] = [[Scene 3-4]],
+		["Sub"] = {
+			["Int"] = [["CLOTHES ENCOUNTERS"]],
+			["Jpn"] = [["STARLIGHT STORM"]],
+		},
+	},
 	["LevelMonitorIDList"] = {
 		"Scene34.BossMonitor",
 	},
@@ -16,9 +22,14 @@ Overlay.LevelMonitor.LevelData[0x14] = {
 		local KeepOn
 
 		local WoodenDresser = BossHealth.Create("WoodenDresser",{
-			["PrintName"] = "Wooden Dresser",
+			["PrintName"] = {
+				["Int"] = "Wooden Dresser",
+				["Jpn"] = "Jacquline Dressy",
+			},
 			["Address"] = 0xFFD279,
-			["HealthInit"] = 0x48,
+			["HealthInit"] = {
+				["Int"] = 0x48,
+			},
 			["HealthDeath"] = 0x3F,
 		},true)
 
@@ -28,7 +39,7 @@ Overlay.LevelMonitor.LevelData[0x14] = {
 			if
 				(
 					not KeepOn
-				and	newVal < 0x0A
+				and	newVal < 0xA
 			)
 			or	newVal >= 0x28
 			then

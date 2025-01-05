@@ -7,7 +7,13 @@ local BossHealth = Overlay.BossHealth
 local ReadU16BE = memory.read_u16_be
 
 Overlay.LevelMonitor.LevelData[0x30] = {
-	["LevelName"] = [[Scene 9-3 — "Finale Analysis"]],
+	["LevelName"] = {
+		["Main"] = [[Scene 9-3]],
+		["Sub"] = {
+			["Int"] = [["FINALE ANALYSIS"]],
+			["Jpn"] = [["FINAL ATTACK"]],
+		},
+	},
 	["LevelMonitorIDList"] = {
 		"Scene93.BossMonitorA",
 		"Scene93.BossMonitorB",
@@ -15,9 +21,15 @@ Overlay.LevelMonitor.LevelData[0x30] = {
 
 	["LevelScript"] = function()
 		local DarkDemon = BossHealth.Create("DarkDemon",{
-			["PrintName"] = "Dark Demon",
+			["PrintName"] = {
+				["Int"] = "Dark Demon",
+				["Jpn"] = "King Dark Demon",
+			},
 			["Address"] = 0xFFD231,
-			["HealthInit"] = 0x50,
+			["HealthInit"] = {
+				["Int"] = 0x50,
+				["Jpn"] = 0x48,
+			},
 			["HealthDeath"] = 0x3F,
 		},true)
 
