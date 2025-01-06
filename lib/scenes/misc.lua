@@ -25,13 +25,6 @@ for sceneID,sceneName in pairs({
 			["Jpn"] = [["SOUTH TOWN"]],
 		},
 	},
-	[6] = {
-		["Main"] = [[Scene 2-3]],
-		["Sub"] = {
-			["Int"] = [["MAD DOG AND HEADDY"]],
-			["Jpn"] = [["CONCERT PANIC"]],
-		},
-	},
 	[8] = {
 		["Main"] = [[]],
 		["Sub"] = {
