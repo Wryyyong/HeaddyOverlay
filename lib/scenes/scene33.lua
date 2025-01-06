@@ -55,7 +55,7 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 				return
 			end
 
-			if checkD15E >= 0x8 then
+			if checkD15E >= 8 then
 				Puppeteer:Hide()
 			end
 
