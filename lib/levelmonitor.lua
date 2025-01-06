@@ -20,6 +20,7 @@ local DrawString = gui.drawString
 
 -- Include sub-scripts
 local ScenePath = "lib/scenes/"
+dofile(ScenePath .. "scene11.lua")
 dofile(ScenePath .. "scene22.lua")
 dofile(ScenePath .. "scene23.lua")
 dofile(ScenePath .. "Scene32.lua")

@@ -4,13 +4,6 @@ local LevelData = HeaddyOverlay.LevelMonitor.LevelData
 -- Add barebones LevelData entries for all maps
 -- that don't need any special treatment
 for sceneID,sceneName in pairs({
-	[0] = {
-		["Main"] = [[Scene 1-1]],
-		["Sub"] = {
-			["Int"] = [["THE GETAWAY"]],
-			["Jpn"] = [["ESCAPE HERO!"]],
-		},
-	},
 	[4] = {
 		["Main"] = [[Scene 4-1]],
 		["Sub"] = {
