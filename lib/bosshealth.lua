@@ -84,6 +84,7 @@ function BossHealth:UpdateBoss(bossName,bossData)
 
 	MemoryMonitor.Unregister(self.MonitorID)
 
+	self.BossName = bossName
 	self.BossData = bossData
 	SetMetaTable(bossData.PrintName,Overlay.LangFallback)
 	SetMetaTable(bossData.HealthInit,Overlay.LangFallback)
@@ -91,7 +92,6 @@ function BossHealth:UpdateBoss(bossName,bossData)
 	local monitorID = "BossHealth." .. bossName
 	self.MonitorID = monitorID
 	self.HealthTotal = bossData.HealthInit[Overlay.Lang] - bossData.HealthDeath
-
 	self.ReadFunc = bossData.Use16Bit and ReadU16BE or ReadU8
 
 	MemoryMonitor.Register(monitorID,bossData.Address,function()
