@@ -87,13 +87,6 @@ for sceneID,sceneName in pairs({
 			["Jpn"] = [["RESTLESS FACTORY"]],
 		},
 	},
-	[0x1E] = {
-		["Main"] = [[Scene 5-4]],
-		["Sub"] = {
-			["Int"] = [["SPINDERELLA"]],
-			["Jpn"] = [["ON THE SKY"]],
-		},
-	},
 	[0x22] = {
 		["Main"] = [[Scene 8-1]],
 		["Sub"] = {
