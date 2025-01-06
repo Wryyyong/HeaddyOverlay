@@ -108,13 +108,6 @@ for sceneID,sceneName in pairs({
 			["Jpn"] = [["REVERSE WORLD"]],
 		},
 	},
-	[0x2A] = {
-		["Main"] = [[Scene 8-5]],
-		["Sub"] = {
-			["Int"] = [["TWIN FREAKS"]],
-			["Jpn"] = [["FUNNY ANGRY"]],
-		},
-	},
 	[0x2C] = {
 		["Main"] = [[Scene 9-1]],
 		["Sub"] = {

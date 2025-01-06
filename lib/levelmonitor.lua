@@ -28,6 +28,7 @@ dofile(ScenePath .. "scene53.lua")
 dofile(ScenePath .. "scene54.lua")
 dofile(ScenePath .. "scene64.lua")
 dofile(ScenePath .. "scene71.lua")
+dofile(ScenePath .. "scene85.lua")
 dofile(ScenePath .. "scene93.lua")
 dofile(ScenePath .. "misc.lua")
 
