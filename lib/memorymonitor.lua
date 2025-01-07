@@ -34,6 +34,12 @@ event.on_bus_write(function(address)
 	end
 end,nil,"HeaddyOverlay.MemoryMonitor")
 
+event.onloadstate(function()
+	for _,data in pairs(MonitorLookup) do
+		data.Callback(data.Address)
+	end
+end)
+
 --[[
 	[TODO: Explain this]
 --]]
