@@ -146,13 +146,6 @@ for sceneID,sceneName in pairs({
 			["Jpn"] = [["AIR WALKER"]],
 		},
 	},
-	[0x52] = {
-		["Main"] = [[Scene 6-2]],
-		["Sub"] = {
-			["Int"] = [["FLY HARD"]],
-			["Jpn"] = [["RECKLESS WHEEL"]],
-		},
-	},
 	[0x54] = {
 		["Main"] = [[Scene 6-3]],
 		["Sub"] = {
