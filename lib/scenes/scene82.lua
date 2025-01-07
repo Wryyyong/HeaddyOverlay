@@ -19,7 +19,8 @@ Overlay.LevelMonitor.LevelData[0x24] = {
 	},
 
 	["LevelScript"] = function()
-		local MissileMan = BossHealth.Create("MissileMan",{
+		local MissileMan = BossHealth({
+			["ID"] = "MissileMan",
 			["PrintName"] = {
 				["Int"] = "Missile Man",
 				["Jpn"] = "Base Captain",
@@ -29,19 +30,10 @@ Overlay.LevelMonitor.LevelData[0x24] = {
 				["Int"] = 0x90,
 			},
 			["HealthDeath"] = 0x7F,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene82.BossMonitor",0xFFD14A,function(address)
-			local newVal = ReadU16BE(address)
-
-			if
-				newVal < 2
-			or	newVal >= 4
-			then
-				MissileMan:Hide()
-			else
-				MissileMan:Show()
-			end
+			MissileMan:Show(ReadU16BE(address) == 2)
 		end,true)
 	end,
 }

@@ -22,7 +22,8 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 	},
 
 	["LevelScript"] = function()
-		local BattleshipClaw = BossHealth.Create("BattleshipClaw",{
+		local BattleshipClaw = BossHealth({
+			["ID"] = "BattleshipClaw",
 			["PrintName"] = {
 				["Int"] = "Claw",
 			},
@@ -31,11 +32,12 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 				["Int"] = 0x40,
 			},
 			["HealthDeath"] = 0,
-		},true)
+		})
 
 		-- [TODO: Consider whether to implement the bars for the other Battleship components]
 		--[[
-		local BattleshipJaw = BossHealth.Create("BattleshipJaw",{
+		local BattleshipJaw = BossHealth({
+			["ID"] = "BattleshipJaw",
 			["PrintName"] = {
 				["Int"] = "Jaw",
 			},
@@ -44,8 +46,9 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 				["Int"] = 0x86,
 			},
 			["HealthDeath"] = 0x7F,
-		},true)
-		local BattleshipTurretA = BossHealth.Create("BattleshipTurretA",{
+		})
+		local BattleshipTurretA = BossHealth({
+			["ID"] = "BattleshipTurretA",
 			["PrintName"] = {
 				["Int"] = "Turret (A)",
 			},
@@ -54,8 +57,9 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 				["Int"] = 0x18,
 			},
 			["HealthDeath"] = 0,
-		},true)
-		local BattleshipTurretB = BossHealth.Create("BattleshipTurretB",{
+		})
+		local BattleshipTurretB = BossHealth({
+			["ID"] = "BattleshipTurretB",
 			["PrintName"] = {
 				["Int"] = "Turret (B)",
 			},
@@ -64,8 +68,9 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 				["Int"] = 0x18,
 			},
 			["HealthDeath"] = 0,
-		},true)
-		local BattleshipTurretC = BossHealth.Create("BattleshipTurretC",{
+		})
+		local BattleshipTurretC = BossHealth({
+			["ID"] = "BattleshipTurretC",
 			["PrintName"] = {
 				["Int"] = "Turret (C)",
 			},
@@ -74,8 +79,9 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 				["Int"] = 0x18,
 			},
 			["HealthDeath"] = 0,
-		},true)
-		local BattleshipWorm = BossHealth.Create("BattleshipWorm",{
+		})
+		local BattleshipWorm = BossHealth({
+			["ID"] = "BattleshipWorm",
 			["PrintName"] = {
 				["Int"] = "Worm",
 			},
@@ -84,20 +90,16 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 				["Int"] = 6,
 			},
 			["HealthDeath"] = 0,
-		},true)
+		})
 		--]]
 
 		local function StageMonitor()
-			if
+			BattleshipClaw:Show(
 				ReadU16BE(0xFFD138) == 0x748
 			and	ReadU16BE(0xFFD13A) >= 0xA
 			and	ReadU16BE(0xFFD140) == 0x76C
 			and	ReadU16BE(0xFFD142) < 6
-			then
-				BattleshipClaw:Show()
-			else
-				BattleshipClaw:Hide()
-			end
+			)
 		end
 
 		for address,append in pairs({

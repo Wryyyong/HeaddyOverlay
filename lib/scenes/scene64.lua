@@ -20,14 +20,14 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 	},
 
 	["LevelScript"] = function()
-		local BabyFace = BossHealth.Create()
+		local BabyFace = BossHealth()
 
 		local function BossEnd(address)
 			if ReadU16BE(address) ~= 0 then
 				return false
 			end
 
-			BabyFace:Hide()
+			BabyFace:Show(false)
 
 			MemoryMonitor.Unregister("Scene64.BossPhaseMonitor")
 		end
@@ -46,7 +46,8 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 				local secCheck = (ReadU8(0xFFDB65) << 8) + ReadU8(0xFFDB6D)
 
 				if secCheck == 0x800 then
-					BabyFace:UpdateBoss("BabyFaceA",{
+					BabyFace:UpdateBoss({
+						["ID"] = "BabyFaceA",
 						["PrintName"] = {
 							["Int"] = "Baby Face",
 							["Jpn"] = "Mitsuru",
@@ -58,9 +59,10 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 						["HealthDeath"] = 0x60,
 					})
 				elseif secCheck == 0x1C20 then
-					BabyFace:UpdateBoss("BabyFaceB",{
+					BabyFace:UpdateBoss({
+						["ID"] = "BabyFaceB",
 						["PrintName"] = {
-							["Int"] = "Boy Face",
+							["Int"] = "Baby Face...?",
 							["Jpn"] = "Mitsuru",
 						},
 						["Address"] = 0xFFD235,
@@ -70,9 +72,10 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 						["HealthDeath"] = 0x60,
 					})
 				elseif secCheck == 0x1C60 then
-					BabyFace:UpdateBoss("BabyFaceC",{
+					BabyFace:UpdateBoss({
+						["ID"] = "BabyFaceC",
 						["PrintName"] = {
-							["Int"] = "Man Face",
+							["Int"] = "Baby Face...?",
 							["Jpn"] = "Mitsuru",
 						},
 						["Address"] = 0xFFD235,
@@ -82,9 +85,10 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 						["HealthDeath"] = 0x60,
 					})
 				elseif secCheck == 0x6060 then
-					BabyFace:UpdateBoss("BabyFaceD",{
+					BabyFace:UpdateBoss({
+						["ID"] = "BabyFaceD",
 						["PrintName"] = {
-							["Int"] = "Grandpa Face",
+							["Int"] = "Baby Face...?",
 							["Jpn"] = "Mitsuru",
 						},
 						["Address"] = 0xFFD235,
@@ -97,9 +101,10 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 					SetupBossEndMonitor(0xFFD030)
 				end
 
-				BabyFace:Show()
+				BabyFace:Show(true)
 			elseif newVal == 0x1C then
 				local binoData = {
+					["ID"] = "BabyFaceBino",
 					["PrintName"] = {
 						["Int"] = "Bino",
 					},
@@ -109,14 +114,13 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 					},
 					["HealthDeath"] = 0x7F,
 				}
-				binoData.HealthInit = ReadU8(binoData.Address)
+				binoData.HealthInit = binoData.ReadFunc(binoData.Address)
 				binoData.HealthDeath = binoData.HealthInit - 1
-
-				BabyFace:UpdateBoss("BabyFaceBino",binoData)
 
 				SetupBossEndMonitor(0xFFD050)
 
-				BabyFace:Show()
+				BabyFace:UpdateBoss(binoData)
+				BabyFace:Show(true)
 			end
 		end,true)
 	end,

@@ -24,7 +24,8 @@ Overlay.LevelMonitor.LevelData[0x1C] = {
 	},
 
 	["LevelScript"] = function()
-		local ChainA = BossHealth.Create("ChainA",{
+		local ChainA = BossHealth({
+			["ID"] = "ChainA",
 			["PrintName"] = {
 				["Int"] = "Chain (A)",
 			},
@@ -33,8 +34,9 @@ Overlay.LevelMonitor.LevelData[0x1C] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x7B,
-		},true)
-		local ChainB = BossHealth.Create("ChainB",{
+		})
+		local ChainB = BossHealth({
+			["ID"] = "ChainB",
 			["PrintName"] = {
 				["Int"] = "Chain (B)",
 			},
@@ -43,8 +45,9 @@ Overlay.LevelMonitor.LevelData[0x1C] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x7B,
-		},true)
-		local Armordillo = BossHealth.Create("Armordillo",{
+		})
+		local Armordillo = BossHealth({
+			["ID"] = "Armordillo",
 			["PrintName"] = {
 				["Int"] = "Armordillo",
 				["Jpn"] = "Armored Soldier",
@@ -54,9 +57,9 @@ Overlay.LevelMonitor.LevelData[0x1C] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x70,
-		},true)
+		})
 
-		local ChainLookup = {
+		local BossLookup = {
 			[ChainA] = {
 				["Ent"] = {
 					["Address"] = 0xFFD178,
@@ -86,28 +89,23 @@ Overlay.LevelMonitor.LevelData[0x1C] = {
 					["Address"] = 0xFFD182,
 					["Target"] = 8,
 				},
-			}
+			},
 		}
 
-		-- *Very* dirty way of handling this, but the most reliable
 		local function StageMonitor()
-			for boss,addrTbl in pairs(ChainLookup) do
+			for boss,addrTbl in pairs(BossLookup) do
 				local bossEnt,bossFlags = addrTbl["Ent"],addrTbl["Flags"]
 
-				if
-					ReadU16BE(bossEnt["Address"]) ~= bossEnt["Target"]
-				or	ReadU16BE(bossFlags["Address"]) < bossFlags["Target"]
-				then
-					boss:Hide()
-				else
-					boss:Show()
-				end
+				boss:Show(
+					ReadU16BE(bossEnt["Address"]) == bossEnt["Target"]
+				and	ReadU16BE(bossFlags["Address"]) >= bossFlags["Target"]
+				)
 			end
 		end
 
-		for bossBar,bossData in pairs(ChainLookup) do
+		for bossBar,bossData in pairs(BossLookup) do
 			for key,dataTbl in pairs(bossData) do
-				MemoryMonitor.Register("Scene53.StageMonitor." .. bossBar.bossName .. "." .. key,dataTbl.Address,StageMonitor,true)
+				MemoryMonitor.Register("Scene53.StageMonitor." .. bossBar.BossData.ID .. "." .. key,dataTbl.Address,StageMonitor,true)
 			end
 		end
 	end,

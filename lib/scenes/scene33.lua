@@ -20,7 +20,8 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 	},
 
 	["LevelScript"] = function()
-		local Puppeteer = BossHealth.Create("Puppeteer",{
+		local Puppeteer = BossHealth({
+			["ID"] = "Puppeteer",
 			["PrintName"] = {
 				["Int"] = "Puppeteer",
 				["Jpn"] = "Marrio",
@@ -30,8 +31,9 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 				["Int"] = 0x10,
 			},
 			["HealthDeath"] = 0,
-		},true)
-		local GentlemanJim = BossHealth.Create("GentlemanJim",{
+		})
+		local GentlemanJim = BossHealth({
+			["ID"] = "GentlemanJim",
 			["PrintName"] = {
 				["Int"] = "Gentleman Jim",
 				["Jpn"] = "Nettoh",
@@ -41,29 +43,29 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 				["Int"] = 0x10,
 			},
 			["HealthDeath"] = 0,
-		},true)
+		})
 
-		-- [[TODO: FIND BETTER WAYS TO LOGIC THIS JESUS CHRIST]]
+		-- [TODO: FIND BETTER WAYS TO LOGIC THIS JESUS CHRIST]
 		local function BossMonitor()
-			local checkD142 = ReadU16BE(0xFFD142)
-			local checkD15E = ReadU16BE(0xFFD15E)
+			local flagsPuppeteer = ReadU16BE(0xFFD142)
+			local flagsStage = ReadU16BE(0xFFD15E)
 
-			if (checkD142 << 8) + checkD15E == 0xC06 then
-				Puppeteer:Show()
-				GentlemanJim:Show()
+			if (flagsPuppeteer << 8) + flagsStage == 0xC06 then
+				Puppeteer:Show(true)
+				GentlemanJim:Show(true)
 
 				return
 			end
 
-			if checkD15E >= 8 then
-				Puppeteer:Hide()
+			if flagsStage >= 8 then
+				Puppeteer:Show(false)
 			end
 
 			if
-				checkD142 >= 0xE
-			or	checkD15E >= 0xC
+				flagsPuppeteer >= 0xE
+			or	flagsStage >= 0xC
 			then
-				GentlemanJim:Hide()
+				GentlemanJim:Show(false)
 			end
 		end
 

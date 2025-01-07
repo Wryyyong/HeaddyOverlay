@@ -18,7 +18,8 @@ Overlay.LevelMonitor.LevelData[0x12] = {
 	},
 
 	["LevelScript"] = function()
-		local RocketGrappler = BossHealth.Create("RocketGrappler",{
+		local RocketGrappler = BossHealth({
+			["ID"] = "RocketGrappler",
 			["PrintName"] = {
 				["Int"] = "Rocket Grappler",
 				["Jpn"] = "Tail Hanger",
@@ -28,19 +29,15 @@ Overlay.LevelMonitor.LevelData[0x12] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x70,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene32.BossMonitor",0xFFD186,function(address)
 			local newVal = ReadU16BE(address)
 
-			if
-				newVal < 0x14
-			or	newVal >= 0x20
-			then
-				RocketGrappler:Hide()
-			else
-				RocketGrappler:Show()
-			end
+			RocketGrappler:Show(
+				newVal >= 0x14
+			and	newVal < 0x20
+			)
 		end,true)
 	end,
 }

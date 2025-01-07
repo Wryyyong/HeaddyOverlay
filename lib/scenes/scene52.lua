@@ -22,7 +22,8 @@ Overlay.LevelMonitor.LevelData[0x1A] = {
 		-- Disable hiding when going under threshold after first success
 		local KeepOn
 
-		local FlyingScythe = BossHealth.Create("FlyingScythe",{
+		local FlyingScythe = BossHealth({
+			["ID"] = "FlyingScythe",
 			["PrintName"] = {
 				["Int"] = "Flying Scythe",
 				["Jpn"] = "Tower Crasher",
@@ -33,26 +34,19 @@ Overlay.LevelMonitor.LevelData[0x1A] = {
 				["Jpn"] = 0x3C,
 			},
 			["HealthDeath"] = 0x38,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene52.BossMonitor",0xFFD162,function(address)
 			local newVal = ReadU16BE(address)
 
-			if
+			KeepOn =
 				(
-					not KeepOn
-				and	newVal < 0x8
+					KeepOn
+				or	newVal >= 0x8
 			)
-			or	newVal >= 0x1A
-			then
-				FlyingScythe:Hide()
+			and	newVal < 0x1A
 
-				KeepOn = false
-			else
-				FlyingScythe:Show()
-
-				KeepOn = true
-			end
+			FlyingScythe:Show(KeepOn)
 		end,true)
 	end,
 }

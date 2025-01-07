@@ -19,7 +19,8 @@ Overlay.LevelMonitor.LevelData[6] = {
 	},
 
 	["LevelScript"] = function()
-		local MadDog = BossHealth.Create("MadDog",{
+		local MadDog = BossHealth({
+			["ID"] = "MadDog",
 			["PrintName"] = {
 				["Int"] = "Mad Dog",
 				["Jpn"] = "Bounty Boundy",
@@ -29,19 +30,15 @@ Overlay.LevelMonitor.LevelData[6] = {
 				["Int"] = 0x50,
 			},
 			["HealthDeath"] = 0x3F,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene23.BossMonitor",0xFFD142,function(address)
 			local newVal = ReadU16BE(address)
 
-			if
-				newVal < 0x16
-			or	newVal >= 0x5E
-			then
-				MadDog:Hide()
-			else
-				MadDog:Show()
-			end
+			MadDog:Show(
+				newVal >= 0x16
+			and	newVal < 0x5E
+			)
 		end,true)
 	end,
 }

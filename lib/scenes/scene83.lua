@@ -22,9 +22,10 @@ Overlay.LevelMonitor.LevelData[0x26] = {
 	},
 
 	["LevelScript"] = function()
-		local Tarot = BossHealth.Create()
+		local Tarot = BossHealth()
 
 		local DataTarotA = {
+			["ID"] = "TarotA",
 			["PrintName"] = {
 				["Int"] = "Tarot",
 				["Jpn"] = "Taro",
@@ -36,6 +37,7 @@ Overlay.LevelMonitor.LevelData[0x26] = {
 			["HealthDeath"] = 0x7F,
 		}
 		local DataTarotB = {
+			["ID"] = "TarotB",
 			["PrintName"] = {
 				["Int"] = "Tarot",
 				["Jpn"] = "Taro",
@@ -48,32 +50,18 @@ Overlay.LevelMonitor.LevelData[0x26] = {
 		}
 
 		local function StageMonitor()
-			if ReadU16BE(0xFFD130) ~= 0x454 then return end
-
 			local tarotFlags = ReadU16BE(0xFFD132)
 
-			if
-				tarotFlags >= 4
+			local tarotCheck =
+				ReadU16BE(0xFFD130) == 0x454
+			and	tarotFlags >= 4
 			and	(
 					ReadU16BE(0xFFD138) ~= 0x458
 				or	ReadU16BE(0xFFD13A) < 2
 			)
-			then
-				local newName,newData
 
-				if tarotFlags >= 6 then
-					newName = "TarotB"
-					newData = DataTarotB
-				else
-					newName = "TarotA"
-					newData = DataTarotA
-				end
-
-				Tarot:UpdateBoss(newName,newData)
-				Tarot:Show()
-			else
-				Tarot:Hide()
-			end
+			Tarot:UpdateBoss(tarotCheck and (tarotFlags >= 6 and DataTarotB or DataTarotA) or nil)
+			Tarot:Show(tarotCheck)
 		end
 
 		for address,append in pairs({

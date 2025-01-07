@@ -19,7 +19,8 @@ Overlay.LevelMonitor.LevelData[0x2A] = {
 	},
 
 	["LevelScript"] = function()
-		local TwinFreaks = BossHealth.Create("TwinFreaks",{
+		local TwinFreaks = BossHealth({
+			["ID"] = "TwinFreaks",
 			["PrintName"] = {
 				["Int"] = "Twin Freaks",
 				["Jpn"] = "Rever Face",
@@ -30,19 +31,15 @@ Overlay.LevelMonitor.LevelData[0x2A] = {
 				["Jpn"] = 0x60,
 			},
 			["HealthDeath"] = 0x3F,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene85.BossMonitor",0xFFD142,function(address)
 			local newVal = ReadU16BE(address)
 
-			if
-				newVal < 6
-			or	newVal >= 0x10
-			then
-				TwinFreaks:Hide()
-			else
-				TwinFreaks:Show()
-			end
+			TwinFreaks:Show(
+				newVal >= 6
+			and	newVal < 0x10
+			)
 		end,true)
 	end,
 }

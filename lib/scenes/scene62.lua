@@ -22,7 +22,8 @@ Overlay.LevelMonitor.LevelData[0x52] = {
 		-- Disable hiding when going under threshold after first success
 		local KeepOn
 
-		local WheelerDealer = BossHealth.Create("WheelerDealer",{
+		local WheelerDealer = BossHealth({
+			["ID"] = "WheelerDealer",
 			["PrintName"] = {
 				["Int"] = "Wheeler-Dealer",
 				["Jpn"] = "Chris Wheel",
@@ -32,28 +33,19 @@ Overlay.LevelMonitor.LevelData[0x52] = {
 				["Int"] = 0xC0,
 			},
 			["HealthDeath"] = 0x7F,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene62.BossMonitor",0xFFD142,function(address)
 			local newVal = ReadU16BE(address)
 
-			if
+			KeepOn =
 				(
-					not KeepOn
-				and	newVal < 0x6
+					KeepOn
+				or	newVal >= 6
 			)
-			or	newVal >= 0x10
-			then
-				WheelerDealer:Hide()
+			and	newVal < 0x10
 
-				if newVal == 0 then
-					KeepOn = false
-				end
-			else
-				WheelerDealer:Show()
-
-				KeepOn = true
-			end
+			WheelerDealer:Show(KeepOn)
 		end,true)
 	end,
 }

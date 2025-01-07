@@ -24,7 +24,8 @@ Overlay.LevelMonitor.LevelData[2] = {
 	},
 
 	["LevelScript"] = function()
-		local Catherine = BossHealth.Create("Catherine",{
+		local Catherine = BossHealth({
+			["ID"] = "Catherine",
 			["PrintName"] = {
 				["Int"] = "Catherine Derigueur",
 				["Jpn"] = "Catherine Degoon",
@@ -34,8 +35,9 @@ Overlay.LevelMonitor.LevelData[2] = {
 				["Int"] = 0x48,
 			},
 			["HealthDeath"] = 0x3F,
-		},true)
-		local SnakeEyes = BossHealth.Create("SnakeEyes",{
+		})
+		local SnakeEyes = BossHealth({
+			["ID"] = "SnakeEyes",
 			["PrintName"] = {
 				["Int"] = "Snake Eyes",
 				["Jpn"] = "Happy Comecome",
@@ -45,41 +47,26 @@ Overlay.LevelMonitor.LevelData[2] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x78,
-		},true)
+		})
 
 		local function StageMonitor()
-			-- Catherine
-			if ReadU16BE(0xFFD158) == 0x74 then
-				local flags = ReadU16BE(0xFFD15A)
+			local flagsCatherine = ReadU16BE(0xFFD15A)
 
-				if
-					flags >= 4
-				and	flags < 0x10
-				then
-					Catherine:Show()
-				else
-					Catherine:Hide()
-				end
-			else
-				Catherine:Hide()
-			end
+			-- Catherine
+			Catherine:Show(
+				ReadU16BE(0xFFD158) == 0x74
+			and	flagsCatherine >= 4
+			and	flagsCatherine < 0x10
+			)
 
 			-- Snake Eyes
-			if ReadU16BE(0xFFD164) == 0xA0 then
-				if
-					ReadU16BE(0xFFD1A0) == 0x180
-				and	(
-						ReadU16BE(0xFFD1A2) < 6
-					or	ReadU16BE(0xFFD166) >= 4
-				)
-				then
-					SnakeEyes:Show()
-				else
-					SnakeEyes:Hide()
-				end
-			else
-				SnakeEyes:Hide()
-			end
+			SnakeEyes:Show(
+				ReadU16BE(0xFFD164) == 0xA0
+			and	ReadU16BE(0xFFD1A0) == 0x180
+			and	(
+					ReadU16BE(0xFFD1A2) < 6
+				or	ReadU16BE(0xFFD166) >= 4
+			))
 		end
 
 		for address,append in pairs({

@@ -20,7 +20,8 @@ Overlay.LevelMonitor.LevelData[0x30] = {
 	},
 
 	["LevelScript"] = function()
-		local DarkDemon = BossHealth.Create("DarkDemon",{
+		local DarkDemon = BossHealth({
+			["ID"] = "DarkDemon",
 			["PrintName"] = {
 				["Int"] = "Dark Demon",
 				["Jpn"] = "King Dark Demon",
@@ -31,17 +32,13 @@ Overlay.LevelMonitor.LevelData[0x30] = {
 				["Jpn"] = 0x48,
 			},
 			["HealthDeath"] = 0x3F,
-		},true)
+		})
 
 		local function BossMonitor()
-			if
-				ReadU16BE(0xFFD106) == 0x10
-			or	ReadU16BE(0xFFD10A) < 0x4
-			then
-				DarkDemon:Hide()
-			else
-				DarkDemon:Show()
-			end
+			DarkDemon:Show(
+				ReadU16BE(0xFFD106) ~= 0x10
+			and	ReadU16BE(0xFFD10A) >= 0x4
+			)
 		end
 
 		for address,append in pairs({

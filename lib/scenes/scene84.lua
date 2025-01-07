@@ -23,7 +23,8 @@ Overlay.LevelMonitor.LevelData[0x28] = {
 		-- Disable hiding when going under threshold after first success
 		local KeepOn
 
-		local Sparky = BossHealth.Create("Sparky",{
+		local Sparky = BossHealth({
+			["ID"] = "Sparky",
 			["PrintName"] = {
 				["Int"] = "Sparky",
 				["Jpn"] = "Thunder Captain",
@@ -33,24 +34,19 @@ Overlay.LevelMonitor.LevelData[0x28] = {
 				["Int"] = 0x88,
 			},
 			["HealthDeath"] = 0x7F,
-		},true)
+		})
 
 		local function StageMonitor()
-			if
-				ReadU16BE(0xFFD144) ~= 0x498
-			or	(
-					not KeepOn
-				and	ReadU16BE(0xFFD146) < 4
+			local newVal = ReadU16BE(address)
+
+			KeepOn =
+				ReadU16BE(0xFFD144) == 0x498
+			and	(
+					KeepOn
+				or	newVal >= 4
 			)
-			then
-				Sparky:Hide()
 
-				KeepOn = false
-			else
-				Sparky:Show()
-
-				KeepOn = true
-			end
+			Sparky:Show(KeepOn)
 		end
 
 		for address,append in pairs({

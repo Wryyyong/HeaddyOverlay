@@ -9,7 +9,19 @@ Overlay.BossHealth = BossHealth
 local ActiveBars = BossHealth.ActiveBars or {}
 BossHealth.ActiveBars = ActiveBars
 
-local BossGlobals = {}
+local BossGlobals = {
+	["Multipliers"] = {
+		["PosX"] = 68 / 320,
+		["ElementWidth"] = 184 / 320,
+		["ElementHeight"] = 16 / 224,
+		["BarWidth"] = 68 / 184,
+		["BarHeight"] = 8 / 16,
+	},
+	["Element"] = {
+		["InnerPadding"] = {},
+	},
+	["Bar"] = {},
+}
 
 -- Commonly-used functions
 local SetMetaTable = setmetatable
@@ -20,6 +32,7 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 local BossDataDefault = {
+	["ID"] = "DEFAULT",
 	["PrintName"] = {
 		["Int"] = "N/A",
 		["Jpn"] = "N/A",
@@ -30,7 +43,7 @@ local BossDataDefault = {
 		["Jpn"] = 0xFF,
 	},
 	["HealthDeath"] = 0,
-	["StartHidden"] = true,
+	["Use16Bit"] = false,
 }
 
 local HealthColorVals = {
@@ -38,26 +51,14 @@ local HealthColorVals = {
 	["Min"] = 0xFFFF0000,
 }
 
-function BossHealth.Create(bossName,bossData,startHidden)
-	bossName = tostring(bossName)
+local function CreateBar(_,bossData)
 	bossData = bossData or BossDataDefault
-	startHidden =
-			(
-				startHidden ~= nil
-			and	startHidden
-		)
-		or	(
-				bossData["StartHidden"] ~= nil
-			and	bossData["StartHidden"]
-		)
-		or	false
 
 	local newBar = {}
 	SetMetaTable(newBar,BossHealth)
 
-	newBar:UpdateBoss(bossName,bossData)
-
-	newBar.Render = not startHidden
+	newBar:UpdateBoss(bossData)
+	newBar.Render = false
 
 	local activeIndex = #ActiveBars + 1
 	newBar.ActiveIndex = activeIndex
@@ -66,30 +67,32 @@ function BossHealth.Create(bossName,bossData,startHidden)
 	return newBar
 end
 
-function BossHealth:Show()
-	if self.Render then return end
+function BossHealth:Show(newVal)
+	if
+		newVal == nil
+	or	newVal == self.Render
+	then return end
 
-	self:UpdateHealth()
-	self.Render = true
+	if newVal then
+		self:UpdateHealth()
+	end
+
+	self.Render = newVal
 end
 
-function BossHealth:Hide()
-	if not self.Render then return end
-
-	self.Render = false
-end
-
-function BossHealth:UpdateBoss(bossName,bossData)
-	if self.BossData == bossData then return end
+function BossHealth:UpdateBoss(bossData)
+	if
+		type(bossData) ~= "table"
+	or	self.BossData == bossData
+	then return end
 
 	MemoryMonitor.Unregister(self.MonitorID)
 
-	self.BossName = bossName
 	self.BossData = bossData
 	SetMetaTable(bossData.PrintName,Overlay.LangFallback)
 	SetMetaTable(bossData.HealthInit,Overlay.LangFallback)
 
-	local monitorID = "BossHealth." .. bossName
+	local monitorID = "BossHealth." .. bossData.ID
 	self.MonitorID = monitorID
 	self.HealthTotal = bossData.HealthInit[Overlay.Lang] - bossData.HealthDeath
 	self.ReadFunc = bossData.Use16Bit and ReadU16BE or ReadU8
@@ -127,39 +130,39 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:Draw()
-	local innerBoundaryUp = self.PosY + 4
+	local innerPaddingUp = self.PosY + 4
 
 	-- Black background
 	DrawRectangle(
-		BossGlobals.BarWidth,
+		BossGlobals.Element.PosX,
 		self.PosY,
-		BossGlobals.ElementWidth,
-		16,
+		BossGlobals.Element.Width,
+		BossGlobals.Element.Height,
 		0,
 		0xFF000000
 	)
 	-- Health bar outline
 	DrawRectangle(
-		BossGlobals.InnerBoundaryLeft,
-		innerBoundaryUp,
-		72,
-		8,
+		BossGlobals.Element.InnerPadding.Left,
+		innerPaddingUp,
+		BossGlobals.Bar.Width,
+		BossGlobals.Bar.Height,
 		0xFFFFFFFF,
 		0
 	)
 	-- Health bar fill
 	DrawRectangle(
-		BossGlobals.InnerBoundaryLeft,
-		innerBoundaryUp,
-		self.HealthPercent * 72,
-		8,
+		BossGlobals.Element.InnerPadding.Left,
+		innerPaddingUp,
+		BossGlobals.Bar.Width * self.HealthPercent,
+		BossGlobals.Bar.Height,
 		0,
 		self.HealthColor
 	)
 
 	DrawString(
-		BossGlobals.InnerBoundaryRight,
-		self.PosY + 8,
+		BossGlobals.Element.InnerPadding.Right,
+		innerPaddingUp + 4,
 		self.BossData.PrintName[Overlay.Lang],
 		nil,
 		nil,
@@ -188,19 +191,34 @@ end
 function BossHealth.DrawAll()
 	if #ActiveBars <= 0 then return end
 
-	BossGlobals.ElementWidth = Overlay.BufferWidth * 0.575
-	BossGlobals.BarWidth = Overlay.BufferWidth * 0.2125
-	BossGlobals.InnerBoundaryLeft = BossGlobals.BarWidth + 4
-	BossGlobals.InnerBoundaryRight = Overlay.BufferWidth - BossGlobals.BarWidth - 4
+	local multipliers = BossGlobals.Multipliers
+	local element = BossGlobals.Element
+	local bar = BossGlobals.Bar
 
+	element.PosX = Overlay.BufferWidth * multipliers.PosX
+
+	element.Width = Overlay.BufferWidth * multipliers.ElementWidth
+	element.Height = Overlay.BufferHeight * multipliers.ElementHeight
+
+	element.InnerPadding.Left = element.PosX + 4
+	element.InnerPadding.Right = Overlay.BufferWidth - element.PosX - 4
+
+	bar.Width = element.Width * multipliers.BarWidth
+	bar.Height = element.Height * multipliers.BarHeight
+
+	local clamp2,clamp1 = element.Height / 8,element.Height / 16
 	local barCounter = -1
 
-	for _,bar in ipairs(ActiveBars) do
-		if bar.Render then
+	for _,bossBar in ipairs(ActiveBars) do
+		if bossBar.Render then
 			barCounter = barCounter + 1
-			bar.PosY = (barCounter * 16) - (barCounter > 0 and 2 or 1)
+			bossBar.PosY = (barCounter * element.Height) - (barCounter > 0 and clamp2 or clamp1)
 
-			bar:Draw()
+			bossBar:Draw()
 		end
 	end
 end
+
+SetMetaTable(BossHealth,{
+	["__call"] = CreateBar,
+})

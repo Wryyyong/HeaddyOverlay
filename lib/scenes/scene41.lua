@@ -20,7 +20,8 @@ Overlay.LevelMonitor.LevelData[4] = {
 	},
 
 	["LevelScript"] = function()
-		local MonsMeg = BossHealth.Create("MonsMeg",{
+		local MonsMeg = BossHealth({
+			["ID"] = "MonsMeg",
 			["PrintName"] = {
 				["Int"] = "Mons Meg",
 				["Jpn"] = "Rebecca",
@@ -30,20 +31,17 @@ Overlay.LevelMonitor.LevelData[4] = {
 				["Int"] = 0xFF,
 			},
 			["HealthDeath"] = 0xE7,
-		},true)
+		})
 
 		local function StageMonitor()
+			if ReadU16BE(0xFFD174) ~= 0x134 then return end
+
 			local flags = ReadU16BE(0xFFD176)
 
-			if
-				ReadU16BE(0xFFD174) == 0x134
-			and	flags >= 6
+			MonsMeg:Show(
+				flags >= 6
 			and	flags < 0xC
-			then
-				MonsMeg:Show()
-			else
-				MonsMeg:Hide()
-			end
+			)
 		end
 
 		for address,append in pairs({

@@ -23,7 +23,8 @@ Overlay.LevelMonitor.LevelData[0x1E] = {
 		-- Disable hiding when going under threshold after first success
 		local KeepOn
 
-		local Spinderella = BossHealth.Create("Spinderella",{
+		local Spinderella = BossHealth({
+			["ID"] = "Spinderella",
 			["PrintName"] = {
 				["Int"] = "Spinderella",
 				["Jpn"] = "Motor Hand",
@@ -33,26 +34,19 @@ Overlay.LevelMonitor.LevelData[0x1E] = {
 				["Int"] = 0x50,
 			},
 			["HealthDeath"] = 0x3F,
-		},true)
+		})
 
 		MemoryMonitor.Register("Scene54.BossMonitor",0xFFD142,function(address)
 			local newVal = ReadU16BE(address)
 
-			if
+			KeepOn =
 				(
-					not KeepOn
-				and	newVal < 0xC
+					KeepOn
+				or	newVal >= 0xC
 			)
-			or	newVal >= 0x1E
-			then
-				Spinderella:Hide()
+			and	newVal < 0x1E
 
-				KeepOn = false
-			else
-				Spinderella:Show()
-
-				KeepOn = true
-			end
+			Spinderella:Show(KeepOn)
 		end,true)
 	end,
 }

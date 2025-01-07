@@ -20,21 +20,23 @@ Overlay.LevelMonitor.LevelData[0x20] = {
 	},
 
 	["LevelScript"] = function()
-		local Gatekeeper = BossHealth.Create()
+		local Gatekeeper = BossHealth()
 
 		local DataGatekeeper = {
+			["ID"] = "Gatekeeper",
 			["PrintName"] = {
 				["Int"] = "Gatekeeper",
 				["Jpn"] = "Yayoi",
 			},
 			["Address"] = 0xFFCC14,
 			["HealthInit"] = {
-				["Int"] = 0x5,
+				["Int"] = 5,
 			},
 			["HealthDeath"] = 0,
 			["Use16Bit"] = true,
 		}
 		local DataNastyGatekeeper = {
+			["ID"] = "NastyGatekeeper",
 			["PrintName"] = {
 				["Int"] = "Nasty Gatekeeper",
 				["Jpn"] = "Izayoi",
@@ -48,34 +50,27 @@ Overlay.LevelMonitor.LevelData[0x20] = {
 		}
 
 		local function BossMonitor()
-			local checkD132 = ReadU16BE(0xFFD132)
-			local checkD152 = ReadU16BE(0xFFD152)
-			local bossName,bossData,checkLowerVal,checkLowerThres,checkUpperThres
+			local flagsNastyGatekeeper = ReadU16BE(0xFFD132)
+			local flagsGatekeeper = ReadU16BE(0xFFD152)
+			local bossData,checkLowerVal,checkLowerThres,checkUpperThres
 
-			if checkD132 >= 0x1A then
-				bossName = "NastyGatekeeper"
+			if flagsNastyGatekeeper >= 0x1A then
 				bossData = DataNastyGatekeeper
-				checkLowerVal = checkD152
+				checkLowerVal = flagsGatekeeper
 				checkLowerThres = 0x16
 				checkUpperThres = 0x80
 			else
-				bossName = "Gatekeeper"
 				bossData = DataGatekeeper
-				checkLowerVal = checkD132
+				checkLowerVal = flagsNastyGatekeeper
 				checkLowerThres = 0x12
 				checkUpperThres = 0x40
 			end
 
-			Gatekeeper:UpdateBoss(bossName,bossData)
-
-			if
-				checkLowerVal < checkLowerThres
-			or	checkD152 >= checkUpperThres
-			then
-				Gatekeeper:Hide()
-			else
-				Gatekeeper:Show()
-			end
+			Gatekeeper:UpdateBoss(bossData)
+			Gatekeeper:Show(
+				checkLowerVal >= checkLowerThres
+			and	flagsGatekeeper < checkUpperThres
+			)
 		end
 
 		for address,append in pairs({

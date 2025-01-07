@@ -17,7 +17,8 @@ Overlay.LevelMonitor.LevelData[0x38] = {
 	},
 
 	["LevelScript"] = function()
-		local ManRight = BossHealth.Create("ManRight",{
+		local ManRight = BossHealth({
+			["ID"] = "ManRight",
 			["PrintName"] = {
 				["Int"] = "Right-Hand Man",
 			},
@@ -26,8 +27,9 @@ Overlay.LevelMonitor.LevelData[0x38] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x6F,
-		},true)
-		local ManLeft = BossHealth.Create("ManLeft",{
+		})
+		local ManLeft = BossHealth({
+			["ID"] = "ManLeft",
 			["PrintName"] = {
 				["Int"] = "Left-Hand Man",
 			},
@@ -36,8 +38,9 @@ Overlay.LevelMonitor.LevelData[0x38] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x6F,
-		},true)
-		local TheatreOwner = BossHealth.Create("TheatreOwner",{
+		})
+		local TheatreOwner = BossHealth({
+			["ID"] = "TheatreOwner",
 			["PrintName"] = {
 				["Int"] = "Theatre Owner",
 			},
@@ -46,7 +49,7 @@ Overlay.LevelMonitor.LevelData[0x38] = {
 				["Int"] = 0x80,
 			},
 			["HealthDeath"] = 0x71,
-		},true)
+		})
 
 		local BossLookup = {
 			[ManRight] = 0xFFD13A,
@@ -58,19 +61,15 @@ Overlay.LevelMonitor.LevelData[0x38] = {
 			for bossBar,address in pairs(BossLookup) do
 				local flags = ReadU16BE(address)
 
-				if
+				bossBar:Show(
 					flags >= 8
 				and	flags < 0x18
-				then
-					bossBar:Show()
-				else
-					bossBar:Hide()
-				end
+				)
 			end
 		end
 
 		for bossBar,address in pairs(BossLookup) do
-			MemoryMonitor.Register("Scene??.BossMonitor." .. bossBar.BossName,address,BossMonitor,true)
+			MemoryMonitor.Register("Scene??.BossMonitor." .. bossBar.BossData.ID,address,BossMonitor,true)
 		end
 	end,
 }
