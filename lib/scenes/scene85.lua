@@ -27,7 +27,9 @@ LevelMonitor.LevelData[0x2A] = {
 				["Int"] = 0x50,
 				["Jpn"] = 0x60,
 			},
-			["HealthDeath"] = 0x3F,
+			["HealthDeath"] = {
+				["Int"] = 0x3F,
+			},
 		})
 
 		LevelMonitor.SetSceneMonitor(0xFFD142,function(addressTbl)

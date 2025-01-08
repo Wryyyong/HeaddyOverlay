@@ -25,7 +25,9 @@ LevelMonitor.LevelData[0x50] = {
 			["HealthInit"] = {
 				["Int"] = 0x40,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 
 		-- [TODO: Consider whether to implement the bars for the other Battleship components]
@@ -39,7 +41,9 @@ LevelMonitor.LevelData[0x50] = {
 			["HealthInit"] = {
 				["Int"] = 0x86,
 			},
-			["HealthDeath"] = 0x7F,
+			["HealthDeath"] = {
+				["Int"] = 0x7F,
+			},
 		})
 		local BattleshipTurretA = BossHealth({
 			["ID"] = "BattleshipTurretA",
@@ -50,7 +54,9 @@ LevelMonitor.LevelData[0x50] = {
 			["HealthInit"] = {
 				["Int"] = 0x18,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 		local BattleshipTurretB = BossHealth({
 			["ID"] = "BattleshipTurretB",
@@ -61,7 +67,9 @@ LevelMonitor.LevelData[0x50] = {
 			["HealthInit"] = {
 				["Int"] = 0x18,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 		local BattleshipTurretC = BossHealth({
 			["ID"] = "BattleshipTurretC",
@@ -72,7 +80,9 @@ LevelMonitor.LevelData[0x50] = {
 			["HealthInit"] = {
 				["Int"] = 0x18,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 		local BattleshipWorm = BossHealth({
 			["ID"] = "BattleshipWorm",
@@ -83,7 +93,9 @@ LevelMonitor.LevelData[0x50] = {
 			["HealthInit"] = {
 				["Int"] = 6,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 		--]]
 

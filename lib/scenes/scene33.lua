@@ -26,7 +26,9 @@ LevelMonitor.LevelData[0x32] = {
 			["HealthInit"] = {
 				["Int"] = 0x10,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 		local GentlemanJim = BossHealth({
 			["ID"] = "GentlemanJim",
@@ -38,7 +40,9 @@ LevelMonitor.LevelData[0x32] = {
 			["HealthInit"] = {
 				["Int"] = 0x10,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 		})
 
 		LevelMonitor.SetSceneMonitor({

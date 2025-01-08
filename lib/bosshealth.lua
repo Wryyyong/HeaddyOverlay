@@ -24,7 +24,11 @@ local BossGlobals = {
 }
 
 -- Commonly-used functions
-local SetMetaTable = setmetatable
+local type = type
+local next = next
+local pairs = pairs
+local setmetatable = setmetatable
+
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
@@ -42,7 +46,10 @@ local BossDataDefault = {
 		["Int"] = 0xFF,
 		["Jpn"] = 0xFF,
 	},
-	["HealthDeath"] = 0,
+	["HealthDeath"] = {
+		["Int"] = 0,
+		["Jpn"] = 0,
+	},
 	["Use16Bit"] = false,
 }
 
@@ -55,7 +62,7 @@ local function CreateBar(_,bossData)
 	bossData = bossData or BossDataDefault
 
 	local newBar = {}
-	SetMetaTable(newBar,BossHealth)
+	setmetatable(newBar,BossHealth)
 
 	newBar:UpdateBoss(bossData)
 	newBar.Render = false
@@ -89,12 +96,13 @@ function BossHealth:UpdateBoss(bossData)
 	MemoryMonitor.Unregister(self.MonitorID)
 
 	self.BossData = bossData
-	SetMetaTable(bossData.PrintName,Overlay.LangFallback)
-	SetMetaTable(bossData.HealthInit,Overlay.LangFallback)
+	setmetatable(bossData.PrintName,Overlay.LangFallback)
+	setmetatable(bossData.HealthInit,Overlay.LangFallback)
+	setmetatable(bossData.HealthDeath,Overlay.LangFallback)
 
 	local monitorID = "BossHealth." .. bossData.ID
 	self.MonitorID = monitorID
-	self.HealthTotal = bossData.HealthInit[Overlay.Lang] - bossData.HealthDeath
+	self.HealthTotal = bossData.HealthInit[Overlay.Lang] - bossData.HealthDeath[Overlay.Lang]
 	self.ReadFunc = bossData.Use16Bit and ReadU16BE or ReadU8
 
 	MemoryMonitor.Register(monitorID,bossData.Address,function()
@@ -105,7 +113,7 @@ end
 function BossHealth:UpdateHealth()
 	local bossData = self.BossData
 
-	self.Health = self.ReadFunc(bossData.Address) - bossData.HealthDeath
+	self.Health = self.ReadFunc(bossData.Address) - bossData.HealthDeath[Overlay.Lang]
 	self.HealthPercent = self.Health / self.HealthTotal
 	self:UpdateColor()
 end
@@ -130,38 +138,42 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:Draw()
+	local element = BossGlobals.Element
+	local bar = BossGlobals.Bar
+	local innerPadding = element.InnerPadding
+
 	local innerPaddingUp = self.PosY + 4
 
 	-- Black background
 	DrawRectangle(
-		BossGlobals.Element.PosX,
+		element.PosX,
 		self.PosY,
-		BossGlobals.Element.Width,
-		BossGlobals.Element.Height,
+		element.Width,
+		element.Height,
 		0,
 		0xFF000000
 	)
 	-- Health bar outline
 	DrawRectangle(
-		BossGlobals.Element.InnerPadding.Left,
+		innerPadding.Left,
 		innerPaddingUp,
-		BossGlobals.Bar.Width,
-		BossGlobals.Bar.Height,
+		bar.Width,
+		bar.Height,
 		0xFFFFFFFF,
 		0
 	)
 	-- Health bar fill
 	DrawRectangle(
-		BossGlobals.Element.InnerPadding.Left,
+		innerPadding.Left,
 		innerPaddingUp,
-		BossGlobals.Bar.Width * self.HealthPercent,
-		BossGlobals.Bar.Height,
+		bar.Width * self.HealthPercent,
+		bar.Height,
 		0,
 		self.HealthColor
 	)
 
 	DrawString(
-		BossGlobals.Element.InnerPadding.Right,
+		innerPadding.Right,
 		innerPaddingUp + 4,
 		self.BossData.PrintName[Overlay.Lang],
 		nil,
@@ -181,27 +193,28 @@ function BossHealth:Destroy()
 end
 
 function BossHealth.DestroyAll()
-	if #ActiveBars <= 0 then return end
+	if next(ActiveBars) == nil then return end
 
-	for _,bar in ipairs(ActiveBars) do
-		bar:Destroy()
+	for _,bossbar in pairs(ActiveBars) do
+		bossbar:Destroy()
 	end
 end
 
 function BossHealth.DrawAll()
-	if #ActiveBars <= 0 then return end
+	if next(ActiveBars) == nil then return end
 
 	local multipliers = BossGlobals.Multipliers
 	local element = BossGlobals.Element
 	local bar = BossGlobals.Bar
+	local innerPadding = element.InnerPadding
 
 	element.PosX = Overlay.BufferWidth * multipliers.PosX
 
 	element.Width = Overlay.BufferWidth * multipliers.ElementWidth
 	element.Height = Overlay.BufferHeight * multipliers.ElementHeight
 
-	element.InnerPadding.Left = element.PosX + 4
-	element.InnerPadding.Right = Overlay.BufferWidth - element.PosX - 4
+	innerPadding.Left = element.PosX + 4
+	innerPadding.Right = Overlay.BufferWidth - element.PosX - 4
 
 	bar.Width = element.Width * multipliers.BarWidth
 	bar.Height = element.Height * multipliers.BarHeight
@@ -209,7 +222,7 @@ function BossHealth.DrawAll()
 	local clamp2,clamp1 = element.Height / 8,element.Height / 16
 	local barCounter = -1
 
-	for _,bossBar in ipairs(ActiveBars) do
+	for _,bossBar in pairs(ActiveBars) do
 		if bossBar.Render then
 			barCounter = barCounter + 1
 			bossBar.PosY = (barCounter * element.Height) - (barCounter > 0 and clamp2 or clamp1)
@@ -219,6 +232,6 @@ function BossHealth.DrawAll()
 	end
 end
 
-SetMetaTable(BossHealth,{
+setmetatable(BossHealth,{
 	["__call"] = CreateBar,
 })

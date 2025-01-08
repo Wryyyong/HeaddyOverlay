@@ -28,7 +28,9 @@ LevelMonitor.LevelData[0x20] = {
 			["HealthInit"] = {
 				["Int"] = 5,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 			["Use16Bit"] = true,
 		}
 		local DataNastyGatekeeper = {
@@ -42,7 +44,9 @@ LevelMonitor.LevelData[0x20] = {
 				["Int"] = 0x50,
 				["Jpn"] = 0x48,
 			},
-			["HealthDeath"] = 0x3F,
+			["HealthDeath"] = {
+				["Int"] = 0x3F,
+			},
 		}
 
 		LevelMonitor.SetSceneMonitor({

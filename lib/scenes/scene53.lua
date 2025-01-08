@@ -27,7 +27,9 @@ LevelMonitor.LevelData[0x1C] = {
 			["HealthInit"] = {
 				["Int"] = 0x80,
 			},
-			["HealthDeath"] = 0x7B,
+			["HealthDeath"] = {
+				["Int"] = 0x7B,
+			},
 		})
 		local ChainB = BossHealth({
 			["ID"] = "ChainB",
@@ -38,7 +40,9 @@ LevelMonitor.LevelData[0x1C] = {
 			["HealthInit"] = {
 				["Int"] = 0x80,
 			},
-			["HealthDeath"] = 0x7B,
+			["HealthDeath"] = {
+				["Int"] = 0x7B,
+			},
 		})
 		local Armordillo = BossHealth({
 			["ID"] = "Armordillo",
@@ -50,7 +54,9 @@ LevelMonitor.LevelData[0x1C] = {
 			["HealthInit"] = {
 				["Int"] = 0x80,
 			},
-			["HealthDeath"] = 0x70,
+			["HealthDeath"] = {
+				["Int"] = 0x70,
+			},
 		})
 
 		local BossLookup = {

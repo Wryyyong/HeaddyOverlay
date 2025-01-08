@@ -26,7 +26,9 @@ LevelMonitor.LevelData[2] = {
 			["HealthInit"] = {
 				["Int"] = 0x48,
 			},
-			["HealthDeath"] = 0x3F,
+			["HealthDeath"] = {
+				["Int"] = 0x3F,
+			},
 		})
 		local SnakeEyes = BossHealth({
 			["ID"] = "SnakeEyes",
@@ -38,7 +40,9 @@ LevelMonitor.LevelData[2] = {
 			["HealthInit"] = {
 				["Int"] = 0x80,
 			},
-			["HealthDeath"] = 0x78,
+			["HealthDeath"] = {
+				["Int"] = 0x78,
+			},
 		})
 
 		LevelMonitor.SetSceneMonitor({

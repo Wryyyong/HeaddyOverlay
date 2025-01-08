@@ -28,7 +28,9 @@ LevelMonitor.LevelData[0x26] = {
 			["HealthInit"] = {
 				["Int"] = 0xA0,
 			},
-			["HealthDeath"] = 0x7F,
+			["HealthDeath"] = {
+				["Int"] = 0x7F,
+			},
 		}
 		local DataTarotB = {
 			["ID"] = "TarotB",
@@ -40,7 +42,9 @@ LevelMonitor.LevelData[0x26] = {
 			["HealthInit"] = {
 				["Int"] = 0x90,
 			},
-			["HealthDeath"] = 0x7F,
+			["HealthDeath"] = {
+				["Int"] = 0x7F,
+			},
 		}
 
 		LevelMonitor.SetSceneMonitor({

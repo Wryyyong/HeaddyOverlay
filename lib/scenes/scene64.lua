@@ -25,7 +25,9 @@ LevelMonitor.LevelData[0x56] = {
 			["HealthInit"] = {
 				["Int"] = 0x80,
 			},
-			["HealthDeath"] = 0x60,
+			["HealthDeath"] = {
+				["Int"] = 0x60,
+			},
 		})
 
 		LevelMonitor.SetSceneMonitor({

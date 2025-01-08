@@ -26,7 +26,9 @@ LevelMonitor.LevelData[0] = {
 			["HealthInit"] = {
 				["Int"] = 0x80,
 			},
-			["HealthDeath"] = 0x60,
+			["HealthDeath"] = {
+				["Int"] = 0x60,
+			},
 		})
 		local TroubleBruin = BossHealth({
 			["ID"] = "TroubleBruin",
@@ -38,7 +40,9 @@ LevelMonitor.LevelData[0] = {
 			["HealthInit"] = {
 				["Int"] = 2,
 			},
-			["HealthDeath"] = 0,
+			["HealthDeath"] = {
+				["Int"] = 0,
+			},
 			["Use16Bit"] = true,
 		})
 
