@@ -1,22 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x32] = {
+LevelMonitor.LevelData[0x32] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 3-3]],
 		["Sub"] = {
 			["Int"] = [["THE GREEN ROOM"]],
 			["Jpn"] = [["GUEST AREA"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene33.BossMonitorA",
-		"Scene33.BossMonitorB",
 	},
 
 	["LevelScript"] = function()
@@ -45,10 +41,12 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 			["HealthDeath"] = 0,
 		})
 
-		-- [TODO: FIND BETTER WAYS TO LOGIC THIS JESUS CHRIST]
-		local function BossMonitor()
-			local flagsPuppeteer = ReadU16BE(0xFFD142)
-			local flagsStage = ReadU16BE(0xFFD15E)
+		LevelMonitor.SetSceneMonitor({
+			["Puppeteer.Flags"] = 0xFFD142,
+			["GentlemanJim.Flags"] = 0xFFD15E,
+		},function(addressTbl)
+			local flagsPuppeteer = ReadU16BE(addressTbl["Puppeteer.Flags"])
+			local flagsStage = ReadU16BE(addressTbl["GentlemanJim.Flags"])
 
 			if (flagsPuppeteer << 8) + flagsStage == 0xC06 then
 				Puppeteer:Show(true)
@@ -67,13 +65,6 @@ Overlay.LevelMonitor.LevelData[0x32] = {
 			then
 				GentlemanJim:Show(false)
 			end
-		end
-
-		for address,append in pairs({
-			[0xFFD142] = "A",
-			[0xFFD15E] = "B",
-		}) do
-			MemoryMonitor.Register("Scene33.BossMonitor" .. append,address,BossMonitor,true)
-		end
+		end)
 	end,
 }

@@ -1,26 +1,20 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
+local pairs = pairs
+
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x1C] = {
+LevelMonitor.LevelData[0x1C] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 5-3]],
 		["Sub"] = {
 			["Int"] = [["TOWERING INTERNAL"]],
 			["Jpn"] = [["ROLLING ROLLING"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene53.StageMonitor.ChainA.Ent",
-		"Scene53.StageMonitor.ChainA.Flags",
-		"Scene53.StageMonitor.ChainB.Ent",
-		"Scene53.StageMonitor.ChainB.Flags",
-		"Scene53.StageMonitor.Armordillo.Ent",
-		"Scene53.StageMonitor.Armordillo.Flags",
 	},
 
 	["LevelScript"] = function()
@@ -92,21 +86,24 @@ Overlay.LevelMonitor.LevelData[0x1C] = {
 			},
 		}
 
-		local function StageMonitor()
-			for boss,addrTbl in pairs(BossLookup) do
+		LevelMonitor.SetSceneMonitor({
+			BossLookup[ChainA].Ent.Address,
+			BossLookup[ChainA].Flags.Address,
+
+			BossLookup[ChainB].Ent.Address,
+			BossLookup[ChainB].Flags.Address,
+
+			BossLookup[Armordillo].Ent.Address,
+			BossLookup[Armordillo].Flags.Address,
+		},function()
+			for bossBar,addrTbl in pairs(BossLookup) do
 				local bossEnt,bossFlags = addrTbl["Ent"],addrTbl["Flags"]
 
-				boss:Show(
+				bossBar:Show(
 					ReadU16BE(bossEnt["Address"]) == bossEnt["Target"]
 				and	ReadU16BE(bossFlags["Address"]) >= bossFlags["Target"]
 				)
 			end
-		end
-
-		for bossBar,bossData in pairs(BossLookup) do
-			for key,dataTbl in pairs(bossData) do
-				MemoryMonitor.Register("Scene53.StageMonitor." .. bossBar.BossData.ID .. "." .. key,dataTbl.Address,StageMonitor,true)
-			end
-		end
+		end)
 	end,
 }

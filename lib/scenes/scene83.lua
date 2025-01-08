@@ -1,24 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x26] = {
+LevelMonitor.LevelData[0x26] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 8-3]],
 		["Sub"] = {
 			["Int"] = [["FUN FORGIVEN"]],
 			["Jpn"] = [["RADICAL PARTY"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene83.StageMonitor.Tarot.Ent",
-		"Scene83.StageMonitor.Tarot.Flags",
-		"Scene83.StageMonitor.Rope.Ent",
-		"Scene83.StageMonitor.Rope.Flags",
 	},
 
 	["LevelScript"] = function()
@@ -49,28 +43,25 @@ Overlay.LevelMonitor.LevelData[0x26] = {
 			["HealthDeath"] = 0x7F,
 		}
 
-		local function StageMonitor()
-			local tarotFlags = ReadU16BE(0xFFD132)
+		LevelMonitor.SetSceneMonitor({
+			["Tarot.Ent"] = 0xFFD130,
+			["Tarot.Flags"] = 0xFFD132,
+
+			["Rope.Ent"] = 0xFFD138,
+			["Rope.Flags"] = 0xFFD13A,
+		},function(addressTbl)
+			local tarotFlags = ReadU16BE(addressTbl["Tarot.Flags"])
 
 			local tarotCheck =
-				ReadU16BE(0xFFD130) == 0x454
+				ReadU16BE(addressTbl["Tarot.Ent"]) == 0x454
 			and	tarotFlags >= 4
 			and	(
-					ReadU16BE(0xFFD138) ~= 0x458
-				or	ReadU16BE(0xFFD13A) < 2
+					ReadU16BE(addressTbl["Rope.Ent"]) ~= 0x458
+				or	ReadU16BE(addressTbl["Rope.Flags"]) < 2
 			)
 
 			Tarot:UpdateBoss(tarotCheck and (tarotFlags >= 6 and DataTarotB or DataTarotA) or nil)
 			Tarot:Show(tarotCheck)
-		end
-
-		for address,append in pairs({
-			[0xFFD130] = "Tarot.Ent",
-			[0xFFD132] = "Tarot.Flags",
-			[0xFFD138] = "Rope.Ent",
-			[0xFFD13A] = "Rope.Flags",
-		}) do
-			MemoryMonitor.Register("Scene83.StageMonitor." .. append,address,StageMonitor,true)
-		end
+		end)
 	end,
 }

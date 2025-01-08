@@ -1,24 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x50] = {
+LevelMonitor.LevelData[0x50] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 6-1]],
 		["Sub"] = {
 			["Int"] = [["FLYING GAME"]],
 			["Jpn"] = [["AIR WALKER"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene61.StageMonitor.Battleship.Ent",
-		"Scene61.StageMonitor.Battleship.Flags",
-		"Scene61.StageMonitor.Claw.Ent",
-		"Scene61.StageMonitor.Claw.Flags",
 	},
 
 	["LevelScript"] = function()
@@ -93,22 +87,19 @@ Overlay.LevelMonitor.LevelData[0x50] = {
 		})
 		--]]
 
-		local function StageMonitor()
-			BattleshipClaw:Show(
-				ReadU16BE(0xFFD138) == 0x748
-			and	ReadU16BE(0xFFD13A) >= 0xA
-			and	ReadU16BE(0xFFD140) == 0x76C
-			and	ReadU16BE(0xFFD142) < 6
-			)
-		end
+		LevelMonitor.SetSceneMonitor({
+			["Battleship.Ent"] = 0xFFD140,
+			["Battleship.Flags"] = 0xFFD142,
 
-		for address,append in pairs({
-			[0xFFD140] = "Battleship.Ent",
-			[0xFFD142] = "Battleship.Flags",
-			[0xFFD138] = "Claw.Ent",
-			[0xFFD13A] = "Claw.Flags",
-		}) do
-			MemoryMonitor.Register("Scene61.StageMonitor." .. append,address,StageMonitor,true)
-		end
+			["Claw.Ent"] = 0xFFD138,
+			["Claw.Flags"] = 0xFFD13A,
+		},function(addressTbl)
+			BattleshipClaw:Show(
+				ReadU16BE(addressTbl["Claw.Ent"]) == 0x748
+			and	ReadU16BE(addressTbl["Claw.Flags"]) >= 0xA
+			and	ReadU16BE(addressTbl["Battleship.Ent"]) == 0x76C
+			and	ReadU16BE(addressTbl["Battleship.Flags"]) < 6
+			)
+		end)
 	end,
 }

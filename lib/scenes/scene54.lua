@@ -1,22 +1,19 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x1E] = {
+LevelMonitor.LevelData[0x1E] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 5-4]],
 		["Sub"] = {
 			["Int"] = [["SPINDERELLA"]],
 			["Jpn"] = [["ON THE SKY"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene54.BossMonitor",
 	},
 
 	["LevelScript"] = function()
@@ -36,8 +33,8 @@ Overlay.LevelMonitor.LevelData[0x1E] = {
 			["HealthDeath"] = 0x3F,
 		})
 
-		MemoryMonitor.Register("Scene54.BossMonitor",0xFFD142,function(address)
-			local newVal = ReadU16BE(address)
+		LevelMonitor.SetSceneMonitor(0xFFD142,function(addressTbl)
+			local newVal = ReadU16BE(addressTbl[1])
 
 			KeepOn =
 				(
@@ -47,6 +44,6 @@ Overlay.LevelMonitor.LevelData[0x1E] = {
 			and	newVal < 0x1E
 
 			Spinderella:Show(KeepOn)
-		end,true)
+		end)
 	end,
 }

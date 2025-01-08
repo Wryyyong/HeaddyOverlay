@@ -4,12 +4,16 @@ local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor or {}
 Overlay.MemoryMonitor = MemoryMonitor
 
-local ActiveMonitors = MemoryMonitor.ActiveMonitors or {}
-local MonitorLookup = MemoryMonitor.MonitorLookup or {}
-MemoryMonitor.ActiveMonitors = ActiveMonitors
-MemoryMonitor.MonitorLookup = MonitorLookup
-
+local ActiveByID = {}
+local ActiveByAddress = {}
 local CallbacksToExec = {}
+
+-- Commonly-used functions
+local type = type
+local pairs = pairs
+local ipairs = ipairs
+local tostring = tostring
+local tonumber = tonumber
 
 --[[
 	As of writing, the Genplus-gx core only returns '0' for all read/write/exec callbacks.
@@ -20,68 +24,87 @@ local CallbacksToExec = {}
 --]]
 
 -- Create global memory monitor
-event.unregisterbyname("HeaddyOverlay.MemoryMonitor")
+event.unregisterbyname("HeaddyOverlay.MemoryMonitor.Main")
+event.unregisterbyname("HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
+
 event.on_bus_write(function(address)
 	-- read/write/exec callbacks return 32-bit address values
 	-- We only want the 24 least-significant bits of that address
 	address = address - 0xFF000000
 
-	local monitors = ActiveMonitors[address]
+	local monitors = ActiveByAddress[address]
 	if not monitors then return end
 
-	for id,data in pairs(monitors) do
-		CallbacksToExec[data.Callback] = data
+	for _,data in pairs(monitors) do
+		CallbacksToExec[data.Callback] = data.AddressTbl
 	end
-end,nil,"HeaddyOverlay.MemoryMonitor")
+end,nil,"HeaddyOverlay.MemoryMonitor.Main")
 
 event.onloadstate(function()
-	for _,data in pairs(MonitorLookup) do
-		data.Callback(data.Address)
+	for _,data in pairs(ActiveByID) do
+		data.Callback(data.AddressTbl)
 	end
-end)
+end,"HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
 
 --[[
 	[TODO: Explain this]
 --]]
 
-function MemoryMonitor.Register(id,address,callback,persist)
-	id = tostring(id)
-	address = tonumber(address)
-	persist = type(persist) == "boolean" and persist or false
+local function UnregisterInternal(id,monitorData)
+	for _,address in ipairs(monitorData.AddressTbl) do
+		ActiveByAddress[address][id] = nil
+	end
 
-	if not ActiveMonitors[address] then
-		ActiveMonitors[address] = {}
+	ActiveByID[id] = nil
+end
+
+function MemoryMonitor.Register(id,addressTbl,callback)
+	if type(callback) ~= "function" then return end
+
+	id = tostring(id)
+
+	if ActiveByID[id] then
+		UnregisterInternal(id,ActiveByID[id])
+	end
+
+	-- Backwards-compat with non-table arguments
+	if type(addressTbl) ~= "table" then
+		addressTbl = {addressTbl}
 	end
 
 	local monitorData = {
-		["Address"] = address,
+		["AddressTbl"] = addressTbl,
 		["Callback"] = callback,
-		["Persistence"] = persist,
 	}
 
-	MonitorLookup[id] = monitorData
-	ActiveMonitors[address][id] = monitorData
-	CallbacksToExec[monitorData.Callback] = monitorData
+	for idx,address in pairs(addressTbl) do
+		local addressConv = tonumber(address)
+
+		if not ActiveByAddress[addressConv] then
+			ActiveByAddress[addressConv] = {}
+		end
+
+		addressTbl[idx] = addressConv
+		ActiveByID[id] = monitorData
+		ActiveByAddress[addressConv][id] = monitorData
+	end
+
+	CallbacksToExec[monitorData.Callback] = addressTbl
 end
 
 function MemoryMonitor.Unregister(id)
 	id = tostring(id)
 
-	local monitorTbl = MonitorLookup[id]
-	if not monitorTbl then return end
+	local monitorData = ActiveByID[id]
+	if not monitorData then return end
 
-	ActiveMonitors[monitorTbl.Address][id] = nil
-	MonitorLookup[id] = nil
+	UnregisterInternal(id,monitorData)
 end
 
 function MemoryMonitor.ExecuteCallbacks()
-	for id,data in pairs(CallbacksToExec) do
-		local result = data.Callback(data.Address)
+	for callback,addressTbl in pairs(CallbacksToExec) do
+		callback(addressTbl)
 
-		if not data.Persistence and result ~= false then
-			MemoryMonitor.Unregister(id)
-		end
-
-		CallbacksToExec[data.Callback] = nil
+		CallbacksToExec[callback] = nil
 	end
 end

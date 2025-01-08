@@ -1,22 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x30] = {
+LevelMonitor.LevelData[0x30] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 9-3]],
 		["Sub"] = {
 			["Int"] = [["FINALE ANALYSIS"]],
 			["Jpn"] = [["FINAL ATTACK"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene93.BossMonitorA",
-		"Scene93.BossMonitorB",
 	},
 
 	["LevelScript"] = function()
@@ -34,18 +30,14 @@ Overlay.LevelMonitor.LevelData[0x30] = {
 			["HealthDeath"] = 0x3F,
 		})
 
-		local function BossMonitor()
+		LevelMonitor.SetSceneMonitor({
+			["DarkDemon.Flags"] = 0xFFD106,
+			["Smiley.Flags"] = 0xFFD10A,
+		},function(addressTbl)
 			DarkDemon:Show(
-				ReadU16BE(0xFFD106) ~= 0x10
-			and	ReadU16BE(0xFFD10A) >= 0x4
+				ReadU16BE(addressTbl["DarkDemon.Flags"]) ~= 0x10
+			and	ReadU16BE(addressTbl["Smiley.Flags"]) >= 0x4
 			)
-		end
-
-		for address,append in pairs({
-			[0xFFD106] = "A",
-			[0xFFD10A] = "B",
-		}) do
-			MemoryMonitor.Register("Scene93.BossMonitor" .. append,address,BossMonitor,true)
-		end
+		end)
 	end,
 }

@@ -1,22 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x28] = {
+LevelMonitor.LevelData[0x28] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 8-4]],
 		["Sub"] = {
 			["Int"] = [["VICE VERSA"]],
 			["Jpn"] = [["REVERSE WORLD"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene84.StageMonitor.Ball.Ent",
-		"Scene84.StageMonitor.Ball.Flags",
 	},
 
 	["LevelScript"] = function()
@@ -36,24 +32,18 @@ Overlay.LevelMonitor.LevelData[0x28] = {
 			["HealthDeath"] = 0x7F,
 		})
 
-		local function StageMonitor()
-			local newVal = ReadU16BE(address)
-
+		LevelMonitor.SetSceneMonitor({
+			["Ball.Ent"] = 0xFFD144,
+			["Ball.Flags"] = 0xFFD146,
+		},function(addressTbl)
 			KeepOn =
-				ReadU16BE(0xFFD144) == 0x498
+				ReadU16BE(addressTbl["Ball.Ent"]) == 0x498
 			and	(
 					KeepOn
-				or	newVal >= 4
+				or	ReadU16BE(addressTbl["Ball.Flags"]) >= 4
 			)
 
 			Sparky:Show(KeepOn)
-		end
-
-		for address,append in pairs({
-			[0xFFD144] = "Ball.Ent",
-			[0xFFD146] = "Ball.Flags",
-		}) do
-			MemoryMonitor.Register("Scene84.StageMonitor." .. append,address,StageMonitor,true)
-		end
+		end)
 	end,
 }

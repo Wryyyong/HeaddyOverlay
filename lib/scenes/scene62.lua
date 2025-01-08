@@ -1,21 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x52] = {
+LevelMonitor.LevelData[0x52] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 6-2]],
 		["Sub"] = {
 			["Int"] = [["FLY HARD"]],
 			["Jpn"] = [["RECKLESS WHEEL"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene62.BossMonitor",
 	},
 
 	["LevelScript"] = function()
@@ -35,8 +32,8 @@ Overlay.LevelMonitor.LevelData[0x52] = {
 			["HealthDeath"] = 0x7F,
 		})
 
-		MemoryMonitor.Register("Scene62.BossMonitor",0xFFD142,function(address)
-			local newVal = ReadU16BE(address)
+		LevelMonitor.SetSceneMonitor(0xFFD142,function(addressTbl)
+			local newVal = ReadU16BE(addressTbl[1])
 
 			KeepOn =
 				(
@@ -46,6 +43,6 @@ Overlay.LevelMonitor.LevelData[0x52] = {
 			and	newVal < 0x10
 
 			WheelerDealer:Show(KeepOn)
-		end,true)
+		end)
 	end,
 }

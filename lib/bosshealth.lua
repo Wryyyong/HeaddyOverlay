@@ -99,7 +99,7 @@ function BossHealth:UpdateBoss(bossData)
 
 	MemoryMonitor.Register(monitorID,bossData.Address,function()
 		self:UpdateHealth()
-	end,true)
+	end)
 end
 
 function BossHealth:UpdateHealth()

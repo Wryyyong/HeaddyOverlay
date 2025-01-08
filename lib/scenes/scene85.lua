@@ -1,21 +1,18 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local MemoryMonitor = Overlay.MemoryMonitor
+local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 
-Overlay.LevelMonitor.LevelData[0x2A] = {
+LevelMonitor.LevelData[0x2A] = {
 	["LevelName"] = {
 		["Main"] = [[Scene 8-5]],
 		["Sub"] = {
 			["Int"] = [["TWIN FREAKS"]],
 			["Jpn"] = [["FUNNY ANGRY"]],
 		},
-	},
-	["LevelMonitorIDList"] = {
-		"Scene85.BossMonitor",
 	},
 
 	["LevelScript"] = function()
@@ -33,13 +30,13 @@ Overlay.LevelMonitor.LevelData[0x2A] = {
 			["HealthDeath"] = 0x3F,
 		})
 
-		MemoryMonitor.Register("Scene85.BossMonitor",0xFFD142,function(address)
-			local newVal = ReadU16BE(address)
+		LevelMonitor.SetSceneMonitor(0xFFD142,function(addressTbl)
+			local newVal = ReadU16BE(addressTbl[1])
 
 			TwinFreaks:Show(
 				newVal >= 6
 			and	newVal < 0x10
 			)
-		end,true)
+		end)
 	end,
 }

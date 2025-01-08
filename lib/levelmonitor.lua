@@ -12,7 +12,8 @@ LevelMonitor.LevelData = LevelData
 local LevelNameString = ""
 
 -- Commonly-used functions
-local SetMetaTable = setmetatable
+local setmetatable = setmetatable
+
 local ReadU16BE = memory.read_u16_be
 
 local DrawRectangle = gui.drawRectangle
@@ -52,13 +53,12 @@ local LevelDataDefault = {
 			["Jpn"] = [[]],
 		},
 	},
-	["LevelMonitorIDList"] = {},
 
 	["LevelScript"] = function()
 	end,
 }
 
-SetMetaTable(LevelData,{
+setmetatable(LevelData,{
 	["__index"] = function()
 		return LevelDataDefault
 	end,
@@ -73,11 +73,11 @@ local LevelNameMeta = {
 }
 
 for _,sceneTbl in pairs(LevelData) do
-	SetMetaTable(sceneTbl,LevelDataMeta)
+	setmetatable(sceneTbl,LevelDataMeta)
 
 	local levelName = sceneTbl.LevelName
-	SetMetaTable(levelName,LevelNameMeta)
-	SetMetaTable(levelName.Sub,Overlay.LangFallback)
+	setmetatable(levelName,LevelNameMeta)
+	setmetatable(levelName.Sub,Overlay.LangFallback)
 end
 
 local function UpdateLevelNameString()
@@ -95,25 +95,25 @@ local function UpdateLevelNameString()
 	LevelNameString = newStr
 end
 
-MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(address)
-	local oldLevel = LevelMonitor.CurrentLevel or LevelDataDefault
-	local newLevel = LevelData[ReadU16BE(address)]
+MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
+	local newLevel = LevelData[ReadU16BE(addressTbl[1])]
 
 	LevelMonitor.CurrentLevel = newLevel
 	UpdateLevelNameString()
 
 	BossHealth.DestroyAll()
-
-	for _,id in ipairs(oldLevel.LevelMonitorIDList) do
-		MemoryMonitor.Unregister(id)
-	end
+	MemoryMonitor.Unregister("SceneMonitor")
 
 	newLevel.LevelScript()
-end,true)
+end)
 
-MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,function(address)
-	LevelMonitor.InStageTransition = ReadU16BE(address) ~= 0x9200
-end,true)
+MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,function(addressTbl)
+	LevelMonitor.InStageTransition = ReadU16BE(addressTbl[1]) ~= 0x9200
+end)
+
+function LevelMonitor.SetSceneMonitor(addressTbl,callback)
+	MemoryMonitor.Register("SceneMonitor",addressTbl,callback)
+end
 
 function LevelMonitor.DrawGUI()
 	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)
