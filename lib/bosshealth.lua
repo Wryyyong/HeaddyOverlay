@@ -1,5 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local GUI = Overlay.GUI
 local MemoryMonitor = Overlay.MemoryMonitor
 
 local BossHealth = Overlay.BossHealth or {}
@@ -208,13 +209,13 @@ function BossHealth.DrawAll()
 	local bar = BossGlobals.Bar
 	local innerPadding = element.InnerPadding
 
-	element.PosX = Overlay.BufferWidth * multipliers.PosX
+	element.PosX = GUI.BufferWidth * multipliers.PosX
 
-	element.Width = Overlay.BufferWidth * multipliers.ElementWidth
-	element.Height = Overlay.BufferHeight * multipliers.ElementHeight
+	element.Width = GUI.BufferWidth * multipliers.ElementWidth
+	element.Height = GUI.BufferHeight * multipliers.ElementHeight
 
 	innerPadding.Left = element.PosX + 4
-	innerPadding.Right = Overlay.BufferWidth - element.PosX - 4
+	innerPadding.Right = GUI.BufferWidth - element.PosX - 4
 
 	bar.Width = element.Width * multipliers.BarWidth
 	bar.Height = element.Height * multipliers.BarHeight

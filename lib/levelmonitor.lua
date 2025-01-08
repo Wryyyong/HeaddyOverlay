@@ -1,5 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local GUI = Overlay.GUI
+local Headdy = Overlay.Headdy
 local MemoryMonitor = Overlay.MemoryMonitor
 local BossHealth = Overlay.BossHealth
 
@@ -104,6 +106,10 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	BossHealth.DestroyAll()
 	MemoryMonitor.Unregister("SceneMonitor")
 
+	Headdy.DisableGUI = false
+	LevelMonitor.DisableGUI = false
+	GUI.ClearCustomElements()
+
 	newLevel.LevelScript()
 end)
 
@@ -116,6 +122,8 @@ function LevelMonitor.SetSceneMonitor(addressTbl,callback)
 end
 
 function LevelMonitor.DrawGUI()
+	if LevelMonitor.DisableGUI then return end
+
 	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)
 	DrawString(Overlay.BufferWidth * 0.5,Overlay.BufferHeight - 9,LevelMonitor.CurrentLevel.LevelName,nil,nil,12,"Courier New","regular","center","middle")
 end

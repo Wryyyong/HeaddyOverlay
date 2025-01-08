@@ -26,27 +26,18 @@ Overlay.LangFallback = {
 -- Commonly-used functions
 local EmuYield = emu.yield
 local GuiClearGraphics = gui.clearGraphics
-local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
 
 -- Include sub-scripts
 local LibPath = "lib/"
 dofile(LibPath .. "memorymonitor.lua")
-dofile(LibPath .. "headdystats.lua")
-dofile(LibPath .. "bosshealth.lua")
-dofile(LibPath .. "levelmonitor.lua")
+dofile(LibPath .. "gui.lua")
 
 -- Main loop
 while true do
 	GuiClearGraphics()
 
 	Overlay.MemoryMonitor.ExecuteCallbacks()
-
-	if not Overlay.LevelMonitor.InStageTransition then
-		Overlay.BufferWidth,Overlay.BufferHeight = ClientBufferWidth(),ClientBufferHeight()
-
-		Overlay.LevelMonitor.DrawGUI()
-		Overlay.BossHealth.DrawAll()
-	end
+	Overlay.GUI.Draw()
 
 	EmuYield()
 end
