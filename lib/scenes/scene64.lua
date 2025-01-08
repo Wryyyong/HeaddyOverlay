@@ -4,7 +4,6 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
-local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
 Overlay.LevelMonitor.LevelData[0x56] = {
@@ -15,113 +14,52 @@ Overlay.LevelMonitor.LevelData[0x56] = {
 		},
 	},
 	["LevelMonitorIDList"] = {
-		"Scene64.BossPhaseMonitor",
-		"Scene64.BossEnd",
+		"Scene64.BossMonitor.BabyFace.Flags",
+		"Scene64.BossMonitor.BabyFace.State",
+		"Scene64.BossMonitor.BabyFace.EarlyEnd",
 	},
 
 	["LevelScript"] = function()
-		local BabyFace = BossHealth()
+		local BabyFace = BossHealth({
+			["ID"] = "BabyFace",
+			["PrintName"] = {
+				["Int"] = "Baby Face",
+				["Jpn"] = "Mitsuru",
+			},
+			["Address"] = 0xFFD235,
+			["HealthInit"] = {
+				["Int"] = 0x80,
+			},
+			["HealthDeath"] = 0x60,
+		})
 
-		local function BossEnd(address)
-			if ReadU16BE(address) ~= 0 then
-				return false
-			end
+		local function BossMonitor()
+			local flags = ReadU16BE(0xFFD132)
 
-			BabyFace:Show(false)
+			local doShow =
+				ReadU16BE(0xFFD030) ~= 0
+			and	flags >= 0xC
+			and	flags < 0x1C
 
-			MemoryMonitor.Unregister("Scene64.BossPhaseMonitor")
-		end
+			if doShow then
+				local newStr = "Baby Face"
 
-		local function SetupBossEndMonitor(address)
-			MemoryMonitor.Register("Scene64.BossEnd",address,BossEnd)
-		end
-
-		MemoryMonitor.Register("Scene64.BossPhaseMonitor",0xFFD132,function(address)
-			local newVal = ReadU16BE(address)
-
-			if newVal == 0xC then
-				-- This was the only way I could find a reproducible way of getting
-				-- different values for each phase
-				-- [TODO: search for a better method]
-				local secCheck = (ReadU8(0xFFDB65) << 8) + ReadU8(0xFFDB6D)
-
-				if secCheck == 0x800 then
-					BabyFace:UpdateBoss({
-						["ID"] = "BabyFaceA",
-						["PrintName"] = {
-							["Int"] = "Baby Face",
-							["Jpn"] = "Mitsuru",
-						},
-						["Address"] = 0xFFD235,
-						["HealthInit"] = {
-							["Int"] = 0x80,
-						},
-						["HealthDeath"] = 0x60,
-					})
-				elseif secCheck == 0x1C20 then
-					BabyFace:UpdateBoss({
-						["ID"] = "BabyFaceB",
-						["PrintName"] = {
-							["Int"] = "Baby Face...?",
-							["Jpn"] = "Mitsuru",
-						},
-						["Address"] = 0xFFD235,
-						["HealthInit"] = {
-							["Int"] = 0x80,
-						},
-						["HealthDeath"] = 0x60,
-					})
-				elseif secCheck == 0x1C60 then
-					BabyFace:UpdateBoss({
-						["ID"] = "BabyFaceC",
-						["PrintName"] = {
-							["Int"] = "Baby Face...?",
-							["Jpn"] = "Mitsuru",
-						},
-						["Address"] = 0xFFD235,
-						["HealthInit"] = {
-							["Int"] = 0x80,
-						},
-						["HealthDeath"] = 0x60,
-					})
-				elseif secCheck == 0x6060 then
-					BabyFace:UpdateBoss({
-						["ID"] = "BabyFaceD",
-						["PrintName"] = {
-							["Int"] = "Baby Face...?",
-							["Jpn"] = "Mitsuru",
-						},
-						["Address"] = 0xFFD235,
-						["HealthInit"] = {
-							["Int"] = 0x80,
-						},
-						["HealthDeath"] = 0x5F,
-					})
-
-					SetupBossEndMonitor(0xFFD030)
+				if ReadU16BE(0xFFDB64) >= 0x1C then
+					newStr = newStr .. "...?"
 				end
 
-				BabyFace:Show(true)
-			elseif newVal == 0x1C then
-				local binoData = {
-					["ID"] = "BabyFaceBino",
-					["PrintName"] = {
-						["Int"] = "Bino",
-					},
-					["Address"] = 0xFFD26D,
-					["HealthInit"] = {
-						["Int"] = 0x80,
-					},
-					["HealthDeath"] = 0x7F,
-				}
-				binoData.HealthInit = binoData.ReadFunc(binoData.Address)
-				binoData.HealthDeath = binoData.HealthInit - 1
-
-				SetupBossEndMonitor(0xFFD050)
-
-				BabyFace:UpdateBoss(binoData)
-				BabyFace:Show(true)
+				BabyFace.BossData.PrintName.Int = newStr
 			end
-		end,true)
+
+			BabyFace:Show(doShow)
+		end
+
+		for address,append in pairs({
+			[0xFFD132] = "BabyFace.Flags",
+			[0xFFDB64] = "BabyFace.State",
+			[0xFFD030] = "BabyFace.EarlyEnd",
+		}) do
+			MemoryMonitor.Register("Scene64.BossMonitor." .. append,address,BossMonitor,true)
+		end
 	end,
 }
