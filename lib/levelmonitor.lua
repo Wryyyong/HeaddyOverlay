@@ -43,6 +43,7 @@ dofile(ScenePath .. "scene84.lua")
 dofile(ScenePath .. "scene85.lua")
 dofile(ScenePath .. "scene93.lua")
 dofile(ScenePath .. "sceneXX.lua")
+dofile(ScenePath .. "inputsecretnumber.lua")
 dofile(ScenePath .. "misc.lua")
 
 -- Default/fallback values for LevelData entries so we

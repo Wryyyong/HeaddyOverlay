@@ -133,9 +133,6 @@ for sceneID,sceneName in pairs({
 	[0x4A] = {
 		["Main"] = [[Credits]],
 	},
-	[0x4C] = {
-		["Main"] = [[Input Secret Number]],
-	},
 	[0x4E] = {
 		["Main"] = [[The End]],
 	},
