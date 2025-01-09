@@ -24,6 +24,11 @@ local BossGlobals = {
 	["Bar"] = {},
 }
 
+local GMultipliers = BossGlobals.Multipliers
+local GElement = BossGlobals.Element
+local GBar = BossGlobals.Bar
+local GInnerPadding = GElement.InnerPadding
+
 -- Commonly-used functions
 local type = type
 local next = next
@@ -139,42 +144,38 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:Draw()
-	local element = BossGlobals.Element
-	local bar = BossGlobals.Bar
-	local innerPadding = element.InnerPadding
-
 	local innerPaddingUp = self.PosY + 4
 
 	-- Black background
 	DrawRectangle(
-		element.PosX,
+		GElement.PosX,
 		self.PosY,
-		element.Width,
-		element.Height,
+		GElement.Width,
+		GElement.Height,
 		0,
 		0xFF000000
 	)
 	-- Health bar outline
 	DrawRectangle(
-		innerPadding.Left,
+		GInnerPadding.Left,
 		innerPaddingUp,
-		bar.Width,
-		bar.Height,
+		GBar.Width,
+		GBar.Height,
 		0xFFFFFFFF,
 		0
 	)
 	-- Health bar fill
 	DrawRectangle(
-		innerPadding.Left,
+		GInnerPadding.Left,
 		innerPaddingUp,
-		bar.Width * self.HealthPercent,
-		bar.Height,
+		GBar.Width * self.HealthPercent,
+		GBar.Height,
 		0,
 		self.HealthColor
 	)
 
 	DrawString(
-		innerPadding.Right,
+		GInnerPadding.Right,
 		innerPaddingUp + 4,
 		self.BossData.PrintName[Overlay.Lang],
 		nil,
@@ -204,29 +205,24 @@ end
 function BossHealth.DrawAll()
 	if next(ActiveBars) == nil then return end
 
-	local multipliers = BossGlobals.Multipliers
-	local element = BossGlobals.Element
-	local bar = BossGlobals.Bar
-	local innerPadding = element.InnerPadding
+	GElement.PosX = GUI.BufferWidth * GMultipliers.PosX
 
-	element.PosX = GUI.BufferWidth * multipliers.PosX
+	GElement.Width = GUI.BufferWidth * GMultipliers.ElementWidth
+	GElement.Height = GUI.BufferHeight * GMultipliers.ElementHeight
 
-	element.Width = GUI.BufferWidth * multipliers.ElementWidth
-	element.Height = GUI.BufferHeight * multipliers.ElementHeight
+	GInnerPadding.Left = GElement.PosX + 4
+	GInnerPadding.Right = GUI.BufferWidth - GElement.PosX - 4
 
-	innerPadding.Left = element.PosX + 4
-	innerPadding.Right = GUI.BufferWidth - element.PosX - 4
+	GBar.Width = GElement.Width * GMultipliers.BarWidth
+	GBar.Height = GElement.Height * GMultipliers.BarHeight
 
-	bar.Width = element.Width * multipliers.BarWidth
-	bar.Height = element.Height * multipliers.BarHeight
-
-	local clamp2,clamp1 = element.Height / 8,element.Height / 16
+	local clamp2,clamp1 = GElement.Height / 8,GElement.Height / 16
 	local barCounter = -1
 
 	for _,bossBar in pairs(ActiveBars) do
 		if bossBar.Render then
 			barCounter = barCounter + 1
-			bossBar.PosY = (barCounter * element.Height) - (barCounter > 0 and clamp2 or clamp1)
+			bossBar.PosY = (barCounter * GElement.Height) - (barCounter > 0 and clamp2 or clamp1)
 
 			bossBar:Draw()
 		end
