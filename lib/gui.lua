@@ -44,10 +44,20 @@ function GUI.ClearCustomElements()
 	end
 end
 
+function GUI.ResetGlobalOffsetY()
+	GUI.GlobalOffsetY = OffsetY.Max
+end
+
 function GUI.UpdateGlobalOffsetY()
 	local diff
 
-	if LevelMonitor.InStageTransition then
+	if
+		LevelMonitor.InStageTransition
+	or	(
+			Headdy.DisableGUI
+		and	LevelMonitor.DisableGUI
+	)
+	then
 		if GUI.GlobalOffsetY >= OffsetY.Max then return end
 
 		diff = OffsetY.Inc

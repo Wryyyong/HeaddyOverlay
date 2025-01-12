@@ -59,7 +59,7 @@ local LevelDataDefault = {
 			["Jpn"] = [[]],
 		},
 	},
-	["ScoreTallyThres"] = 0xFFFF,
+	["ScoreTallyThres"] = math.huge,
 
 	["LevelScript"] = function()
 	end,
@@ -114,14 +114,18 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	MemoryMonitor.Unregister("SceneMonitor")
 
 	Headdy.DisableGUI = false
+	Headdy.SetInfiniteLives(false)
 	Headdy.CommitTotalScore()
 
 	LevelMonitor.DisableGUI = false
 
 	GUI.ScoreTallyActive = false
+	GUI.ResetGlobalOffsetY()
 	GUI.ClearCustomElements()
 
 	newLevel.LevelScript()
+
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health")
 end)
 
 MemoryMonitor.Register("LevelMonitor.StageFlags",0xFFE850,function(addressTbl)

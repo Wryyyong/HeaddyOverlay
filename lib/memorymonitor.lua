@@ -120,3 +120,15 @@ function MemoryMonitor.ExecuteCallbacks()
 		CallbacksToExec[callback] = nil
 	end
 end
+
+function MemoryMonitor.ManuallyExecuteByIDs(...)
+	for _,arg in ipairs{(...)} do
+		local id = tostring(arg)
+
+		local monitorData = ActiveByID[id]
+
+		if monitorData then
+			CallbacksToExec[monitorData.Callback] = monitorData.AddressTbl
+		end
+	end
+end

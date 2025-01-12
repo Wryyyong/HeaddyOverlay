@@ -12,7 +12,6 @@ local StatStrings = {
 	["Health"] = "",
 	["Score"] = "",
 	["Lives"] = "",
-	["ContinueLives"] = "",
 }
 
 local ScoreStore = {
@@ -23,6 +22,7 @@ local ScoreStore = {
 }
 
 -- Commonly-used functions
+local MathHuge = math.huge
 local MathToInt = math.tointeger
 local StringSub = string.sub
 local ReadU16BE = memory.read_u16_be
@@ -39,7 +39,15 @@ MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	StatStrings.Health = "Health: " .. StringSub("00" .. newVal,-2) .. " / 16"
 end)
 
-local function UpdateScore()
+MemoryMonitor.Register("Headdy.Score",{
+	["Score.Stage"] = 0xFFE8F0,
+	["Score.Time"] = 0xFFE8F2,
+	["Score.Secret"] = 0xFFE8F4,
+},function(addressTbl)
+	ScoreStore.Stage = ReadU16BE(addressTbl["Score.Stage"])
+	ScoreStore.Time = ReadU16BE(addressTbl["Score.Time"])
+	ScoreStore.Secret = ReadU16BE(addressTbl["Score.Secret"])
+
 	if GUI.ScoreTallyActive then return end
 
 	local newScore =
@@ -51,38 +59,41 @@ local function UpdateScore()
 		) * 100
 
 	StatStrings.Score = "Score: " .. StringSub("000000" .. newScore,-6)
-end
+end)
 
-MemoryMonitor.Register("Headdy.Score",{
-	["Score.Stage"] = 0xFFE8F0,
-	["Score.Time"] = 0xFFE8F2,
-	["Score.Secret"] = 0xFFE8F4,
+MemoryMonitor.Register("Headdy.LivesContinues",{
+	["Lives"] = 0xFFE8EC,
+	["Continues"] = 0xFFE93C,
 },function(addressTbl)
-	ScoreStore.Stage = ReadU16BE(addressTbl["Score.Stage"])
-	ScoreStore.Time = ReadU16BE(addressTbl["Score.Time"])
-	ScoreStore.Secret = ReadU16BE(addressTbl["Score.Secret"])
+	Headdy.Lives = ReadU16BE(addressTbl["Lives"])
+	Headdy.Continues = ReadU16BE(addressTbl["Continues"])
 
-	UpdateScore()
+	local newStr = "Lives: "
+
+	if Headdy.InfiniteLives then
+		newStr = newStr .. MathHuge
+	else
+		newStr = newStr .. Headdy.Lives .. (Headdy.Continues > 0 and " (+" .. Headdy.Continues * 3 .. ")" or "")
+	end
+
+	StatStrings.Lives = newStr
 end)
 
-MemoryMonitor.Register("Headdy.Lives",0xFFE8EC,function(addressTbl)
-	local newVal = ReadU16BE(addressTbl[1])
-	Headdy.Lives = newVal
+function Headdy.SetInfiniteLives(newVal)
+	if
+		newVal == nil
+	or	newVal == Headdy.InfiniteLives
+	then return end
 
-	StatStrings.Lives = "Lives: " .. newVal
-end)
+	Headdy.InfiniteLives = newVal
 
-MemoryMonitor.Register("Headdy.Continues",0xFFE93C,function(addressTbl)
-	local newVal = ReadU16BE(addressTbl[1])
-	Headdy.Continues = newVal
-
-	StatStrings.ContinueLives = newVal > 0 and "(+" .. newVal * 3 .. ")" or ""
-end)
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.LivesContinues")
+end
 
 function Headdy.CommitTotalScore()
 	ScoreStore.Total = ReadU16BE(0xFFE8FA)
 
-	UpdateScore()
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Score")
 end
 
 function Headdy.DrawGUI()
@@ -133,23 +144,9 @@ function Headdy.DrawGUI()
 
 	-- Lives
 	DrawString(
-		GUI.BufferWidth * .9 - 1,
-		StringHeight,
-		StatStrings.Lives,
-		nil,
-		0xFF000000,
-		10,
-		"MS Gothic",
-		nil,
-		"right",
-		"bottom"
-	)
-
-	-- Extra lives from available continues
-	DrawString(
 		GUI.BufferWidth - 1,
 		StringHeight,
-		StatStrings.ContinueLives,
+		StatStrings.Lives,
 		nil,
 		0xFF000000,
 		10,

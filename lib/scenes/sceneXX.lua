@@ -1,5 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Headdy = Overlay.Headdy
 local BossHealth = Overlay.BossHealth
 local LevelMonitor = Overlay.LevelMonitor
 
@@ -54,18 +55,30 @@ LevelMonitor.LevelData[0x38] = {
 			},
 		})
 
+		Headdy.SetInfiniteLives(true)
+
 		LevelMonitor.SetSceneMonitor({
+			["CurrentLevel"] = 0xFFE8AA,
+			["Stage.Flags"] = 0xFFE850,
 			[ManRight] = 0xFFD13A,
 			[ManLeft] = 0xFFD13E,
 			[TheatreOwner] = 0xFFD136,
 		},function(addressTbl)
 			for bossBar,address in pairs(addressTbl) do
+				-- Skip Stage.Flags entry
+				if not bossBar.Show then
+					goto skip
+				end
+
 				local flags = ReadU16BE(address)
 
 				bossBar:Show(
-					flags >= 8
+					LevelMonitor.StageFlags >= 4
+				and	flags >= 8
 				and	flags < 0x18
 				)
+
+				::skip::
 			end
 		end)
 	end,
