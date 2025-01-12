@@ -13,6 +13,7 @@ LevelMonitor.LevelData[0x56] = {
 			["Int"] = [["BABY FACE"]],
 		},
 	},
+	["ScoreTallyThres"] = 6,
 
 	["LevelScript"] = function()
 		local BabyFace = BossHealth({

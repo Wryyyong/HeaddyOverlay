@@ -14,6 +14,7 @@ LevelMonitor.LevelData[0x20] = {
 			["Jpn"] = [["PARADISE?"]],
 		},
 	},
+	["ScoreTallyThres"] = 8,
 
 	["LevelScript"] = function()
 		local Gatekeeper = BossHealth()

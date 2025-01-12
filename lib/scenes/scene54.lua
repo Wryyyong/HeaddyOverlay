@@ -14,6 +14,7 @@ LevelMonitor.LevelData[0x1E] = {
 			["Jpn"] = [["ON THE SKY"]],
 		},
 	},
+	["ScoreTallyThres"] = 4,
 
 	["LevelScript"] = function()
 		-- Disable hiding when going under threshold after first success

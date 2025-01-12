@@ -6,16 +6,26 @@ local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy or {}
 Overlay.Headdy = Headdy
 
+local HeightRatio = 208 / 224
+
 local StatStrings = {
 	["Health"] = "",
+	["Score"] = "",
 	["Lives"] = "",
 	["ContinueLives"] = "",
 }
 
+local ScoreStore = {
+	["Total"] = 0,
+	["Stage"] = 0,
+	["Time"] = 0,
+	["Secret"] = 0,
+}
+
 -- Commonly-used functions
-local ReadU16BE = memory.read_u16_be
 local MathToInt = math.tointeger
 local StringSub = string.sub
+local ReadU16BE = memory.read_u16_be
 
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
@@ -26,7 +36,33 @@ MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	local newVal = MathToInt(ReadU16BE(addressTbl[1]) * .5)
 	Headdy.Health = newVal
 
-	StatStrings.Health = "Health: " .. StringSub(0 .. newVal,-2) .. " / 16"
+	StatStrings.Health = "Health: " .. StringSub("00" .. newVal,-2) .. " / 16"
+end)
+
+local function UpdateScore()
+	if GUI.ScoreTallyActive then return end
+
+	local newScore =
+			(
+				ScoreStore.Total
+			+	ScoreStore.Stage
+			+	ScoreStore.Time
+			+	ScoreStore.Secret
+		) * 100
+
+	StatStrings.Score = "Score: " .. StringSub("000000" .. newScore,-6)
+end
+
+MemoryMonitor.Register("Headdy.Score",{
+	["Score.Stage"] = 0xFFE8F0,
+	["Score.Time"] = 0xFFE8F2,
+	["Score.Secret"] = 0xFFE8F4,
+},function(addressTbl)
+	ScoreStore.Stage = ReadU16BE(addressTbl["Score.Stage"])
+	ScoreStore.Time = ReadU16BE(addressTbl["Score.Time"])
+	ScoreStore.Secret = ReadU16BE(addressTbl["Score.Secret"])
+
+	UpdateScore()
 end)
 
 MemoryMonitor.Register("Headdy.Lives",0xFFE8EC,function(addressTbl)
@@ -43,8 +79,17 @@ MemoryMonitor.Register("Headdy.Continues",0xFFE93C,function(addressTbl)
 	StatStrings.ContinueLives = newVal > 0 and "(+" .. newVal * 3 .. ")" or ""
 end)
 
+function Headdy.CommitTotalScore()
+	ScoreStore.Total = ReadU16BE(0xFFE8FA)
+
+	UpdateScore()
+end
+
 function Headdy.DrawGUI()
-	if Headdy.DisableGUI then return end
+	if
+		Headdy.DisableGUI
+	or	GUI.ScoreTallyActive
+	then return end
 
 	-- Background
 	DrawRectangle(
@@ -56,7 +101,7 @@ function Headdy.DrawGUI()
 		0x7F000000
 	)
 
-	local StringHeight = GUI.GlobalOffsetY + GUI.BufferHeight - 2 - 16
+	local StringHeight = GUI.GlobalOffsetY + GUI.BufferHeight * HeightRatio - 2
 
 	-- Health
 	DrawString(
@@ -72,9 +117,23 @@ function Headdy.DrawGUI()
 		"bottom"
 	)
 
+	-- Score
+	DrawString(
+		GUI.BufferWidth * .5,
+		StringHeight,
+		StatStrings.Score,
+		nil,
+		0xFF000000,
+		10,
+		"MS Gothic",
+		nil,
+		"center",
+		"bottom"
+	)
+
 	-- Lives
 	DrawString(
-		GUI.BufferWidth - 32 - 1,
+		GUI.BufferWidth * .9 - 1,
 		StringHeight,
 		StatStrings.Lives,
 		nil,

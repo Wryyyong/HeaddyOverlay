@@ -14,6 +14,7 @@ LevelMonitor.LevelData[6] = {
 			["Jpn"] = [["CONCERT PANIC"]],
 		},
 	},
+	["ScoreTallyThres"] = 4,
 
 	["LevelScript"] = function()
 		local MadDog = BossHealth({

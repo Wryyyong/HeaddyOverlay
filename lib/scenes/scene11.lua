@@ -14,6 +14,7 @@ LevelMonitor.LevelData[0] = {
 			["Jpn"] = [["ESCAPE HERO!"]],
 		},
 	},
+	["ScoreTallyThres"] = 0x18,
 
 	["LevelScript"] = function()
 		local RoboCollector = BossHealth({

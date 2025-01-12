@@ -14,6 +14,7 @@ LevelMonitor.LevelData[0x2A] = {
 			["Jpn"] = [["FUNNY ANGRY"]],
 		},
 	},
+	["ScoreTallyThres"] = 8,
 
 	["LevelScript"] = function()
 		local TwinFreaks = BossHealth({

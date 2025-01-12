@@ -74,13 +74,6 @@ for sceneID,sceneName in pairs({
 			["Jpn"] = [["BRAIN BREAK!"]],
 		},
 	},
-	[0x34] = {
-		["Main"] = [[Scene 4-4]],
-		["Sub"] = {
-			["Int"] = [["HEATHERNAPPED"]],
-			["Jpn"] = [["MYSTERY SPOT"]],
-		},
-	},
 	[0x36] = {
 		["Main"] = [[Scene 5-1]],
 		["Sub"] = {

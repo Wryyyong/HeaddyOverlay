@@ -30,6 +30,7 @@ dofile(ScenePath .. "Scene32.lua")
 dofile(ScenePath .. "scene33.lua")
 dofile(ScenePath .. "scene34.lua")
 dofile(ScenePath .. "scene41.lua")
+dofile(ScenePath .. "scene44.lua")
 dofile(ScenePath .. "scene52.lua")
 dofile(ScenePath .. "scene53.lua")
 dofile(ScenePath .. "scene54.lua")
@@ -56,6 +57,7 @@ local LevelDataDefault = {
 			["Jpn"] = [[]],
 		},
 	},
+	["ScoreTallyThres"] = 0xFFFF,
 
 	["LevelScript"] = function()
 	end,
@@ -98,6 +100,8 @@ local function UpdateLevelNameString()
 	LevelNameString = newStr
 end
 
+LevelMonitor.CurrentLevel = LevelDataDefault
+
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	local newLevel = LevelData[ReadU16BE(addressTbl[1])]
 
@@ -108,10 +112,21 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	MemoryMonitor.Unregister("SceneMonitor")
 
 	Headdy.DisableGUI = false
+	Headdy.CommitTotalScore()
+
 	LevelMonitor.DisableGUI = false
+
+	GUI.ScoreTallyActive = false
 	GUI.ClearCustomElements()
 
 	newLevel.LevelScript()
+end)
+
+MemoryMonitor.Register("LevelMonitor.StageFlags",0xFFE850,function(addressTbl)
+	local newVal = ReadU16BE(addressTbl[1])
+	LevelMonitor.StageFlags = newVal
+
+	GUI.ScoreTallyActive = newVal > LevelMonitor.CurrentLevel.ScoreTallyThres
 end)
 
 MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,function(addressTbl)
@@ -123,7 +138,10 @@ function LevelMonitor.SetSceneMonitor(addressTbl,callback)
 end
 
 function LevelMonitor.DrawGUI()
-	if LevelMonitor.DisableGUI then return end
+	if
+		LevelMonitor.DisableGUI
+	or	GUI.ScoreTallyActive
+	then return end
 
 	DrawRectangle(
 		-1,
