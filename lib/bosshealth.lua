@@ -37,7 +37,7 @@ local GInnerPadding = GElement.InnerPadding
 -- Commonly-used functions
 local type = type
 local next = next
-local pairs = pairs
+local ipairs = ipairs
 local setmetatable = setmetatable
 
 local ReadU8 = memory.read_u8
@@ -154,24 +154,24 @@ function BossHealth:UpdateOffsetY()
 	local diff
 
 	if self.Render then
-		if self.PosY >= self.MaxPosY then return end
-
-		diff = .5
+		if self.PosY == self.MaxPosY then
+			return
+		elseif self.PosY > self.MaxPosY then
+			diff = -.5
+		else
+			diff = .5
+		end
 	else
-		if self.PosY <= GPosYInit.Min then return end
-
-		diff = -.5
+		if self.PosY == GPosYInit.Min then
+			return
+		elseif self.PosY < GPosYInit.Min then
+			diff = .5
+		else
+			diff = -.5
+		end
 	end
 
-	local newOffset = self.PosY + diff
-
-	if newOffset > self.MaxPosY then
-		newOffset = self.MaxPosY
-	elseif newOffset < GPosYInit.Min then
-		newOffset = GPosYInit.Min
-	end
-
-	self.PosY = newOffset
+	self.PosY = self.PosY + diff
 end
 
 function BossHealth:Draw()
@@ -219,17 +219,13 @@ function BossHealth:Draw()
 	)
 end
 
-function BossHealth:Destroy()
-	MemoryMonitor.Unregister(self.MonitorID)
-
-	ActiveBars[self.ActiveIndex] = nil
-end
-
 function BossHealth.DestroyAll()
-	if next(ActiveBars) == nil then return end
+	if #ActiveBars <= 0 then return end
 
-	for _,bossbar in pairs(ActiveBars) do
-		bossbar:Destroy()
+	for _,bossbar in ipairs(ActiveBars) do
+		MemoryMonitor.Unregister(bossbar.MonitorID)
+
+		ActiveBars[bossbar.ActiveIndex] = nil
 	end
 end
 
@@ -250,15 +246,14 @@ function BossHealth.DrawAll()
 	local clamp2,clamp1 = GElement.Height / 8,GElement.Height / 16
 	local barCounter = -1
 
-	for _,bossBar in pairs(ActiveBars) do
+	for _,bossBar in ipairs(ActiveBars) do
 		bossBar:UpdateOffsetY()
 
-		if
-			bossBar.Render
-		or	bossBar.PosY > GPosYInit.Min
-		then
-			barCounter = barCounter + 1
-			bossBar.MaxPosY = (barCounter * GElement.Height) - (barCounter > 0 and clamp2 or clamp1)
+		if bossBar.PosY > GPosYInit.Min then
+			if bossBar.Render then
+				barCounter = barCounter + 1
+				bossBar.MaxPosY = (barCounter * GElement.Height) - (barCounter > 0 and clamp2 or clamp1)
+			end
 
 			bossBar:Draw()
 		end
