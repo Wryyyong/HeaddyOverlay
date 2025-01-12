@@ -4,7 +4,6 @@ local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
-local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 
 LevelMonitor.LevelData[0x1E] = {

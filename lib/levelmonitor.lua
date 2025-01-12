@@ -125,6 +125,25 @@ end
 function LevelMonitor.DrawGUI()
 	if LevelMonitor.DisableGUI then return end
 
-	DrawRectangle(-1,Overlay.BufferHeight - 16,Overlay.BufferWidth + 1,16,0,0x7F000000)
-	DrawString(Overlay.BufferWidth * 0.5,Overlay.BufferHeight - 9,LevelMonitor.CurrentLevel.LevelName,nil,nil,12,"Courier New","regular","center","middle")
+	DrawRectangle(
+		-1,
+		GUI.GlobalOffsetY + GUI.BufferHeight - 17,
+		GUI.BufferWidth + 1,
+		17,
+		0,
+		0x7F000000
+	)
+
+	DrawString(
+		GUI.BufferWidth * .5,
+		GUI.GlobalOffsetY + GUI.BufferHeight - 2,
+		LevelNameString,
+		nil,
+		0xFF000000,
+		10,
+		"MS Gothic",
+		nil,
+		"center",
+		"bottom"
+	)
 end

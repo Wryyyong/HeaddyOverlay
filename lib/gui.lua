@@ -4,6 +4,13 @@ local Overlay = HeaddyOverlay
 local GUI = Overlay.GUI or {}
 Overlay.GUI = GUI
 
+local OffsetY = {
+	["Min"] = 0,
+	["Max"] = 64,
+	["Inc"] = 32 / 28,
+}
+GUI.GlobalOffsetY = GUI.GlobalOffsetY or OffsetY.Max
+
 local CustomElements = {}
 
 -- Commonly-used functions
@@ -37,11 +44,35 @@ function GUI.ClearCustomElements()
 	end
 end
 
-function GUI.Draw()
-	if LevelMonitor.InStageTransition then return end
+function GUI.UpdateGlobalOffsetY()
+	local diff
 
+	if LevelMonitor.InStageTransition then
+		if GUI.GlobalOffsetY >= OffsetY.Max then return end
+
+		diff = OffsetY.Inc
+	else
+		if GUI.GlobalOffsetY <= OffsetY.Min then return end
+
+		diff = -OffsetY.Inc * .5
+	end
+
+	local newOffset = GUI.GlobalOffsetY + diff
+
+	if newOffset < OffsetY.Min then
+		newOffset = OffsetY.Min
+	elseif newOffset > OffsetY.Max then
+		newOffset = OffsetY.Max
+	end
+
+	GUI.GlobalOffsetY = newOffset
+end
+
+function GUI.Draw()
 	GUI.BufferWidth,GUI.BufferHeight = ClientBufferWidth(),ClientBufferHeight()
 
+	GUI.UpdateGlobalOffsetY()
+	Headdy.DrawGUI()
 	BossHealth.DrawAll()
 	LevelMonitor.DrawGUI()
 

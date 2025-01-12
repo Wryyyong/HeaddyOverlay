@@ -5,8 +5,6 @@ local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
 
 -- Commonly-used functions
-local ipairs = ipairs
-
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 

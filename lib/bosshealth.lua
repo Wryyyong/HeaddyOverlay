@@ -22,11 +22,16 @@ local BossGlobals = {
 		["InnerPadding"] = {},
 	},
 	["Bar"] = {},
+	["PosYInit"] = {
+		["Min"] = -15,
+		["Max"] = -1,
+	},
 }
 
 local GMultipliers = BossGlobals.Multipliers
 local GElement = BossGlobals.Element
 local GBar = BossGlobals.Bar
+local GPosYInit = BossGlobals.PosYInit
 local GInnerPadding = GElement.InnerPadding
 
 -- Commonly-used functions
@@ -72,6 +77,8 @@ local function CreateBar(_,bossData)
 
 	newBar:UpdateBoss(bossData)
 	newBar.Render = false
+	newBar.PosY = GPosYInit.Min
+	newBar.MaxPosY = GPosYInit.Max
 
 	local activeIndex = #ActiveBars + 1
 	newBar.ActiveIndex = activeIndex
@@ -143,6 +150,30 @@ function BossHealth:UpdateColor()
 	--self.HealthColor = (HealthColorVals.Max - (self.HealthPercent * (HealthColorVals.Min - HealthColorVals.Max))) & 0xFFFFFF00
 end
 
+function BossHealth:UpdateOffsetY()
+	local diff
+
+	if self.Render then
+		if self.PosY >= self.MaxPosY then return end
+
+		diff = .5
+	else
+		if self.PosY <= GPosYInit.Min then return end
+
+		diff = -.5
+	end
+
+	local newOffset = self.PosY + diff
+
+	if newOffset > self.MaxPosY then
+		newOffset = self.MaxPosY
+	elseif newOffset < GPosYInit.Min then
+		newOffset = GPosYInit.Min
+	end
+
+	self.PosY = newOffset
+end
+
 function BossHealth:Draw()
 	local innerPaddingUp = self.PosY + 4
 
@@ -153,7 +184,7 @@ function BossHealth:Draw()
 		GElement.Width,
 		GElement.Height,
 		0,
-		0xFF000000
+		0x7F000000
 	)
 	-- Health bar outline
 	DrawRectangle(
@@ -179,7 +210,7 @@ function BossHealth:Draw()
 		innerPaddingUp + 4,
 		self.BossData.PrintName[Overlay.Lang],
 		nil,
-		nil,
+		0xFF000000,
 		10,
 		"MS Gothic",
 		nil,
@@ -220,9 +251,14 @@ function BossHealth.DrawAll()
 	local barCounter = -1
 
 	for _,bossBar in pairs(ActiveBars) do
-		if bossBar.Render then
+		bossBar:UpdateOffsetY()
+
+		if
+			bossBar.Render
+		or	bossBar.PosY > GPosYInit.Min
+		then
 			barCounter = barCounter + 1
-			bossBar.PosY = (barCounter * GElement.Height) - (barCounter > 0 and clamp2 or clamp1)
+			bossBar.MaxPosY = (barCounter * GElement.Height) - (barCounter > 0 and clamp2 or clamp1)
 
 			bossBar:Draw()
 		end
