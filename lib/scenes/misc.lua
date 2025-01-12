@@ -81,9 +81,6 @@ for sceneID,sceneName in pairs({
 			["Jpn"] = [["PUPPET TOWER"]],
 		},
 	},
-	[0x3A] = {
-		["Main"] = [[Game Over]],
-	},
 	[0x3C] = {
 		["Main"] = [[Opening Demo]],
 		["Sub"] = {
