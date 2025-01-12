@@ -1,7 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
+local LevelMonitor = Overlay.LevelMonitor
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be

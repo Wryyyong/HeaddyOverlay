@@ -1,7 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local GUI = Overlay.GUI
 local MemoryMonitor = Overlay.MemoryMonitor
+local GUI = Overlay.GUI
 
 local BossHealth = Overlay.BossHealth or {}
 BossHealth.__index = BossHealth
