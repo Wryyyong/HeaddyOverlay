@@ -135,8 +135,13 @@ MemoryMonitor.Register("LevelMonitor.StageFlags",0xFFE850,function(addressTbl)
 	GUI.ScoreTallyActive = newVal > LevelMonitor.CurrentLevel.ScoreTallyThres
 end)
 
-MemoryMonitor.Register("LevelMonitor.InStageTransition",0xFFE8CC,function(addressTbl)
-	LevelMonitor.InStageTransition = ReadU16BE(addressTbl[1]) ~= 0x9200
+MemoryMonitor.Register("LevelMonitor.InStageTransition",{
+	["Status"] = 0xFFE804,
+	["Curtains"] = 0xFFE8CC,
+},function(addressTbl)
+	LevelMonitor.InStageTransition =
+		ReadU16BE(addressTbl["Status"]) ~= 0
+	or	ReadU16BE(addressTbl["Curtains"]) ~= 0x9200
 end)
 
 function LevelMonitor.SetSceneMonitor(addressTbl,callback)

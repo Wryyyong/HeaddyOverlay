@@ -6,7 +6,7 @@ Overlay.GUI = GUI
 
 local OffsetY = {
 	["Min"] = 0,
-	["Max"] = 64,
+	["Max"] = 96,
 	["Inc"] = 32 / 28,
 }
 GUI.GlobalOffsetY = GUI.GlobalOffsetY or OffsetY.Max

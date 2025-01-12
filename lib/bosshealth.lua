@@ -2,6 +2,7 @@
 local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
+local LevelMonitor = Overlay.LevelMonitor
 
 local BossHealth = Overlay.BossHealth or {}
 BossHealth.__index = BossHealth
@@ -230,7 +231,10 @@ function BossHealth.DestroyAll()
 end
 
 function BossHealth.DrawAll()
-	if next(ActiveBars) == nil then return end
+	if
+		LevelMonitor.InStageTransition
+	or	next(ActiveBars) == nil
+	then return end
 
 	GElement.PosX = GUI.BufferWidth * GMultipliers.PosX
 
