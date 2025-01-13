@@ -38,7 +38,7 @@ LevelMonitor.LevelData[0x30] = {
 		},function(addressTbl)
 			DarkDemon:Show(
 				ReadU16BE(addressTbl["DarkDemon.Flags"]) ~= 0x10
-			and	ReadU16BE(addressTbl["Smiley.Flags"]) >= 0x4
+			and	ReadU16BE(addressTbl["Smiley.Flags"]) >= 4
 			)
 		end)
 	end,

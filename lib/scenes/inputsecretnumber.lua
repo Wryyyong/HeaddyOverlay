@@ -92,8 +92,8 @@ LevelMonitor.LevelData[0x4C] = {
 			if flags >= 0xE then
 				newColor = GuiData.Colors.Prev
 			elseif flags >= 0xC then
-				newColor = 0x00FF00
-			elseif flags >= 0x8 then
+				newColor = 0xFF00
+			elseif flags >= 8 then
 				newColor = 0xFF0000
 			else
 				newColor = 0xFFFFFF

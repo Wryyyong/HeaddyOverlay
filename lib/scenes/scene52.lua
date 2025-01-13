@@ -39,9 +39,10 @@ LevelMonitor.LevelData[0x1A] = {
 			local newVal = ReadU16BE(addressTbl[1])
 
 			KeepOn =
-				(
+				newVal >= 2
+			and (
 					KeepOn
-				or	newVal >= 0x8
+				or	newVal >= 8
 			)
 			and	newVal < 0x1A
 
