@@ -1,8 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
-local Headdy = Overlay.Headdy
-local BossHealth = Overlay.BossHealth
 local LevelMonitor = Overlay.LevelMonitor
+local BossHealth = Overlay.BossHealth
 
 -- Commonly-used functions
 local pairs = pairs

@@ -3,7 +3,6 @@ local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
-local BossHealth = Overlay.BossHealth
 
 local LevelMonitor = Overlay.LevelMonitor or {}
 Overlay.LevelMonitor = LevelMonitor
@@ -20,6 +19,11 @@ local ReadU16BE = memory.read_u16_be
 
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
+
+-- Set up BossHealth here to avoid mutual dependency issues
+dofile("lib/bosshealth.lua")
+
+local BossHealth = Overlay.BossHealth
 
 -- Include sub-scripts
 local ScenePath = "lib/scenes/"

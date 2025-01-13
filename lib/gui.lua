@@ -23,12 +23,11 @@ local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferhei
 -- Include sub-scripts
 local LibPath = "lib/"
 dofile(LibPath .. "headdystats.lua")
-dofile(LibPath .. "bosshealth.lua")
 dofile(LibPath .. "levelmonitor.lua")
 
 local Headdy = Overlay.Headdy
-local BossHealth = Overlay.BossHealth
 local LevelMonitor = Overlay.LevelMonitor
+local BossHealth = Overlay.BossHealth
 
 function GUI.AddCustomElement(id,drawFunc)
 	id = tostring(id)
