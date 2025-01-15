@@ -21,7 +21,10 @@ LevelMonitor.LevelData[0x3A] = {
 
 		if Overlay.Lang == "Jpn" then return end
 
-		local OffsetY = 0xFFFF
+		local OffsetY = {
+			["Prev"] = 0xFFFF,
+			["Cur"] = 0xFFFF,
+		}
 
 		GUI.AddCustomElement("GameOverRemainingContinues",function()
 			local posX = GUI.BufferWidth * .425
@@ -29,9 +32,9 @@ LevelMonitor.LevelData[0x3A] = {
 
 			DrawRectangle(
 				posX,
-				OffsetY,
+				OffsetY.Prev,
 				width,
-				46,
+				47,
 				0xFF2244EE,
 				0xFF000000
 			)
@@ -40,7 +43,7 @@ LevelMonitor.LevelData[0x3A] = {
 
 			DrawString(
 				stringPosX,
-				OffsetY + 2,
+				OffsetY.Prev + 2,
 				"Continues\nremaining:",
 				nil,
 				nil,
@@ -52,7 +55,7 @@ LevelMonitor.LevelData[0x3A] = {
 			)
 			DrawString(
 				stringPosX,
-				OffsetY + 46,
+				OffsetY.Prev + 47,
 				Headdy.Continues,
 				nil,
 				nil,
@@ -70,7 +73,10 @@ LevelMonitor.LevelData[0x3A] = {
 		},function(addressTbl)
 			if ReadU16BE(addressTbl["Sprite.Flags"]) < 6 then return end
 
-			OffsetY = ReadU16BE(addressTbl["Sprite.OffsetY"]) - 152
+			-- The game only applies the new position on the frame following
+			-- the value change, this mimics the result of that behaviour
+			OffsetY.Prev = OffsetY.Cur
+			OffsetY.Cur = ReadU16BE(addressTbl["Sprite.OffsetY"]) - 152
 		end)
 	end,
 }
