@@ -61,11 +61,12 @@ LevelMonitor.LevelData[0] = {
 			RoboCollector:Show(
 				commonEnt == 0x2C
 			and	ReadU16BE(addressTbl["RoboBag.Ent"]) == 0x48
-			and	commonFlags >= 6
 			and	(
-					commonFlags < 0xC
-				or	ReadU16BE(addressTbl["RoboBag.Flags"]) < 2
-			))
+					commonFlags == 6
+				or	commonFlags == 0xC
+			)
+			and	ReadU16BE(addressTbl["RoboBag.Flags"]) < 2
+			)
 
 			-- Trouble Bruin
 			TroubleBruin:Show(
