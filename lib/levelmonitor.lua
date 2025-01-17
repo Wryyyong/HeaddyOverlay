@@ -132,11 +132,8 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health")
 end)
 
-MemoryMonitor.Register("LevelMonitor.StageFlags",0xFFE850,function(addressTbl)
-	local newVal = ReadU16BE(addressTbl[1])
-	LevelMonitor.StageFlags = newVal
-
-	GUI.ScoreTallyActive = newVal > LevelMonitor.CurrentLevel.ScoreTallyThres
+MemoryMonitor.Register("LevelMonitor.StageFlagsScoreTally",0xFFE850,function(addressTbl)
+	GUI.ScoreTallyActive = ReadU16BE(addressTbl[1]) > LevelMonitor.CurrentLevel.ScoreTallyThres
 end)
 
 MemoryMonitor.Register("LevelMonitor.InStageTransition",{
