@@ -1,7 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
 
-local MemoryMonitor = Overlay.MemoryMonitor or {}
+local MemoryMonitor = {}
 Overlay.MemoryMonitor = MemoryMonitor
 
 local ActiveByID = {}

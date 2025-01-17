@@ -4,12 +4,11 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local LevelMonitor = Overlay.LevelMonitor
 
-local BossHealth = Overlay.BossHealth or {}
+local BossHealth = {}
 BossHealth.__index = BossHealth
 Overlay.BossHealth = BossHealth
 
-local ActiveBars = BossHealth.ActiveBars or {}
-BossHealth.ActiveBars = ActiveBars
+local ActiveBars = {}
 
 local BossGlobals = {
 	["Multipliers"] = {
@@ -65,10 +64,12 @@ local BossDataDefault = {
 	["Use16Bit"] = false,
 }
 
+--[[
 local HealthColorVals = {
 	["Max"] = 0xFF00FF00,
 	["Min"] = 0xFFFF0000,
 }
+--]]
 
 setmetatable(BossHealth,{
 	["__call"] = function(_,bossData)

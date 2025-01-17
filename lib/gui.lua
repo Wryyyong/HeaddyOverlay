@@ -1,7 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
 
-local GUI = Overlay.GUI or {}
+local GUI = {}
 Overlay.GUI = GUI
 
 local OffsetY = {

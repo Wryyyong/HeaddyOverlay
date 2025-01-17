@@ -2,7 +2,7 @@
 console.clear()
 
 -- Set up global table
-local Overlay = HeaddyOverlay or {}
+local Overlay = {}
 HeaddyOverlay = Overlay
 
 local RecognizedROMs = {

@@ -3,7 +3,7 @@ local Overlay = HeaddyOverlay
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 
-local Headdy = Overlay.Headdy or {}
+local Headdy = {}
 Overlay.Headdy = Headdy
 
 local HeightRatio = 208 / 224

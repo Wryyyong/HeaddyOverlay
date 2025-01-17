@@ -4,7 +4,7 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 
-local LevelMonitor = Overlay.LevelMonitor or {}
+local LevelMonitor = {}
 Overlay.LevelMonitor = LevelMonitor
 
 local LevelData = {}
