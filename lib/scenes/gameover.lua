@@ -11,8 +11,8 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 LevelMonitor.LevelData[0x3A] = {
-	["LevelName"] = {
-		["Main"] = [[Game Over]],
+	["Name"] = {
+		["Int"] = [[Game Over]],
 	},
 
 	["LevelScript"] = function()

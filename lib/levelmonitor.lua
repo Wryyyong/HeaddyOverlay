@@ -56,17 +56,25 @@ dofile(ScenePath .. "misc.lua")
 -- Default/fallback values for LevelData entries so we
 -- don't need to specify them in every single subtable
 local LevelDataDefault = {
-	["LevelName"] = {
-		["Main"] = [[!! UNRECOGNISED LEVEL !!]],
-		["Sub"] = {
-			["Int"] = [[]],
-			["Jpn"] = [[]],
-		},
+	["SceneNumbers"] = {
+		["Major"] = "",
+		["Minor"] = "",
+	},
+	["Name"] = {
+		["Int"] = [[!! UNRECOGNISED LEVEL !!]],
 	},
 	["ScoreTallyThres"] = math.huge,
 
 	["LevelScript"] = function()
 	end,
+}
+
+local LevelDataMeta = {
+	["__index"] = LevelDataDefault,
+}
+
+local LevelNumMeta = {
+	["__index"] = LevelDataDefault.SceneNumbers,
 }
 
 setmetatable(LevelData,{
@@ -75,32 +83,29 @@ setmetatable(LevelData,{
 	end,
 })
 
-local LevelDataMeta = {
-	["__index"] = LevelDataDefault,
-}
-
-local LevelNameMeta = {
-	["__index"] = LevelDataDefault.LevelName,
-}
-
 for _,sceneTbl in pairs(LevelData) do
 	setmetatable(sceneTbl,LevelDataMeta)
-
-	local levelName = sceneTbl.LevelName
-	setmetatable(levelName,LevelNameMeta)
-	setmetatable(levelName.Sub,Overlay.LangFallback)
+	setmetatable(sceneTbl.SceneNumbers,LevelNumMeta)
+	setmetatable(sceneTbl.Name,Overlay.LangFallback)
 end
 
 local function UpdateLevelNameString()
-	local levelName = LevelMonitor.CurrentLevel.LevelName
+	local curLevel = LevelMonitor.CurrentLevel
+	local newStr = ""
 
-	local newStr,strSub = levelName.Main,levelName.Sub[Overlay.Lang]
-	local doesStrMainExist = #levelName.Main > 0
+	local sceneNum = curLevel.SceneNumbers
 
-	if not doesStrMainExist then
-		newStr = strSub
-	elseif #strSub > 0 then
-		newStr = newStr .. (doesStrMainExist and " — " or "") .. strSub
+	if
+		#sceneNum.Major > 0
+	and	#sceneNum.Minor > 0
+	then
+		newStr = newStr .. "Scene " .. sceneNum.Major .. "-" .. sceneNum.Minor
+	end
+
+	local name = curLevel.Name[Overlay.Lang]
+
+	if #name > 0 then
+		newStr = newStr .. (#newStr > 0 and " — " or "") .. name
 	end
 
 	LevelNameString = newStr

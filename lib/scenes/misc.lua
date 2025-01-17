@@ -3,102 +3,142 @@ local LevelData = HeaddyOverlay.LevelMonitor.LevelData
 
 -- Add barebones LevelData entries for all maps
 -- that don't need any special treatment
-for sceneID,sceneName in pairs({
+for sceneID,sceneData in pairs({
 	[8] = {
-		["Main"] = [[]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "2",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["MEET HEADCASE"]],
 			["Jpn"] = [["FRIEND'S ROOM"]],
 		},
 	},
 	[0xA] = {
-		["Main"] = [[]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "2",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["MEET HANGMAN"]],
 			["Jpn"] = [["FRIEND'S ROOM"]],
 		},
 	},
 	[0xC] = {
-		["Main"] = [[Scene 2-1]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "2",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["PRACTICE AREA"]],
 			["Jpn"] = [["THREE FRIENDS"]],
 		},
 	},
 	[0xE] = {
-		["Main"] = [[]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "2",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["MEET BEAU"]],
 			["Jpn"] = [["FRIEND'S ROOM"]],
 		},
 	},
 	[0x10] = {
-		["Main"] = [[Scene 3-1]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "3",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["DOWN UNDER"]],
 			["Jpn"] = [["FIRE CARNIVAL"]],
 		},
 	},
 	[0x16] = {
-		["Main"] = [[Scene 4-2]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "4",
+			["Minor"] = "2",
+		},
+		["Name"] = {
 			["Int"] = [["MAD MECHS"]],
 			["Jpn"] = [["WORKING GEAR"]],
 		},
 	},
 	[0x18] = {
-		["Main"] = [[Scene 4-3]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "4",
+			["Minor"] = "3",
+		},
+		["Name"] = {
 			["Int"] = [["MAD MECHS 2"]],
 			["Jpn"] = [["RESTLESS FACTORY"]],
 		},
 	},
 	[0x22] = {
-		["Main"] = [[Scene 8-1]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "8",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["THE ROCKET TIER"]],
 			["Jpn"] = [["FIGHT!"]],
 		},
 	},
 	[0x2C] = {
-		["Main"] = [[Scene 9-1]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "9",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["FATAL CONTRAPION"]],
 			["Jpn"] = [["THE RIVAL"]],
 		},
 	},
 	[0x2E] = {
-		["Main"] = [[Scene 9-2]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "9",
+			["Minor"] = "2",
+		},
+		["Name"] = {
 			["Int"] = [["FAR TREK"]],
 			["Jpn"] = [["BRAIN BREAK!"]],
 		},
 	},
 	[0x36] = {
-		["Main"] = [[Scene 5-1]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "5",
+			["Minor"] = "1",
+		},
+		["Name"] = {
 			["Int"] = [["GO HEADDY GO"]],
 			["Jpn"] = [["PUPPET TOWER"]],
 		},
 	},
 	[0x44] = {
-		["Main"] = [[Intermission]],
+		["Name"] = {
+			["Int"] = [[Intermission]],
+		},
 	},
 	[0x54] = {
-		["Main"] = [[Scene 6-3]],
-		["Sub"] = {
+		["SceneNumbers"] = {
+			["Major"] = "6",
+			["Minor"] = "3",
+		},
+		["Name"] = {
 			["Int"] = [["FLY HARD 2"]],
 			["Jpn"] = [["LIGHT VELOCITY"]],
 		},
 	},
 	[0x58] = {
-		["Main"] = [["FLYI NGIA"]],
+		["Name"] = {
+			["Int"] = [["FLYI NGIA"]],
+		},
 	},
 	[0x5A] = {
-		["Main"] = [["FLYI NGIA"]],
+		["Name"] = {
+			["Int"] = [["FLYI NGIA"]],
+		},
 	},
 }) do
-	LevelData[sceneID] = {
-		["LevelName"] = sceneName,
-	}
+	LevelData[sceneID] = sceneData
 end

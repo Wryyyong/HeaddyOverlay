@@ -11,50 +11,33 @@ end
 -- Disable the GUI elements on these maps
 for sceneID,sceneName in pairs({
 	[0x3C] = {
-		["Main"] = [[Opening Demo]],
-		["Sub"] = {
-			["Int"] = [[Shot 1]],
-		},
+		["Int"] = [[Opening Demo — Shot 1]],
 	},
 	[0x3E] = {
-		["Main"] = [[Opening Demo]],
-		["Sub"] = {
-			["Int"] = [[Shot 2]],
-		},
+		["Int"] = [[Opening Demo — Shot 2]],
 	},
 	[0x40] = {
-		["Main"] = [[Opening Demo]],
-		["Sub"] = {
-			["Int"] = [[Shot 3]],
-		},
+		["Int"] = [[Opening Demo — Shot 3]],
 	},
 	[0x42] = {
-		["Sub"] = {
-			["Int"] = [[Curtain Call]],
-			["Jpn"] = [[Puppets Introduction]],
-		},
+		["Int"] = [[Curtain Call]],
+		["Jpn"] = [[Puppets Introduction]],
 	},
 	[0x46] = {
-		["Main"] = [[Ending Demo]],
-		["Sub"] = {
-			["Int"] = [[Shot 1]],
-		},
+		["Int"] = [[Ending Demo — Shot 1]],
 	},
 	[0x48] = {
-		["Main"] = [[Ending Demo]],
-		["Sub"] = {
-			["Int"] = [[Shot 2]],
-		},
+		["Int"] = [[Ending Demo — Shot 2]],
 	},
 	[0x4A] = {
-		["Main"] = [[Credits]],
+		["Int"] = [[Credits]],
 	},
 	[0x4E] = {
-		["Main"] = [[The End]],
+		["Int"] = [[The End]],
 	},
 }) do
 	LevelMonitor.LevelData[sceneID] = {
-		["LevelName"] = sceneName,
+		["Name"] = sceneName,
 		["LevelScript"] = LevelScriptCommon,
 	}
 end

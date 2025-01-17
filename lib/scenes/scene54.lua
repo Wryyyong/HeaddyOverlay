@@ -7,12 +7,13 @@ local BossHealth = Overlay.BossHealth
 local ReadU16BE = memory.read_u16_be
 
 LevelMonitor.LevelData[0x1E] = {
-	["LevelName"] = {
-		["Main"] = [[Scene 5-4]],
-		["Sub"] = {
-			["Int"] = [["SPINDERELLA"]],
-			["Jpn"] = [["ON THE SKY"]],
-		},
+	["SceneNumbers"] = {
+		["Major"] = "5",
+		["Minor"] = "4",
+	},
+	["Name"] = {
+		["Int"] = [["SPINDERELLA"]],
+		["Jpn"] = [["ON THE SKY"]],
 	},
 	["ScoreTallyThres"] = 4,
 

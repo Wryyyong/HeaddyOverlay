@@ -9,12 +9,13 @@ local pairs = pairs
 local ReadU16BE = memory.read_u16_be
 
 LevelMonitor.LevelData[0x1C] = {
-	["LevelName"] = {
-		["Main"] = [[Scene 5-3]],
-		["Sub"] = {
-			["Int"] = [["TOWERING INTERNAL"]],
-			["Jpn"] = [["ROLLING ROLLING"]],
-		},
+	["SceneNumbers"] = {
+		["Major"] = "5",
+		["Minor"] = "3",
+	},
+	["Name"] = {
+		["Int"] = [["TOWERING INTERNAL"]],
+		["Jpn"] = [["ROLLING ROLLING"]],
 	},
 
 	["LevelScript"] = function()

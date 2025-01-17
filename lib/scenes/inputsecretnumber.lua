@@ -11,8 +11,8 @@ local ReadU16BE = memory.read_u16_be
 local DrawString = gui.drawString
 
 LevelMonitor.LevelData[0x4C] = {
-	["LevelName"] = {
-		["Main"] = [[Input Secret Number]],
+	["Name"] = {
+		["Int"] = [[Input Secret Number]],
 	},
 
 	["LevelScript"] = function()
