@@ -70,23 +70,25 @@ local HealthColorVals = {
 	["Min"] = 0xFFFF0000,
 }
 
-local function CreateBar(_,bossData)
-	bossData = bossData or BossDataDefault
+setmetatable(BossHealth,{
+	["__call"] = function(_,bossData)
+		bossData = bossData or BossDataDefault
 
-	local newBar = {}
-	setmetatable(newBar,BossHealth)
+		local newBar = {}
+		setmetatable(newBar,BossHealth)
 
-	newBar:UpdateBoss(bossData)
-	newBar.Render = false
-	newBar.PosY = GPosYInit.Min
-	newBar.MaxPosY = GPosYInit.Max
+		newBar:UpdateBoss(bossData)
+		newBar.Render = false
+		newBar.PosY = GPosYInit.Min
+		newBar.MaxPosY = GPosYInit.Max
 
-	local activeIndex = #ActiveBars + 1
-	newBar.ActiveIndex = activeIndex
-	ActiveBars[activeIndex] = newBar
+		local activeIndex = #ActiveBars + 1
+		newBar.ActiveIndex = activeIndex
+		ActiveBars[activeIndex] = newBar
 
-	return newBar
-end
+		return newBar
+	end,
+})
 
 function BossHealth:Show(newVal)
 	if
@@ -263,7 +265,3 @@ function BossHealth.DrawAll()
 		end
 	end
 end
-
-setmetatable(BossHealth,{
-	["__call"] = CreateBar,
-})
