@@ -31,8 +31,14 @@ LevelMonitor.LevelData[0x24] = {
 			},
 		})
 
-		LevelMonitor.SetSceneMonitor(0xFFD14A,function(addressTbl)
-			MissileMan:Show(ReadU16BE(addressTbl[1]) == 2)
+		LevelMonitor.SetSceneMonitor({
+			["Stage.Flags"] = 0xFFE850,
+			["MissileMan.Flags"] = 0xFFD14A,
+		},function(addressTbl)
+			MissileMan:Show(
+				ReadU16BE(addressTbl["Stage.Flags"]) >= 2
+			and	ReadU16BE(addressTbl["MissileMan.Flags"]) == 2
+			)
 		end)
 	end,
 }

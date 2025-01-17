@@ -32,6 +32,8 @@ LevelMonitor.LevelData[4] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
+			["Stage.Flags"] = 0xFFE850,
+
 			["MonsMeg.Ent"] = 0xFFD174,
 			["MonsMeg.Flags"] = 0xFFD176,
 		},function(addressTbl)
@@ -40,7 +42,8 @@ LevelMonitor.LevelData[4] = {
 			local flags = ReadU16BE(addressTbl["MonsMeg.Flags"])
 
 			MonsMeg:Show(
-				flags >= 6
+				ReadU16BE(addressTbl["Stage.Flags"]) == 0xC
+			and	flags >= 6
 			and	flags < 0xC
 			)
 		end)

@@ -33,11 +33,13 @@ LevelMonitor.LevelData[0x30] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
+			["Stage.Flags"] = 0xFFE850,
 			["DarkDemon.Flags"] = 0xFFD106,
 			["Smiley.Flags"] = 0xFFD10A,
 		},function(addressTbl)
 			DarkDemon:Show(
-				ReadU16BE(addressTbl["DarkDemon.Flags"]) ~= 0x10
+				ReadU16BE(addressTbl["Stage.Flags"]) == 4
+			and	ReadU16BE(addressTbl["DarkDemon.Flags"]) ~= 0x10
 			and	ReadU16BE(addressTbl["Smiley.Flags"]) >= 4
 			)
 		end)

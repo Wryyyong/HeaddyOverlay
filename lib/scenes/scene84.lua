@@ -35,13 +35,16 @@ LevelMonitor.LevelData[0x28] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
+			["Stage.Flags"] = 0xFFE850,
+
 			["Ball.Ent"] = 0xFFD144,
 			["Ball.Flags"] = 0xFFD146,
 		},function(addressTbl)
 			local flags = ReadU16BE(addressTbl["Ball.Flags"])
 
 			KeepOn =
-				ReadU16BE(addressTbl["Ball.Ent"]) == 0x498
+				ReadU16BE(addressTbl["Stage.Flags"]) == 2
+			and ReadU16BE(addressTbl["Ball.Ent"]) == 0x498
 			and	flags >= 2
 			and	(
 					KeepOn

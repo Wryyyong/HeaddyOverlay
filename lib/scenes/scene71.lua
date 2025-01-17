@@ -51,6 +51,7 @@ LevelMonitor.LevelData[0x20] = {
 		}
 
 		LevelMonitor.SetSceneMonitor({
+			["Stage.Flags"] = 0xFFE850,
 			["Gatekeeper.Flags"] = 0xFFD132,
 			["NastyGatekeeper.Flags"] = 0xFFD152,
 		},function(addressTbl)
@@ -72,7 +73,8 @@ LevelMonitor.LevelData[0x20] = {
 
 			Gatekeeper:UpdateBoss(bossData)
 			Gatekeeper:Show(
-				checkLowerVal >= checkLowerThres
+				ReadU16BE(addressTbl["Stage.Flags"]) == 4
+			and	checkLowerVal >= checkLowerThres
 			and	flagsGatekeeper < checkUpperThres
 			)
 		end)

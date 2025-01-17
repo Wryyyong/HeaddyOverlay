@@ -61,6 +61,9 @@ LevelMonitor.LevelData[0x1C] = {
 
 		local BossLookup = {
 			[ChainA] = {
+				["Sprite"] = {
+					["Address"] = 0xFFD078,
+				},
 				["Ent"] = {
 					["Address"] = 0xFFD178,
 					["Target"] = 0x37C,
@@ -71,6 +74,9 @@ LevelMonitor.LevelData[0x1C] = {
 				},
 			},
 			[ChainB] = {
+				["Sprite"] = {
+					["Address"] = 0xFFD090,
+				},
 				["Ent"] = {
 					["Address"] = 0xFFD190,
 					["Target"] = 0x37C,
@@ -81,6 +87,9 @@ LevelMonitor.LevelData[0x1C] = {
 				},
 			},
 			[Armordillo] = {
+				["Sprite"] = {
+					["Address"] = 0xFFD080,
+				},
 				["Ent"] = {
 					["Address"] = 0xFFD180,
 					["Target"] = 0x39C,
@@ -103,10 +112,11 @@ LevelMonitor.LevelData[0x1C] = {
 			BossLookup[Armordillo].Flags.Address,
 		},function()
 			for bossBar,addrTbl in pairs(BossLookup) do
-				local bossEnt,bossFlags = addrTbl["Ent"],addrTbl["Flags"]
+				local bossSprite,bossEnt,bossFlags = addrTbl["Sprite"],addrTbl["Ent"],addrTbl["Flags"]
 
 				bossBar:Show(
-					ReadU16BE(bossEnt["Address"]) == bossEnt["Target"]
+					ReadU16BE(bossSprite["Address"]) ~= 0
+				and	ReadU16BE(bossEnt["Address"]) == bossEnt["Target"]
 				and	ReadU16BE(bossFlags["Address"]) >= bossFlags["Target"]
 				)
 			end
