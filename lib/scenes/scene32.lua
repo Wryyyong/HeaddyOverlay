@@ -34,7 +34,7 @@ LevelMonitor.LevelData[0x12] = {
 			local newVal = ReadU16BE(addressTbl[1])
 
 			RocketGrappler:Show(
-				newVal >= 0x14
+				newVal >= 8
 			and	newVal < 0x20
 			)
 		end)
