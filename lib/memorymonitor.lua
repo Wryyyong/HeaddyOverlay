@@ -63,7 +63,7 @@ local function UnregisterInternal(id,monitorData)
 	ActiveByID[id] = nil
 end
 
-function MemoryMonitor.Register(id,addressTbl,callback)
+function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
 	if type(callback) ~= "function" then return end
 
 	id = tostring(id)
@@ -93,6 +93,8 @@ function MemoryMonitor.Register(id,addressTbl,callback)
 		ActiveByID[id] = monitorData
 		ActiveByAddress[addressConv][id] = monitorData
 	end
+
+	if skipInit then return end
 
 	-- Queue the callback up to be executed immediately after registering,
 	-- to help with initialisation

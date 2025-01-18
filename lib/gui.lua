@@ -24,6 +24,7 @@ local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferhei
 local LibPath = "lib/"
 dofile(LibPath .. "headdystats.lua")
 dofile(LibPath .. "levelmonitor.lua")
+dofile(LibPath .. "secretbonuspopup.lua")
 
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
@@ -33,6 +34,12 @@ function GUI.AddCustomElement(id,drawFunc)
 	id = tostring(id)
 
 	CustomElements[id] = drawFunc
+end
+
+function GUI.RemoveCustomElement(id)
+	id = tostring(id)
+
+	CustomElements[id] = nil
 end
 
 function GUI.ClearCustomElements()
