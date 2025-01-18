@@ -2,6 +2,7 @@
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
+local DebrisPickup = Overlay.DebrisPickup
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
@@ -48,6 +49,8 @@ LevelMonitor.LevelData[0x14] = {
 			and	newVal < 0x28
 
 			WoodenDresser:Show(KeepOn)
+
+			DebrisPickup.Enable(newVal >= 0x28)
 		end)
 	end,
 }

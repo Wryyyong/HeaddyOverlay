@@ -2,6 +2,7 @@
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
+local DebrisPickup = Overlay.DebrisPickup
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
@@ -48,6 +49,8 @@ LevelMonitor.LevelData[0x1E] = {
 			and	newVal < 0x1E
 
 			Spinderella:Show(KeepOn)
+
+			DebrisPickup.Enable(newVal >= 0x1E)
 		end)
 	end,
 }

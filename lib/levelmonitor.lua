@@ -21,9 +21,12 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 -- Set up BossHealth here to avoid mutual dependency issues
-dofile("lib/bosshealth.lua")
+local LibPath = "lib/"
+dofile(LibPath .. "bosshealth.lua")
+dofile(LibPath .. "debrispickup.lua")
 
 local BossHealth = Overlay.BossHealth
+local DebrisPickup = Overlay.DebrisPickup
 
 -- Include sub-scripts
 local ScenePath = "lib/scenes/"
@@ -127,6 +130,8 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	Headdy.CommitTotalScore()
 
 	LevelMonitor.DisableGUI = false
+
+	DebrisPickup.Enable(false)
 
 	GUI.ScoreTallyActive = false
 	GUI.ResetGlobalOffsetY()

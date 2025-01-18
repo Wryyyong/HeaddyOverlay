@@ -29,6 +29,7 @@ dofile(LibPath .. "secretbonuspopup.lua")
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
+local DebrisPickup = Overlay.DebrisPickup
 
 function GUI.AddCustomElement(id,drawFunc)
 	id = tostring(id)
@@ -89,8 +90,10 @@ function GUI.Draw()
 
 	GUI.UpdateGlobalOffsetY()
 	Headdy.DrawGUI()
-	BossHealth.DrawAll()
 	LevelMonitor.DrawGUI()
+	DebrisPickup.DrawGUI()
+
+	BossHealth.DrawAll()
 
 	if next(CustomElements) == nil then return end
 

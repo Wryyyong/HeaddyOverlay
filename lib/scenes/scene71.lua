@@ -2,6 +2,7 @@
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
+local DebrisPickup = Overlay.DebrisPickup
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
@@ -53,11 +54,11 @@ LevelMonitor.LevelData[0x20] = {
 
 		LevelMonitor.SetSceneMonitor({
 			["Stage.Flags"] = 0xFFE850,
-			["Gatekeeper.Flags"] = 0xFFD132,
-			["NastyGatekeeper.Flags"] = 0xFFD152,
+			["NastyGatekeeper.Flags"] = 0xFFD132,
+			["Gatekeeper.Flags"] = 0xFFD152,
 		},function(addressTbl)
-			local flagsNastyGatekeeper = ReadU16BE(addressTbl["Gatekeeper.Flags"])
-			local flagsGatekeeper = ReadU16BE(addressTbl["NastyGatekeeper.Flags"])
+			local flagsNastyGatekeeper = ReadU16BE(addressTbl["NastyGatekeeper.Flags"])
+			local flagsGatekeeper = ReadU16BE(addressTbl["Gatekeeper.Flags"])
 			local bossData,checkLowerVal,checkLowerThres,checkUpperThres
 
 			if flagsNastyGatekeeper >= 0x1A then
@@ -77,6 +78,11 @@ LevelMonitor.LevelData[0x20] = {
 				ReadU16BE(addressTbl["Stage.Flags"]) == 4
 			and	checkLowerVal >= checkLowerThres
 			and	flagsGatekeeper < checkUpperThres
+			)
+
+			DebrisPickup.Enable(
+				bossData == DataNastyGatekeeper
+			and	flagsGatekeeper >= 0x80
 			)
 		end)
 	end,

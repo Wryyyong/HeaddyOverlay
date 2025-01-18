@@ -2,6 +2,7 @@
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
+local DebrisPickup = Overlay.DebrisPickup
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
@@ -55,6 +56,8 @@ LevelMonitor.LevelData[0x56] = {
 			end
 
 			BabyFace:Show(doShow)
+
+			DebrisPickup.Enable(flags >= 0x1C)
 		end)
 	end,
 }
