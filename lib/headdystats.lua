@@ -24,7 +24,8 @@ local ScoreStore = {
 -- Commonly-used functions
 local MathHuge = math.huge
 local MathToInt = math.tointeger
-local StringSub = string.sub
+
+local PadStart = bizstring.pad_start
 local ReadU16BE = memory.read_u16_be
 
 local DrawRectangle = gui.drawRectangle
@@ -36,7 +37,7 @@ MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	local newVal = MathToInt(ReadU16BE(addressTbl[1]) * .5)
 	Headdy.Health = newVal
 
-	StatStrings.Health = "Health: " .. StringSub("00" .. newVal,-2) .. " / 16"
+	StatStrings.Health = "Health: " .. PadStart(newVal,2,0) .. " / 16"
 end)
 
 MemoryMonitor.Register("Headdy.Score",{
@@ -44,11 +45,11 @@ MemoryMonitor.Register("Headdy.Score",{
 	["Score.Time"] = 0xFFE8F2,
 	["Score.Secret"] = 0xFFE8F4,
 },function(addressTbl)
+	if GUI.ScoreTallyActive then return end
+
 	ScoreStore.Stage = ReadU16BE(addressTbl["Score.Stage"])
 	ScoreStore.Time = ReadU16BE(addressTbl["Score.Time"])
 	ScoreStore.Secret = ReadU16BE(addressTbl["Score.Secret"])
-
-	if GUI.ScoreTallyActive then return end
 
 	local newScore =
 			(
@@ -58,7 +59,7 @@ MemoryMonitor.Register("Headdy.Score",{
 			+	ScoreStore.Secret
 		) * 100
 
-	StatStrings.Score = "Score: " .. StringSub("000000" .. newScore,-6)
+	StatStrings.Score = "Score: " .. PadStart(newScore,6,0)
 end)
 
 MemoryMonitor.Register("Headdy.LivesContinues",{
