@@ -61,6 +61,7 @@ local function UnregisterInternal(id,monitorData)
 	end
 
 	ActiveByID[id] = nil
+	CallbacksToExec[monitorData.Callback] = nil
 end
 
 function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
