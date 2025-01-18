@@ -26,9 +26,6 @@ local tonumber = tonumber
 	executed on the following frame.
 --]]
 
-event.unregisterbyname("HeaddyOverlay.MemoryMonitor.Main")
-event.unregisterbyname("HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
-
 -- Create global memory monitor
 event.on_bus_write(function(address)
 	-- read/write/exec callbacks return 32-bit address values

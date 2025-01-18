@@ -1,6 +1,22 @@
 -- Debugging
 console.clear()
 
+-- Set up onexit event before doing anything else
+local function Cleanup()
+	HeaddyOverlay = nil
+
+	for _,eventName in ipairs({
+		"MemoryMonitor.Main",
+		"MemoryMonitor.ForceRefreshAllMonitors",
+		"Cleanup",
+	}) do
+		event.unregisterbyname("HeaddyOverlay." .. eventName)
+	end
+end
+
+Cleanup()
+event.onexit(Cleanup,"HeaddyOverlay.Cleanup")
+
 -- Set up global table
 local Overlay = {}
 HeaddyOverlay = Overlay
