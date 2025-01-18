@@ -23,7 +23,6 @@ local ScoreStore = {
 
 -- Commonly-used functions
 local MathHuge = math.huge
-local MathToInt = math.tointeger
 
 local PadStart = bizstring.pad_start
 local ReadU16BE = memory.read_u16_be
@@ -33,10 +32,10 @@ local DrawString = gui.drawString
 
 MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	-- Headdy technically has a max health of 32, but this only ever gets
-	-- incremented/decremented in multiples of 2, effectively halving his health.
-	local newVal = MathToInt(ReadU16BE(addressTbl[1]) * .5)
-	Headdy.Health = newVal
+	-- incremented/decremented in multiples of 2, effectively halving this value.
+	local newVal = ReadU16BE(addressTbl[1]) >> 1
 
+	Headdy.Health = newVal
 	StatStrings.Health = "Health: " .. PadStart(newVal,2,0) .. " / 16"
 end)
 
