@@ -25,6 +25,7 @@ local BossGlobals = {
 	["PosYInit"] = {
 		["Min"] = -15,
 		["Max"] = -1,
+		["Inc"] = 1,
 	},
 }
 
@@ -155,27 +156,32 @@ function BossHealth:UpdateColor()
 end
 
 function BossHealth:UpdateOffsetY()
-	local diff
+	local pos,inc = self.PosY,GPosYInit.Inc
+	local thres,diff
 
 	if self.Render then
-		if self.PosY == self.MaxPosY then
+		thres = self.MaxPosY
+
+		if pos == thres then
 			return
-		elseif self.PosY > self.MaxPosY then
-			diff = -.5
+		elseif pos > thres then
+			diff = -inc
 		else
-			diff = .5
+			diff = inc
 		end
 	else
-		if self.PosY == GPosYInit.Min then
+		thres = GPosYInit.Min
+
+		if pos == thres then
 			return
-		elseif self.PosY < GPosYInit.Min then
-			diff = .5
+		elseif pos < thres then
+			diff = inc
 		else
-			diff = -.5
+			diff = -inc
 		end
 	end
 
-	self.PosY = self.PosY + diff
+	self.PosY = pos + diff
 end
 
 function BossHealth:Draw()
