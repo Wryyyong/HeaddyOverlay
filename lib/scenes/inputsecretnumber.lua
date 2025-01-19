@@ -29,7 +29,7 @@ LevelMonitor.LevelData[0x4C] = {
 			},
 		}
 
-		GUI.AddCustomElement("SecretNumberDisplay",function()
+		GUI.SetCustomElement("SecretNumberDisplay",function()
 			local posX = GUI.BufferWidth * .5
 			local posY = GUI.BufferHeight * .835
 

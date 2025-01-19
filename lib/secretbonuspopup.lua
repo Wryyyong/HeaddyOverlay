@@ -53,7 +53,7 @@ local function DrawPopup()
 	PopUpCounter = PopUpCounter - 1
 	if PopUpCounter > 0 then return end
 
-	GUI.RemoveCustomElement("SecretBonusPopUp")
+	GUI.SetCustomElement("SecretBonusPopUp")
 end
 
 MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
@@ -68,5 +68,5 @@ MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
 	PopUpString = ReadU16BE(addressTbl[1]) .. " / " .. totalBonuses
 	PopUpCounter = 300
 
-	GUI.AddCustomElement("SecretBonusPopUp",DrawPopup)
+	GUI.SetCustomElement("SecretBonusPopUp",DrawPopup)
 end,true)

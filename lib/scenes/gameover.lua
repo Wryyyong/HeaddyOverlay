@@ -26,7 +26,7 @@ LevelMonitor.LevelData[0x3A] = {
 			["Cur"] = 0xFFFF,
 		}
 
-		GUI.AddCustomElement("GameOverRemainingContinues",function()
+		GUI.SetCustomElement("GameOverRemainingContinues",function()
 			local posX = GUI.BufferWidth * .425
 			local width = GUI.BufferWidth * .25
 

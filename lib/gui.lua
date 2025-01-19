@@ -14,6 +14,7 @@ GUI.GlobalOffsetY = GUI.GlobalOffsetY or OffsetY.Max
 local CustomElements = {}
 
 -- Commonly-used functions
+local type = type
 local next = next
 local pairs = pairs
 local tostring = tostring
@@ -31,16 +32,19 @@ local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.BossHealth
 local DebrisPickup = Overlay.DebrisPickup
 
-function GUI.AddCustomElement(id,drawFunc)
+-- drawFunc can be either a function or nil; passing nil effectively removes
+-- the custom element from the table
+function GUI.SetCustomElement(id,drawFunc)
+	local funcType = type(drawFunc)
+
+	if
+		funcType ~= "nil"
+	and	funcType ~= "function"
+	then return end
+
 	id = tostring(id)
 
 	CustomElements[id] = drawFunc
-end
-
-function GUI.RemoveCustomElement(id)
-	id = tostring(id)
-
-	CustomElements[id] = nil
 end
 
 function GUI.ClearCustomElements()
