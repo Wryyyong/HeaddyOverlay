@@ -1,8 +1,8 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
-local Headdy = Overlay.Headdy
 
 local LevelMonitor = {}
 Overlay.LevelMonitor = LevelMonitor
@@ -20,42 +20,6 @@ local ReadU16BE = memory.read_u16_be
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
--- Set up BossHealth here to avoid mutual dependency issues
-local LibPath = "lib/"
-dofile(LibPath .. "bosshealth.lua")
-dofile(LibPath .. "debrispickup.lua")
-
-local BossHealth = Overlay.BossHealth
-local DebrisPickup = Overlay.DebrisPickup
-
--- Include sub-scripts
-local ScenePath = "lib/scenes/"
-dofile(ScenePath .. "scene11.lua")
-dofile(ScenePath .. "scene22.lua")
-dofile(ScenePath .. "scene23.lua")
-dofile(ScenePath .. "Scene32.lua")
-dofile(ScenePath .. "scene33.lua")
-dofile(ScenePath .. "scene34.lua")
-dofile(ScenePath .. "scene41.lua")
-dofile(ScenePath .. "scene44.lua")
-dofile(ScenePath .. "scene52.lua")
-dofile(ScenePath .. "scene53.lua")
-dofile(ScenePath .. "scene54.lua")
-dofile(ScenePath .. "scene61.lua")
-dofile(ScenePath .. "scene62.lua")
-dofile(ScenePath .. "scene64.lua")
-dofile(ScenePath .. "scene71.lua")
-dofile(ScenePath .. "scene82.lua")
-dofile(ScenePath .. "scene83.lua")
-dofile(ScenePath .. "scene84.lua")
-dofile(ScenePath .. "scene85.lua")
-dofile(ScenePath .. "scene93.lua")
-dofile(ScenePath .. "sceneXX.lua")
-dofile(ScenePath .. "inputsecretnumber.lua")
-dofile(ScenePath .. "gameover.lua")
-dofile(ScenePath .. "nogui.lua")
-dofile(ScenePath .. "misc.lua")
-
 -- Default/fallback values for LevelData entries so we
 -- don't need to specify them in every single subtable
 local LevelDataDefault = {
@@ -72,25 +36,11 @@ local LevelDataDefault = {
 	end,
 }
 
-local LevelDataMeta = {
-	["__index"] = LevelDataDefault,
-}
-
-local LevelNumMeta = {
-	["__index"] = LevelDataDefault.SceneNumbers,
-}
-
 setmetatable(LevelData,{
 	["__index"] = function()
 		return LevelDataDefault
 	end,
 })
-
-for _,sceneTbl in pairs(LevelData) do
-	setmetatable(sceneTbl,LevelDataMeta)
-	setmetatable(sceneTbl.SceneNumbers,LevelNumMeta)
-	setmetatable(sceneTbl.Name,Overlay.LangFallback)
-end
 
 local function UpdateLevelNameString()
 	local curLevel = LevelMonitor.CurrentLevel
@@ -119,47 +69,24 @@ LevelMonitor.CurrentLevel = LevelDataDefault
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	local newLevel = LevelData[ReadU16BE(addressTbl[1])]
 
+	LevelMonitor.DisableGUI = false
 	LevelMonitor.CurrentLevel = newLevel
 	UpdateLevelNameString()
 
-	BossHealth.DestroyAll()
 	MemoryMonitor.Unregister("SceneMonitor")
 
-	Headdy.DisableGUI = false
-	Headdy.SetInfiniteLives(false)
-	Headdy.CommitTotalScore()
-
-	LevelMonitor.DisableGUI = false
-
-	DebrisPickup.Enable(false)
-
-	GUI.ScoreTallyActive = false
-	GUI.ResetGlobalOffsetY()
-	GUI.ClearCustomElements()
+	Hook.Run("LevelChange")
 
 	newLevel.LevelScript()
 
 	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health")
 end)
 
-MemoryMonitor.Register("LevelMonitor.StageFlagsScoreTally",0xFFE850,function(addressTbl)
-	GUI.ScoreTallyActive = ReadU16BE(addressTbl[1]) > LevelMonitor.CurrentLevel.ScoreTallyThres
-end)
-
-MemoryMonitor.Register("LevelMonitor.InStageTransition",{
-	["Status"] = 0xFFE804,
-	["Curtains"] = 0xFFE8CC,
-},function(addressTbl)
-	LevelMonitor.InStageTransition =
-		ReadU16BE(addressTbl["Status"]) ~= 0
-	or	ReadU16BE(addressTbl["Curtains"]) ~= 0x9200
-end)
-
 function LevelMonitor.SetSceneMonitor(addressTbl,callback)
 	MemoryMonitor.Register("SceneMonitor",addressTbl,callback)
 end
 
-function LevelMonitor.DrawGUI()
+Hook.Set("DrawGUI","LevelMonitor",function()
 	if
 		LevelMonitor.DisableGUI
 	or	GUI.ScoreTallyActive
@@ -186,4 +113,48 @@ function LevelMonitor.DrawGUI()
 		"center",
 		"bottom"
 	)
-end
+end)
+
+Hook.Set("FinalizeSetup","ExecuteSceneScripts",function()
+	local ScenePath = "lib/scenes/"
+
+	dofile(ScenePath .. "scene11.lua")
+	dofile(ScenePath .. "scene22.lua")
+	dofile(ScenePath .. "scene23.lua")
+	dofile(ScenePath .. "Scene32.lua")
+	dofile(ScenePath .. "scene33.lua")
+	dofile(ScenePath .. "scene34.lua")
+	dofile(ScenePath .. "scene41.lua")
+	dofile(ScenePath .. "scene44.lua")
+	dofile(ScenePath .. "scene52.lua")
+	dofile(ScenePath .. "scene53.lua")
+	dofile(ScenePath .. "scene54.lua")
+	dofile(ScenePath .. "scene61.lua")
+	dofile(ScenePath .. "scene62.lua")
+	dofile(ScenePath .. "scene64.lua")
+	dofile(ScenePath .. "scene71.lua")
+	dofile(ScenePath .. "scene82.lua")
+	dofile(ScenePath .. "scene83.lua")
+	dofile(ScenePath .. "scene84.lua")
+	dofile(ScenePath .. "scene85.lua")
+	dofile(ScenePath .. "scene93.lua")
+	dofile(ScenePath .. "sceneXX.lua")
+	dofile(ScenePath .. "inputsecretnumber.lua")
+	dofile(ScenePath .. "gameover.lua")
+	dofile(ScenePath .. "nogui.lua")
+	dofile(ScenePath .. "misc.lua")
+
+	local LevelDataMeta = {
+		["__index"] = LevelDataDefault,
+	}
+
+	local LevelNumMeta = {
+		["__index"] = LevelDataDefault.SceneNumbers,
+	}
+
+	for _,sceneTbl in pairs(LevelData) do
+		setmetatable(sceneTbl,LevelDataMeta)
+		setmetatable(sceneTbl.SceneNumbers,LevelNumMeta)
+		setmetatable(sceneTbl.Name,Overlay.LangFallback)
+	end
+end)

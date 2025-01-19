@@ -53,6 +53,8 @@ dofile(LibPath .. "hook.lua")
 dofile(LibPath .. "memorymonitor.lua")
 dofile(LibPath .. "gui.lua")
 
+Overlay.Hook.Run("FinalizeSetup")
+
 -- Main loop
 while true do
 	GuiClearGraphics()

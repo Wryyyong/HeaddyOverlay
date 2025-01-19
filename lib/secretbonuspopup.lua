@@ -1,5 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local LevelMonitor = Overlay.LevelMonitor
@@ -53,7 +54,7 @@ local function DrawPopup()
 	PopUpCounter = PopUpCounter - 1
 	if PopUpCounter > 0 then return end
 
-	GUI.SetCustomElement("SecretBonusPopUp")
+	Hook.Set("DrawCustomElements","SecretBonusPopUp")
 end
 
 MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
@@ -61,12 +62,12 @@ MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
 
 	if
 		not totalBonuses
-	or	LevelMonitor.InStageTransition
+	or	GUI.IsMenuOrLoadingScreen
 	or	GUI.ScoreTallyActive
 	then return end
 
 	PopUpString = ReadU16BE(addressTbl[1]) .. " / " .. totalBonuses
 	PopUpCounter = 300
 
-	GUI.SetCustomElement("SecretBonusPopUp",DrawPopup)
+	Hook.Set("DrawCustomElements","SecretBonusPopUp",DrawPopup)
 end,true)

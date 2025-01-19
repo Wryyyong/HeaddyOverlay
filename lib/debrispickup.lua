@@ -1,8 +1,8 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
-local LevelMonitor = Overlay.LevelMonitor
 
 local DebrisPickup = {
 	["Count"] = 0,
@@ -78,12 +78,12 @@ function DebrisPickup.UpdateOffsetY()
 	DebrisPickup.OffsetY = pos + diff
 end
 
-function DebrisPickup.DrawGUI()
+Hook.Set("DrawGUI","DebrisPickup",function()
 	DebrisPickup.UpdateOffsetY()
 
 	if
 		DebrisPickup.OffsetY <= OffsetY.Min
-	or	LevelMonitor.InStageTransition
+	or	GUI.IsMenuOrLoadingScreen
 	or	GUI.ScoreTallyActive
 	then return end
 
@@ -123,4 +123,8 @@ function DebrisPickup.DrawGUI()
 		"center",
 		"top"
 	)
-end
+end)
+
+Hook.Set("LevelChange","DebrisPickup",function()
+	DebrisPickup.Enable(false)
+end)

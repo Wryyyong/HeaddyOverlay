@@ -1,5 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
@@ -29,7 +30,9 @@ LevelMonitor.LevelData[0x4C] = {
 			},
 		}
 
-		GUI.SetCustomElement("SecretNumberDisplay",function()
+		Hook.Set("DrawCustomElements","SecretNumberDisplay",function()
+			if GUI.IsMenuOrLoadingScreen then return end
+
 			local posX = GUI.BufferWidth * .5
 			local posY = GUI.BufferHeight * .835
 

@@ -1,5 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 
@@ -90,13 +91,7 @@ function Headdy.SetInfiniteLives(newVal)
 	MemoryMonitor.ManuallyExecuteByIDs("Headdy.LivesContinues")
 end
 
-function Headdy.CommitTotalScore()
-	ScoreStore.Total = ReadU16BE(0xFFE8FA)
-
-	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Score")
-end
-
-function Headdy.DrawGUI()
+Hook.Set("DrawGUI","Headdy",function()
 	if
 		Headdy.DisableGUI
 	or	GUI.ScoreTallyActive
@@ -155,4 +150,12 @@ function Headdy.DrawGUI()
 		"right",
 		"bottom"
 	)
-end
+end)
+
+Hook.Set("LevelChange","Headdy",function()
+	Headdy.DisableGUI = false
+	Headdy.SetInfiniteLives(false)
+
+	ScoreStore.Total = ReadU16BE(0xFFE8FA)
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Score")
+end)

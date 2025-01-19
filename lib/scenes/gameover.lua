@@ -1,5 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
@@ -26,7 +27,9 @@ LevelMonitor.LevelData[0x3A] = {
 			["Cur"] = 0xFFFF,
 		}
 
-		GUI.SetCustomElement("GameOverRemainingContinues",function()
+		Hook.Set("DrawCustomElements","GameOverRemainingContinues",function()
+			if GUI.IsMenuOrLoadingScreen then return end
+
 			local posX = GUI.BufferWidth * .425
 			local width = GUI.BufferWidth * .25
 

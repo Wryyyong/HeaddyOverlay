@@ -1,8 +1,8 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
-local LevelMonitor = Overlay.LevelMonitor
 
 local BossHealth = {}
 BossHealth.__index = BossHealth
@@ -229,7 +229,7 @@ function BossHealth:Draw()
 	)
 end
 
-function BossHealth.DestroyAll()
+Hook.Set("LevelChange","BossHealth",function()
 	if #ActiveBars <= 0 then return end
 
 	for _,bossbar in ipairs(ActiveBars) do
@@ -237,11 +237,11 @@ function BossHealth.DestroyAll()
 
 		ActiveBars[bossbar.ActiveIndex] = nil
 	end
-end
+end)
 
-function BossHealth.DrawAll()
+Hook.Set("DrawGUI","BossHealth",function()
 	if
-		LevelMonitor.InStageTransition
+		GUI.IsMenuOrLoadingScreen
 	or	next(ActiveBars) == nil
 	then return end
 
@@ -271,4 +271,4 @@ function BossHealth.DrawAll()
 			bossBar:Draw()
 		end
 	end
-end
+end)

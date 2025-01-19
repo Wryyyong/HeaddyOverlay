@@ -1,5 +1,7 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
+local Hook = Overlay.Hook
+local MemoryMonitor = Overlay.MemoryMonitor
 
 local GUI = {}
 Overlay.GUI = GUI
@@ -11,59 +13,31 @@ local OffsetY = {
 }
 GUI.GlobalOffsetY = GUI.GlobalOffsetY or OffsetY.Max
 
-local CustomElements = {}
-
 -- Commonly-used functions
 local type = type
 local next = next
 local pairs = pairs
 local tostring = tostring
 
+local ReadU16BE = memory.read_u16_be
 local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
 
 -- Include sub-scripts
 local LibPath = "lib/"
 dofile(LibPath .. "headdystats.lua")
 dofile(LibPath .. "levelmonitor.lua")
+dofile(LibPath .. "bosshealth.lua")
+dofile(LibPath .. "debrispickup.lua")
 dofile(LibPath .. "secretbonuspopup.lua")
 
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
-local BossHealth = Overlay.BossHealth
-local DebrisPickup = Overlay.DebrisPickup
-
--- drawFunc can be either a function or nil; passing nil effectively removes
--- the custom element from the table
-function GUI.SetCustomElement(id,drawFunc)
-	local funcType = type(drawFunc)
-
-	if
-		funcType ~= "nil"
-	and	funcType ~= "function"
-	then return end
-
-	id = tostring(id)
-
-	CustomElements[id] = drawFunc
-end
-
-function GUI.ClearCustomElements()
-	if next(CustomElements) == nil then return end
-
-	for id in pairs(CustomElements) do
-		CustomElements[id] = nil
-	end
-end
-
-function GUI.ResetGlobalOffsetY()
-	GUI.GlobalOffsetY = OffsetY.Max
-end
 
 function GUI.UpdateGlobalOffsetY()
 	local diff
 
 	if
-		LevelMonitor.InStageTransition
+		GUI.IsMenuOrLoadingScreen
 	or	(
 			Headdy.DisableGUI
 		and	LevelMonitor.DisableGUI
@@ -93,15 +67,29 @@ function GUI.Draw()
 	GUI.BufferWidth,GUI.BufferHeight = ClientBufferWidth(),ClientBufferHeight()
 
 	GUI.UpdateGlobalOffsetY()
-	Headdy.DrawGUI()
-	LevelMonitor.DrawGUI()
-	DebrisPickup.DrawGUI()
 
-	BossHealth.DrawAll()
-
-	if next(CustomElements) == nil then return end
-
-	for _,drawFunc in pairs(CustomElements) do
-		drawFunc()
-	end
+	Hook.Run("DrawGUI")
+	Hook.Run("DrawCustomElements")
 end
+
+MemoryMonitor.Register("GUI.StageFlagsScoreTally",0xFFE850,function(addressTbl)
+	GUI.ScoreTallyActive = ReadU16BE(addressTbl[1]) > LevelMonitor.CurrentLevel.ScoreTallyThres
+end)
+
+MemoryMonitor.Register("GUI.IsMenuOrLoadingScreen",{
+	["Game.State"] = 0xFFE802,
+	["Game.Routine"] = 0xFFE804,
+	["Game.Curtains"] = 0xFFE8CC,
+},function(addressTbl)
+	GUI.IsMenuOrLoadingScreen =
+		ReadU16BE(addressTbl["Game.State"]) ~= 0x20
+	or	ReadU16BE(addressTbl["Game.Routine"]) ~= 0
+	or	ReadU16BE(addressTbl["Game.Curtains"]) ~= 0x9200
+end)
+
+Hook.Set("LevelChange","GUI",function()
+	GUI.ScoreTallyActive = false
+	GUI.GlobalOffsetY = OffsetY.Max
+
+	Hook.ClearAll("DrawCustomElements")
+end)
