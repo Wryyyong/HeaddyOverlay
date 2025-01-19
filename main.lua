@@ -49,6 +49,7 @@ local GuiClearGraphics = gui.clearGraphics
 
 -- Include sub-scripts
 local LibPath = "lib/"
+dofile(LibPath .. "hook.lua")
 dofile(LibPath .. "memorymonitor.lua")
 dofile(LibPath .. "gui.lua")
 
