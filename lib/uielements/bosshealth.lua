@@ -6,9 +6,10 @@ local GUI = Overlay.GUI
 
 local BossHealth = {}
 BossHealth.__index = BossHealth
-Overlay.BossHealth = BossHealth
+GUI.Elements.BossHealth = BossHealth
 
 local ActiveBars = {}
+BossHealth.ActiveBars = ActiveBars
 
 local BossGlobals = {
 	["Multipliers"] = {
@@ -16,15 +17,15 @@ local BossGlobals = {
 		["ElementWidth"] = 184 / 320,
 		["ElementHeight"] = 16 / 224,
 		["BarWidth"] = 68 / 184,
-		["BarHeight"] = 8 / 16,
+		["BarHeight"] = 1 / 2,
 	},
 	["Element"] = {
 		["InnerPadding"] = {},
 	},
 	["Bar"] = {},
 	["PosYInit"] = {
-		["Min"] = -15,
-		["Max"] = -1,
+		["Min"] = -18,
+		["Max"] = 0,
 		["Inc"] = 1,
 	},
 }
@@ -185,7 +186,7 @@ function BossHealth:UpdateOffsetY()
 end
 
 function BossHealth:Draw()
-	local innerPaddingUp = self.PosY + 4
+	local innerPaddingUp = self.PosY + GBar.HeightHalf
 
 	-- Black background
 	DrawRectangle(
@@ -193,7 +194,7 @@ function BossHealth:Draw()
 		self.PosY,
 		GElement.Width,
 		GElement.Height,
-		0,
+		0x7F000000,
 		0x7F000000
 	)
 	-- Health bar outline
@@ -229,6 +230,41 @@ function BossHealth:Draw()
 	)
 end
 
+Hook.Set("DrawGUI","BossHealth",function(width,height)
+	if
+		GUI.IsMenuOrLoadingScreen
+	or	next(ActiveBars) == nil
+	then return end
+
+	GElement.PosX = width * GMultipliers.PosX
+
+	GElement.Width = width * GMultipliers.ElementWidth
+	GElement.Height = height * GMultipliers.ElementHeight
+
+	GInnerPadding.Left = GElement.PosX + 4
+	GInnerPadding.Right = width - GElement.PosX - 4
+
+	GBar.Width = GElement.Width * GMultipliers.BarWidth
+	GBar.Height = GElement.Height * GMultipliers.BarHeight
+	GBar.HeightHalf = GBar.Height * .5
+
+	local barCounter = 0
+
+	for _,bossBar in ipairs(ActiveBars) do
+		if bossBar.Render then
+			bossBar.MaxPosY = (barCounter * GElement.Height) + (barCounter > 0 and 1 or 0)
+			barCounter = barCounter + 1
+		end
+
+		bossBar:UpdateOffsetY()
+		print(_,bossBar.MaxPosY)
+
+		if bossBar.PosY > GPosYInit.Min then
+			bossBar:Draw()
+		end
+	end
+end)
+
 Hook.Set("LevelChange","BossHealth",function()
 	if #ActiveBars <= 0 then return end
 
@@ -236,39 +272,5 @@ Hook.Set("LevelChange","BossHealth",function()
 		MemoryMonitor.Unregister(bossbar.MonitorID)
 
 		ActiveBars[bossbar.ActiveIndex] = nil
-	end
-end)
-
-Hook.Set("DrawGUI","BossHealth",function()
-	if
-		GUI.IsMenuOrLoadingScreen
-	or	next(ActiveBars) == nil
-	then return end
-
-	GElement.PosX = GUI.BufferWidth * GMultipliers.PosX
-
-	GElement.Width = GUI.BufferWidth * GMultipliers.ElementWidth
-	GElement.Height = GUI.BufferHeight * GMultipliers.ElementHeight
-
-	GInnerPadding.Left = GElement.PosX + 4
-	GInnerPadding.Right = GUI.BufferWidth - GElement.PosX - 4
-
-	GBar.Width = GElement.Width * GMultipliers.BarWidth
-	GBar.Height = GElement.Height * GMultipliers.BarHeight
-
-	local clamp2,clamp1 = GElement.Height / 8,GElement.Height / 16
-	local barCounter = -1
-
-	for _,bossBar in ipairs(ActiveBars) do
-		bossBar:UpdateOffsetY()
-
-		if bossBar.PosY > GPosYInit.Min then
-			if bossBar.Render then
-				barCounter = barCounter + 1
-				bossBar.MaxPosY = (barCounter * GElement.Height) - (barCounter > 0 and clamp2 or clamp1)
-			end
-
-			bossBar:Draw()
-		end
 	end
 end)

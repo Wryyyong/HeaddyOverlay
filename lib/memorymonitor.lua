@@ -48,7 +48,9 @@ end,nil,"HeaddyOverlay.MemoryMonitor.Main")
 -- skipping CallbacksToExec entirely
 event.onloadstate(function()
 	for _,data in pairs(ActiveByID) do
-		data.Callback(data.AddressTbl)
+		if not data.SkipInit then
+			data.Callback(data.AddressTbl)
+		end
 	end
 end,"HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
 
@@ -82,6 +84,7 @@ function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
 	local monitorData = {
 		["AddressTbl"] = addressTbl,
 		["Callback"] = callback,
+		["SkipInit"] = skipInit,
 	}
 
 	for idx,address in pairs(addressTbl) do

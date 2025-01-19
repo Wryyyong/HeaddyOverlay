@@ -2,8 +2,8 @@
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local GUI = Overlay.GUI
-local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
+local MainHud = GUI.Elements.MainHud
 
 -- Commonly-used functions
 local ReadU8 = memory.read_u8
@@ -17,8 +17,7 @@ LevelMonitor.LevelData[0x4C] = {
 	},
 
 	["LevelScript"] = function()
-		Headdy.DisableGUI = true
-		LevelMonitor.DisableGUI = true
+		MainHud.ForceDisable = true
 
 		local GuiData = {
 			["String"] = "",
@@ -30,11 +29,11 @@ LevelMonitor.LevelData[0x4C] = {
 			},
 		}
 
-		Hook.Set("DrawCustomElements","SecretNumberDisplay",function()
+		Hook.Set("DrawCustomElements","SecretNumberDisplay",function(width,height)
 			if GUI.IsMenuOrLoadingScreen then return end
 
-			local posX = GUI.BufferWidth * .5
-			local posY = GUI.BufferHeight * .835
+			local posX = width * .5
+			local posY = height * .835
 
 			DrawString(
 				posX,

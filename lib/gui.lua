@@ -6,12 +6,10 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = {}
 Overlay.GUI = GUI
 
-local OffsetY = {
-	["Min"] = 0,
-	["Max"] = 96,
-	["Inc"] = 32 / 28,
-}
-GUI.GlobalOffsetY = GUI.GlobalOffsetY or OffsetY.Max
+local Elements = {}
+GUI.Elements = Elements
+
+local CustomElements = {}
 
 -- Commonly-used functions
 local type = type
@@ -26,50 +24,20 @@ local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferhei
 local LibPath = "lib/"
 dofile(LibPath .. "headdystats.lua")
 dofile(LibPath .. "levelmonitor.lua")
-dofile(LibPath .. "bosshealth.lua")
-dofile(LibPath .. "debrispickup.lua")
-dofile(LibPath .. "secretbonuspopup.lua")
 
-local Headdy = Overlay.Headdy
+local UiElemPath = LibPath .. "uielements/"
+dofile(UiElemPath .. "mainhud.lua")
+dofile(UiElemPath .. "bosshealth.lua")
+dofile(UiElemPath .. "debrispickup.lua")
+dofile(UiElemPath .. "secretbonuspopup.lua")
+
 local LevelMonitor = Overlay.LevelMonitor
 
-function GUI.UpdateGlobalOffsetY()
-	local diff
-
-	if
-		GUI.IsMenuOrLoadingScreen
-	or	(
-			Headdy.DisableGUI
-		and	LevelMonitor.DisableGUI
-	)
-	then
-		if GUI.GlobalOffsetY >= OffsetY.Max then return end
-
-		diff = OffsetY.Inc
-	else
-		if GUI.GlobalOffsetY <= OffsetY.Min then return end
-
-		diff = -OffsetY.Inc * .5
-	end
-
-	local newOffset = GUI.GlobalOffsetY + diff
-
-	if newOffset < OffsetY.Min then
-		newOffset = OffsetY.Min
-	elseif newOffset > OffsetY.Max then
-		newOffset = OffsetY.Max
-	end
-
-	GUI.GlobalOffsetY = newOffset
-end
-
 function GUI.Draw()
-	GUI.BufferWidth,GUI.BufferHeight = ClientBufferWidth(),ClientBufferHeight()
+	local width,height = ClientBufferWidth(),ClientBufferHeight()
 
-	GUI.UpdateGlobalOffsetY()
-
-	Hook.Run("DrawGUI")
-	Hook.Run("DrawCustomElements")
+	Hook.Run("DrawGUI",width,height)
+	Hook.Run("DrawCustomElements",width,height)
 end
 
 MemoryMonitor.Register("GUI.StageFlagsScoreTally",0xFFE850,function(addressTbl)
@@ -89,7 +57,6 @@ end)
 
 Hook.Set("LevelChange","GUI",function()
 	GUI.ScoreTallyActive = false
-	GUI.GlobalOffsetY = OffsetY.Max
 
 	Hook.ClearAll("DrawCustomElements")
 end)

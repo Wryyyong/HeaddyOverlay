@@ -7,14 +7,13 @@ local GUI = Overlay.GUI
 local DebrisPickup = {
 	["Count"] = 0,
 }
-Overlay.DebrisPickup = DebrisPickup
+GUI.Elements.DebrisPickup = DebrisPickup
 
 local OffsetY = {
-	["Min"] = -33,
-	["Max"] = -1,
+	["Min"] = -29,
+	["Max"] = 0,
 	["Inc"] = 1,
 }
-DebrisPickup.OffsetY = DebrisPickup.OffsetY or OffsetY.Min
 
 local ContinueReqByVersion = {
 	["Int"] = 13,
@@ -31,14 +30,6 @@ local ReadU16BE = memory.read_u16_be
 
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
-
-MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
-	local newVal = DebrisPickup.Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
-
-	DebrisPickup.Count = newVal
-	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
-	TextColour = newVal == PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
-end)
 
 function DebrisPickup.Enable(newVal)
 	if
@@ -78,7 +69,15 @@ function DebrisPickup.UpdateOffsetY()
 	DebrisPickup.OffsetY = pos + diff
 end
 
-Hook.Set("DrawGUI","DebrisPickup",function()
+MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
+	local newVal = DebrisPickup.Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
+
+	DebrisPickup.Count = newVal
+	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
+	TextColour = newVal == PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
+end)
+
+Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 	DebrisPickup.UpdateOffsetY()
 
 	if
@@ -87,20 +86,20 @@ Hook.Set("DrawGUI","DebrisPickup",function()
 	or	GUI.ScoreTallyActive
 	then return end
 
-	local widthHalf = GUI.BufferWidth * .5
+	local widthHalf = width * .5
 
 	DrawRectangle(
-		GUI.BufferWidth * .3,
+		width * .3,
 		DebrisPickup.OffsetY,
-		GUI.BufferWidth * .4,
-		33,
-		0,
+		width * .4,
+		28,
+		0x7F000000,
 		0x7F000000
 	)
 
 	DrawString(
 		widthHalf,
-		DebrisPickup.OffsetY + GUI.BufferHeight * .02,
+		DebrisPickup.OffsetY + height * .01,
 		"Debris Collected:",
 		nil,
 		0xFF000000,
@@ -113,7 +112,7 @@ Hook.Set("DrawGUI","DebrisPickup",function()
 
 	DrawString(
 		widthHalf,
-		DebrisPickup.OffsetY + GUI.BufferHeight * .08,
+		DebrisPickup.OffsetY + height * .07,
 		PickupString,
 		TextColour,
 		0xFF000000,
@@ -127,4 +126,5 @@ end)
 
 Hook.Set("LevelChange","DebrisPickup",function()
 	DebrisPickup.Enable(false)
+	DebrisPickup.OffsetY = OffsetY.Min
 end)

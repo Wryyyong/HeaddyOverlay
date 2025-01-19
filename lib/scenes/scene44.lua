@@ -1,6 +1,5 @@
 -- Set up globals and local references
-local Overlay = HeaddyOverlay
-local LevelMonitor = Overlay.LevelMonitor
+local LevelMonitor = HeaddyOverlay.LevelMonitor
 
 LevelMonitor.LevelData[0x34] = {
 	["SceneNumbers"] = {

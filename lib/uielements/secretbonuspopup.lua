@@ -25,21 +25,21 @@ local ReadU16BE = memory.read_u16_be
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
-local function DrawPopup()
-	local height125 = GUI.BufferHeight * .125
-	local height175 = GUI.BufferHeight * .175
+local function DrawPopup(width,height)
+	local height125 = height * .125
+	local height175 = height * .175
 
 	DrawRectangle(
-		GUI.BufferWidth * .4,
+		width * .4,
 		height175,
-		GUI.BufferWidth * .2,
+		width * .2,
 		height125,
-		0,
+		0x7F000000,
 		0x7F000000
 	)
 
 	DrawString(
-		GUI.BufferWidth * .5,
+		width * .5,
 		height175 + height125 * .5 + 2,
 		PopUpString,
 		nil,

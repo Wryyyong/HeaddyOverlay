@@ -4,17 +4,16 @@ local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 
-local Headdy = {}
+local Headdy = {
+	["StatStrings"] = {
+		["Health"] = "",
+		["Score"] = "",
+		["Lives"] = "",
+	},
+}
 Overlay.Headdy = Headdy
 
-local HeightRatio = 208 / 224
-
-local StatStrings = {
-	["Health"] = "",
-	["Score"] = "",
-	["Lives"] = "",
-}
-
+local StatStrings = Headdy.StatStrings
 local ScoreStore = {
 	["Total"] = 0,
 	["Stage"] = 0,
@@ -28,8 +27,16 @@ local MathHuge = math.huge
 local PadStart = bizstring.pad_start
 local ReadU16BE = memory.read_u16_be
 
-local DrawRectangle = gui.drawRectangle
-local DrawString = gui.drawString
+function Headdy.SetInfiniteLives(newVal)
+	if
+		newVal == nil
+	or	newVal == Headdy.InfiniteLives
+	then return end
+
+	Headdy.InfiniteLives = newVal
+
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.LivesContinues")
+end
 
 MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	-- Headdy technically has a max health of 32, but this only ever gets
@@ -52,12 +59,12 @@ MemoryMonitor.Register("Headdy.Score",{
 	ScoreStore.Secret = ReadU16BE(addressTbl["Score.Secret"])
 
 	local newScore =
-			(
-				ScoreStore.Total
-			+	ScoreStore.Stage
-			+	ScoreStore.Time
-			+	ScoreStore.Secret
-		) * 100
+		(
+			ScoreStore.Total
+		+	ScoreStore.Stage
+		+	ScoreStore.Time
+		+	ScoreStore.Secret
+	) * 100
 
 	StatStrings.Score = "Score: " .. PadStart(newScore,6,0)
 end)
@@ -80,80 +87,7 @@ MemoryMonitor.Register("Headdy.LivesContinues",{
 	StatStrings.Lives = newStr
 end)
 
-function Headdy.SetInfiniteLives(newVal)
-	if
-		newVal == nil
-	or	newVal == Headdy.InfiniteLives
-	then return end
-
-	Headdy.InfiniteLives = newVal
-
-	MemoryMonitor.ManuallyExecuteByIDs("Headdy.LivesContinues")
-end
-
-Hook.Set("DrawGUI","Headdy",function()
-	if
-		Headdy.DisableGUI
-	or	GUI.ScoreTallyActive
-	then return end
-
-	-- Background
-	DrawRectangle(
-		-1,
-		GUI.GlobalOffsetY + GUI.BufferHeight - 33,
-		GUI.BufferWidth + 1,
-		17,
-		0,
-		0x7F000000
-	)
-
-	local StringHeight = GUI.GlobalOffsetY + GUI.BufferHeight * HeightRatio - 2
-
-	-- Health
-	DrawString(
-		1,
-		StringHeight,
-		StatStrings.Health,
-		nil,
-		0xFF000000,
-		10,
-		"MS Gothic",
-		nil,
-		"left",
-		"bottom"
-	)
-
-	-- Score
-	DrawString(
-		GUI.BufferWidth * .5,
-		StringHeight,
-		StatStrings.Score,
-		nil,
-		0xFF000000,
-		10,
-		"MS Gothic",
-		nil,
-		"center",
-		"bottom"
-	)
-
-	-- Lives
-	DrawString(
-		GUI.BufferWidth - 1,
-		StringHeight,
-		StatStrings.Lives,
-		nil,
-		0xFF000000,
-		10,
-		"MS Gothic",
-		nil,
-		"right",
-		"bottom"
-	)
-end)
-
 Hook.Set("LevelChange","Headdy",function()
-	Headdy.DisableGUI = false
 	Headdy.SetInfiniteLives(false)
 
 	ScoreStore.Total = ReadU16BE(0xFFE8FA)

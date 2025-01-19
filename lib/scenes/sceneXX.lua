@@ -2,7 +2,7 @@
 local Overlay = HeaddyOverlay
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
-local BossHealth = Overlay.BossHealth
+local BossHealth = Overlay.GUI.Elements.BossHealth
 
 -- Commonly-used functions
 local pairs = pairs

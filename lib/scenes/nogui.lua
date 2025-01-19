@@ -1,11 +1,8 @@
 -- Set up globals and local references
-local Overlay = HeaddyOverlay
-local Headdy = Overlay.Headdy
-local LevelMonitor = Overlay.LevelMonitor
+local LevelMonitor = HeaddyOverlay.LevelMonitor
 
 local function LevelScriptCommon()
-	Headdy.DisableGUI = true
-	LevelMonitor.DisableGUI = true
+	MainHud.ForceDisable = true
 end
 
 -- Disable the GUI elements on these maps

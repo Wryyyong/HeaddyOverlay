@@ -2,15 +2,14 @@
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
-local GUI = Overlay.GUI
 
-local LevelMonitor = {}
+local LevelMonitor = {
+	["LevelNameString"] = "",
+}
 Overlay.LevelMonitor = LevelMonitor
 
 local LevelData = {}
 LevelMonitor.LevelData = LevelData
-
-local LevelNameString = ""
 
 -- Commonly-used functions
 local setmetatable = setmetatable
@@ -42,6 +41,8 @@ setmetatable(LevelData,{
 	end,
 })
 
+LevelMonitor.CurrentLevel = LevelDataDefault
+
 local function UpdateLevelNameString()
 	local curLevel = LevelMonitor.CurrentLevel
 	local newStr = ""
@@ -61,15 +62,16 @@ local function UpdateLevelNameString()
 		newStr = newStr .. (#newStr > 0 and " — " or "") .. name
 	end
 
-	LevelNameString = newStr
+	LevelMonitor.LevelNameString = newStr
 end
 
-LevelMonitor.CurrentLevel = LevelDataDefault
+function LevelMonitor.SetSceneMonitor(addressTbl,callback)
+	MemoryMonitor.Register("SceneMonitor",addressTbl,callback)
+end
 
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	local newLevel = LevelData[ReadU16BE(addressTbl[1])]
 
-	LevelMonitor.DisableGUI = false
 	LevelMonitor.CurrentLevel = newLevel
 	UpdateLevelNameString()
 
@@ -80,39 +82,6 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	newLevel.LevelScript()
 
 	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health")
-end)
-
-function LevelMonitor.SetSceneMonitor(addressTbl,callback)
-	MemoryMonitor.Register("SceneMonitor",addressTbl,callback)
-end
-
-Hook.Set("DrawGUI","LevelMonitor",function()
-	if
-		LevelMonitor.DisableGUI
-	or	GUI.ScoreTallyActive
-	then return end
-
-	DrawRectangle(
-		-1,
-		GUI.GlobalOffsetY + GUI.BufferHeight - 17,
-		GUI.BufferWidth + 1,
-		17,
-		0,
-		0x7F000000
-	)
-
-	DrawString(
-		GUI.BufferWidth * .5,
-		GUI.GlobalOffsetY + GUI.BufferHeight - 2,
-		LevelNameString,
-		nil,
-		0xFF000000,
-		10,
-		"MS Gothic",
-		nil,
-		"center",
-		"bottom"
-	)
 end)
 
 Hook.Set("FinalizeSetup","ExecuteSceneScripts",function()

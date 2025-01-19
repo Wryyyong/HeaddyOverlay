@@ -1,8 +1,9 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
-local BossHealth = Overlay.BossHealth
-local DebrisPickup = Overlay.DebrisPickup
+local Elements = Overlay.GUI.Elements
+local BossHealth = Elements.BossHealth
+local DebrisPickup = Elements.DebrisPickup
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be

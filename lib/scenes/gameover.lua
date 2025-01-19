@@ -4,6 +4,7 @@ local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
+local MainHud = GUI.Elements.MainHud
 
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
@@ -17,8 +18,7 @@ LevelMonitor.LevelData[0x3A] = {
 	},
 
 	["LevelScript"] = function()
-		Headdy.DisableGUI = true
-		LevelMonitor.DisableGUI = true
+		MainHud.ForceDisable = true
 
 		if Overlay.Lang == "Jpn" then return end
 
@@ -27,11 +27,11 @@ LevelMonitor.LevelData[0x3A] = {
 			["Cur"] = 0xFFFF,
 		}
 
-		Hook.Set("DrawCustomElements","GameOverRemainingContinues",function()
+		Hook.Set("DrawCustomElements","GameOverRemainingContinues",function(width,height)
 			if GUI.IsMenuOrLoadingScreen then return end
 
-			local posX = GUI.BufferWidth * .425
-			local width = GUI.BufferWidth * .25
+			local posX = width * .425
+			local width = width * .25
 
 			DrawRectangle(
 				posX,
