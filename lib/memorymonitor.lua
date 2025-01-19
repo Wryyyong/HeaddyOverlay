@@ -44,7 +44,8 @@ event.on_bus_write(function(address)
 	end
 end,nil,"HeaddyOverlay.MemoryMonitor.Main")
 
--- Force-refresh all active monitors upon loading a savestate
+-- Force-refresh all active monitors upon loading a savestate,
+-- skipping CallbacksToExec entirely
 event.onloadstate(function()
 	for _,data in pairs(ActiveByID) do
 		data.Callback(data.AddressTbl)
