@@ -9,7 +9,9 @@ local DebrisPickup = {
 }
 GUI.Elements.DebrisPickup = DebrisPickup
 
-local OffsetY = {
+local Render
+local OffsetY
+local OffsetYData = {
 	["Min"] = -29,
 	["Max"] = 0,
 	["Inc"] = 1,
@@ -34,39 +36,10 @@ local DrawString = gui.drawString
 function DebrisPickup.Enable(newVal)
 	if
 		newVal == nil
-	or	newVal == DebrisPickup.Render
+	or	newVal == Render
 	then return end
 
-	DebrisPickup.Render = newVal
-end
-
-function DebrisPickup.UpdateOffsetY()
-	local pos,inc = DebrisPickup.OffsetY,OffsetY.Inc
-	local thres,diff
-
-	if DebrisPickup.Render then
-		thres = OffsetY.Max
-
-		if pos == thres then
-			return
-		elseif pos > thres then
-			diff = -inc
-		else
-			diff = inc
-		end
-	else
-		thres = OffsetY.Min
-
-		if pos == thres then
-			return
-		elseif pos < thres then
-			diff = inc
-		else
-			diff = -inc
-		end
-	end
-
-	DebrisPickup.OffsetY = pos + diff
+	Render = newVal
 end
 
 MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
@@ -78,10 +51,16 @@ MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
 end)
 
 Hook.Set("DrawGUI","DebrisPickup",function(width,height)
-	DebrisPickup.UpdateOffsetY()
+	OffsetY = GUI.LerpOffset(
+		OffsetY,
+		OffsetYData.Inc,
+		OffsetYData.Max,
+		OffsetYData.Min,
+		Render
+	)
 
 	if
-		DebrisPickup.OffsetY <= OffsetY.Min
+		OffsetY <= OffsetYData.Min
 	or	GUI.IsMenuOrLoadingScreen
 	or	GUI.ScoreTallyActive
 	then return end
@@ -90,7 +69,7 @@ Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 
 	DrawRectangle(
 		width * .3,
-		DebrisPickup.OffsetY,
+		OffsetY,
 		width * .4,
 		28,
 		0x7F000000,
@@ -99,7 +78,7 @@ Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 
 	DrawString(
 		widthHalf,
-		DebrisPickup.OffsetY + height * .01,
+		OffsetY + height * .01,
 		"Debris Collected:",
 		nil,
 		0xFF000000,
@@ -112,7 +91,7 @@ Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 
 	DrawString(
 		widthHalf,
-		DebrisPickup.OffsetY + height * .07,
+		OffsetY + height * .07,
 		PickupString,
 		TextColour,
 		0xFF000000,
@@ -126,5 +105,5 @@ end)
 
 Hook.Set("LevelChange","DebrisPickup",function()
 	DebrisPickup.Enable(false)
-	DebrisPickup.OffsetY = OffsetY.Min
+	OffsetY = OffsetYData.Min
 end)

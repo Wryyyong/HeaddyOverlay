@@ -156,35 +156,6 @@ function BossHealth:UpdateColor()
 	--self.HealthColor = (HealthColorVals.Max - (self.HealthPercent * (HealthColorVals.Min - HealthColorVals.Max))) & 0xFFFFFF00
 end
 
-function BossHealth:UpdateOffsetY()
-	local pos,inc = self.PosY,GPosYInit.Inc
-	local thres,diff
-
-	if self.Render then
-		thres = self.MaxPosY
-
-		if pos == thres then
-			return
-		elseif pos > thres then
-			diff = -inc
-		else
-			diff = inc
-		end
-	else
-		thres = GPosYInit.Min
-
-		if pos == thres then
-			return
-		elseif pos < thres then
-			diff = inc
-		else
-			diff = -inc
-		end
-	end
-
-	self.PosY = pos + diff
-end
-
 function BossHealth:Draw()
 	local innerPaddingUp = self.PosY + GBar.HeightHalf
 
@@ -248,6 +219,7 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 	GBar.Height = GElement.Height * GMultipliers.BarHeight
 	GBar.HeightHalf = GBar.Height * .5
 
+	local posInc,posMin = GPosYInit.Inc,GPosYInit.Min
 	local barCounter = 0
 
 	for _,bossBar in ipairs(ActiveBars) do
@@ -256,7 +228,13 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 			barCounter = barCounter + 1
 		end
 
-		bossBar:UpdateOffsetY()
+		bossBar.PosY = GUI.LerpOffset(
+			bossBar.PosY,
+			posInc,
+			bossBar.MaxPosY,
+			posMin,
+			bossBar.Render
+		)
 
 		if bossBar.PosY > GPosYInit.Min then
 			bossBar:Draw()

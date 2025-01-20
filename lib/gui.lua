@@ -40,6 +40,30 @@ function GUI.Draw()
 	Hook.Run("DrawCustomElements",width,height)
 end
 
+function GUI.LerpOffset(oldPos,inc,thresTrue,thresFalse,check)
+	local diff
+
+	if check then
+		if oldPos == thresTrue then
+			return oldPos
+		elseif oldPos > thresTrue then
+			diff = -inc
+		else
+			diff = inc
+		end
+	else
+		if oldPos == thresFalse then
+			return oldPos
+		elseif oldPos < thresFalse then
+			diff = inc
+		else
+			diff = -inc
+		end
+	end
+
+	return oldPos + diff
+end
+
 MemoryMonitor.Register("GUI.StageRoutineScoreTally",0xFFE850,function(addressTbl)
 	GUI.ScoreTallyActive = ReadU16BE(addressTbl[1]) > LevelMonitor.CurrentLevel.ScoreTallyThres
 end)

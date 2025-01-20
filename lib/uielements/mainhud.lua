@@ -10,7 +10,9 @@ local MainHud = {}
 GUI.Elements.MainHud = MainHud
 
 local HeightRatio = 210 / 224
-local OffsetY = {
+
+local OffsetY
+local OffsetYData = {
 	["Min"] = 0,
 	["Max"] = 30 * 4,
 	["Inc"] = 1,
@@ -20,41 +22,17 @@ local OffsetY = {
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
-function MainHud.UpdateOffsetY()
-	local pos,inc = MainHud.OffsetY,OffsetY.Inc
-	local thres,diff
-
-	if
-		MainHud.ForceDisable
-	or	GUI.IsMenuOrLoadingScreen
-	or	GUI.ScoreTallyActive
-	then
-		thres = OffsetY.Max
-
-		if pos == thres then
-			return
-		elseif pos > thres then
-			diff = -inc
-		else
-			diff = inc
-		end
-	else
-		thres = OffsetY.Min
-
-		if pos == thres then
-			return
-		elseif pos < thres then
-			diff = inc
-		else
-			diff = -inc
-		end
-	end
-
-	MainHud.OffsetY = MainHud.OffsetY + diff
-end
-
 Hook.Set("DrawGUI","MainHud",function(width,height)
-	MainHud.UpdateOffsetY()
+	OffsetY = GUI.LerpOffset(
+		OffsetY,
+		OffsetYData.Inc,
+		OffsetYData.Max,
+		OffsetYData.Min,
+
+			MainHud.ForceDisable
+		or	GUI.IsMenuOrLoadingScreen
+		or	GUI.ScoreTallyActive
+	)
 
 	if
 		MainHud.ForceDisable
@@ -63,14 +41,14 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 
 	local widthHalf = width * .5
 
-	local stringHeightBase = MainHud.OffsetY - 1
+	local stringHeightBase = OffsetY - 1
 	local stringHeightUpper = stringHeightBase + height * HeightRatio
 	local stringHeightLower = stringHeightBase + height
 
 	-- Background
 	DrawRectangle(
 		0,
-		MainHud.OffsetY + height - 28,
+		OffsetY + height - 28,
 		width,
 		28,
 		0x7F000000,
@@ -136,5 +114,5 @@ end)
 
 Hook.Set("LevelChange","MainHud",function()
 	MainHud.ForceDisable = false
-	MainHud.OffsetY = OffsetY.Max
+	OffsetY = OffsetYData.Max
 end)
