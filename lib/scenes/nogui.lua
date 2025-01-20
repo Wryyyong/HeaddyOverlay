@@ -1,5 +1,7 @@
 -- Set up globals and local references
-local LevelMonitor = HeaddyOverlay.LevelMonitor
+local Overlay = HeaddyOverlay
+local LevelMonitor = Overlay.LevelMonitor
+local MainHud = Overlay.GUI.Elements.MainHud
 
 local function LevelScriptCommon()
 	MainHud.ForceDisable = true
