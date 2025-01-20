@@ -55,21 +55,19 @@ LevelMonitor.LevelData[0x20] = {
 
 		LevelMonitor.SetSceneMonitor({
 			["Stage.Routine"] = 0xFFE850,
-			["NastyGatekeeper.Routine"] = 0xFFD132,
+			["Unknown.Routine"] = 0xFFD132,
 			["Gatekeeper.Routine"] = 0xFFD152,
 		},function(addressTbl)
-			local nastyRoutine = ReadU16BE(addressTbl["NastyGatekeeper.Routine"])
+			local unkRoutine = ReadU16BE(addressTbl["Unknown.Routine"])
 			local gatekeeperRoutine = ReadU16BE(addressTbl["Gatekeeper.Routine"])
 			local bossData,checkLowerVal,checkLowerThres,checkUpperThres
 
-			if nastyRoutine >= 0x1A then
+			if unkRoutine >= 0x32 then
 				bossData = DataNastyGatekeeper
-				checkLowerVal = gatekeeperRoutine
-				checkLowerThres = 0x16
+				checkLowerThres = 0x24
 				checkUpperThres = 0x80
 			else
 				bossData = DataGatekeeper
-				checkLowerVal = nastyRoutine
 				checkLowerThres = 0x12
 				checkUpperThres = 0x40
 			end
@@ -77,7 +75,7 @@ LevelMonitor.LevelData[0x20] = {
 			Gatekeeper:UpdateBoss(bossData)
 			Gatekeeper:Show(
 				ReadU16BE(addressTbl["Stage.Routine"]) == 4
-			and	checkLowerVal >= checkLowerThres
+			and	gatekeeperRoutine >= checkLowerThres
 			and	gatekeeperRoutine < checkUpperThres
 			)
 
