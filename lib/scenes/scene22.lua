@@ -47,34 +47,34 @@ LevelMonitor.LevelData[2] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
+			["Stage.Routine"] = 0xFFE850,
 
-			["Catherine.Ent"] = 0xFFD158,
-			["Catherine.Flags"] = 0xFFD15A,
+			["Catherine.Sprite"] = 0xFFD158,
+			["Catherine.Routine"] = 0xFFD15A,
 
-			["SnakeEyes.Ent"] = 0xFFD164,
-			["SnakeEyes.Flags"] = 0xFFD166,
+			["SnakeEyes.Sprite"] = 0xFFD164,
+			["SnakeEyes.Routine"] = 0xFFD166,
 
-			["SnakeHelp.Ent"] = 0xFFD1A0,
-			["SnakeHelp.Flags"] = 0xFFD1A2,
+			["SnakeHelp.Sprite"] = 0xFFD1A0,
+			["SnakeHelp.Routine"] = 0xFFD1A2,
 		},function(addressTbl)
-			local flagsStage = ReadU16BE(addressTbl["Stage.Flags"])
-			local flagsCatherine = ReadU16BE(addressTbl["Catherine.Flags"])
+			local stageRoutine = ReadU16BE(addressTbl["Stage.Routine"])
+			local catherineRoutine = ReadU16BE(addressTbl["Catherine.Routine"])
 
 			Catherine:Show(
-				flagsStage == 4
-			and	ReadU16BE(addressTbl["Catherine.Ent"]) == 0x74
-			and	flagsCatherine >= 4
-			and	flagsCatherine < 0x10
+				stageRoutine == 4
+			and	ReadU16BE(addressTbl["Catherine.Sprite"]) == 0x74
+			and	catherineRoutine >= 4
+			and	catherineRoutine < 0x10
 			)
 
 			SnakeEyes:Show(
-				flagsStage >= 0xA
-			and	ReadU16BE(addressTbl["SnakeEyes.Ent"]) == 0xA0
-			and	ReadU16BE(addressTbl["SnakeHelp.Ent"]) == 0x180
+				stageRoutine >= 0xA
+			and	ReadU16BE(addressTbl["SnakeEyes.Sprite"]) == 0xA0
+			and	ReadU16BE(addressTbl["SnakeHelp.Sprite"]) == 0x180
 			and	(
-					ReadU16BE(addressTbl["SnakeEyes.Flags"]) >= 4
-				or	ReadU16BE(addressTbl["SnakeHelp.Flags"]) < 6
+					ReadU16BE(addressTbl["SnakeEyes.Routine"]) >= 4
+				or	ReadU16BE(addressTbl["SnakeHelp.Routine"]) < 6
 			))
 		end)
 	end,

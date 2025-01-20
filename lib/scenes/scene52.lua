@@ -37,19 +37,19 @@ LevelMonitor.LevelData[0x1A] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["FlyingScythe.Sprite"] = 0xFFD060,
-			["FlyingScythe.Flags"] = 0xFFD162,
+			["FlyingScythe.Properties"] = 0xFFD060,
+			["FlyingScythe.Routine"] = 0xFFD162,
 		},function(addressTbl)
-			local flags = ReadU16BE(addressTbl["FlyingScythe.Flags"])
+			local routine = ReadU16BE(addressTbl["FlyingScythe.Routine"])
 
 			KeepOn =
-				ReadU16BE(addressTbl["FlyingScythe.Sprite"]) ~= 0
-			and	flags >= 2
+				ReadU16BE(addressTbl["FlyingScythe.Properties"]) ~= 0
+			and	routine >= 2
 			and (
 					KeepOn
-				or	flags >= 8
+				or	routine >= 8
 			)
-			and	flags < 0x1A
+			and	routine < 0x1A
 
 			FlyingScythe:Show(KeepOn)
 		end)

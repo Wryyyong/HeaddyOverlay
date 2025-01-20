@@ -101,17 +101,17 @@ LevelMonitor.LevelData[0x50] = {
 		--]]
 
 		LevelMonitor.SetSceneMonitor({
-			["Battleship.Ent"] = 0xFFD140,
-			["Battleship.Flags"] = 0xFFD142,
+			["Battleship.Sprite"] = 0xFFD140,
+			["Battleship.Routine"] = 0xFFD142,
 
-			["Claw.Ent"] = 0xFFD138,
-			["Claw.Flags"] = 0xFFD13A,
+			["Claw.Sprite"] = 0xFFD138,
+			["Claw.Routine"] = 0xFFD13A,
 		},function(addressTbl)
 			BattleshipClaw:Show(
-				ReadU16BE(addressTbl["Claw.Ent"]) == 0x748
-			and	ReadU16BE(addressTbl["Claw.Flags"]) >= 0xA
-			and	ReadU16BE(addressTbl["Battleship.Ent"]) == 0x76C
-			and	ReadU16BE(addressTbl["Battleship.Flags"]) < 6
+				ReadU16BE(addressTbl["Claw.Sprite"]) == 0x748
+			and	ReadU16BE(addressTbl["Claw.Routine"]) >= 0xA
+			and	ReadU16BE(addressTbl["Battleship.Sprite"]) == 0x76C
+			and	ReadU16BE(addressTbl["Battleship.Routine"]) < 6
 			)
 		end)
 	end,

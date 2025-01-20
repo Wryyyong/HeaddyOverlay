@@ -36,20 +36,20 @@ LevelMonitor.LevelData[0x28] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
+			["Stage.Routine"] = 0xFFE850,
 
-			["Ball.Ent"] = 0xFFD144,
-			["Ball.Flags"] = 0xFFD146,
+			["Ball.Sprite"] = 0xFFD144,
+			["Ball.Routine"] = 0xFFD146,
 		},function(addressTbl)
-			local flags = ReadU16BE(addressTbl["Ball.Flags"])
+			local routine = ReadU16BE(addressTbl["Ball.Routine"])
 
 			KeepOn =
-				ReadU16BE(addressTbl["Stage.Flags"]) == 2
-			and ReadU16BE(addressTbl["Ball.Ent"]) == 0x498
-			and	flags >= 2
+				ReadU16BE(addressTbl["Stage.Routine"]) == 2
+			and ReadU16BE(addressTbl["Ball.Sprite"]) == 0x498
+			and	routine >= 2
 			and	(
 					KeepOn
-				or	flags >= 4
+				or	routine >= 4
 			)
 
 			Sparky:Show(KeepOn)

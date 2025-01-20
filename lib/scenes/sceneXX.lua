@@ -67,11 +67,11 @@ LevelMonitor.LevelData[0x38] = {
 			[TheatreOwner] = 0xFFD136,
 		},function(addressTbl)
 			for bossBar,address in pairs(addressTbl) do
-				local flags = ReadU16BE(address)
+				local routine = ReadU16BE(address)
 
 				bossBar:Show(
-					flags >= 8
-				and	flags < 0x18
+					routine >= 8
+				and	routine < 0x18
 				)
 			end
 		end)

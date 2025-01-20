@@ -67,7 +67,7 @@ LevelMonitor.LevelData[0x4C] = {
 			["SecretNumber3"] = 0xFFE9C8,
 			["SecretNumber4"] = 0xFFE9CA,
 			["Transparency"] = 0xFFB30C,
-			["Flags"] = 0xFFD132,
+			["Routine"] = 0xFFD132,
 		},function(addressTbl)
 			local transparency = (ReadU8(addressTbl["Transparency"] + 1) << 24)
 
@@ -88,14 +88,14 @@ LevelMonitor.LevelData[0x4C] = {
 			end
 
 			-- Color
-			local flags = ReadU16BE(addressTbl["Flags"])
+			local routine = ReadU16BE(addressTbl["Routine"])
 			local newColor
 
-			if flags >= 0xE then
+			if routine >= 0xE then
 				newColor = GuiData.Colors.Prev
-			elseif flags >= 0xC then
+			elseif routine >= 0xC then
 				newColor = 0xFF00
-			elseif flags >= 8 then
+			elseif routine >= 8 then
 				newColor = 0xFF0000
 			else
 				newColor = 0xFFFFFF

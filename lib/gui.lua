@@ -40,7 +40,7 @@ function GUI.Draw()
 	Hook.Run("DrawCustomElements",width,height)
 end
 
-MemoryMonitor.Register("GUI.StageFlagsScoreTally",0xFFE850,function(addressTbl)
+MemoryMonitor.Register("GUI.StageRoutineScoreTally",0xFFE850,function(addressTbl)
 	GUI.ScoreTallyActive = ReadU16BE(addressTbl[1]) > LevelMonitor.CurrentLevel.ScoreTallyThres
 end)
 

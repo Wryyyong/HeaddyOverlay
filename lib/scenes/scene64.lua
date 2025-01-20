@@ -35,16 +35,16 @@ LevelMonitor.LevelData[0x56] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["BabyFace.Flags"] = 0xFFD132,
+			["BabyFace.Routine"] = 0xFFD132,
 			["BabyFace.State"] = 0xFFDB64,
 			["BabyFace.EarlyEnd"] = 0xFFD030,
 		},function(addressTbl)
-			local flags = ReadU16BE(addressTbl["BabyFace.Flags"])
+			local routine = ReadU16BE(addressTbl["BabyFace.Routine"])
 
 			local doShow =
 				ReadU16BE(addressTbl["BabyFace.EarlyEnd"]) ~= 0
-			and	flags >= 0xC
-			and	flags < 0x1C
+			and	routine >= 0xC
+			and	routine < 0x1C
 
 			if doShow then
 				local newStr = "Baby Face"
@@ -58,7 +58,7 @@ LevelMonitor.LevelData[0x56] = {
 
 			BabyFace:Show(doShow)
 
-			DebrisPickup.Enable(flags >= 0x1C)
+			DebrisPickup.Enable(routine >= 0x1C)
 		end)
 	end,
 }

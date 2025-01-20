@@ -49,35 +49,35 @@ LevelMonitor.LevelData[0] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
+			["Stage.Routine"] = 0xFFE850,
 
-			["Common.Ent"] = 0xFFD140,
-			["Common.Flags"] = 0xFFD142,
+			["Common.Sprite"] = 0xFFD140,
+			["Common.Routine"] = 0xFFD142,
 
-			["RoboBag.Ent"] = 0xFFD144,
-			["RoboBag.Flags"] = 0xFFD146,
+			["RoboBag.Sprite"] = 0xFFD144,
+			["RoboBag.Routine"] = 0xFFD146,
 		},function(addressTbl)
-			local flagsStage = ReadU16BE(addressTbl["Stage.Flags"])
+			local stageRoutine = ReadU16BE(addressTbl["Stage.Routine"])
 
-			local entCommon = ReadU16BE(addressTbl["Common.Ent"])
-			local flagsCommon = ReadU16BE(addressTbl["Common.Flags"])
+			local commonSprite = ReadU16BE(addressTbl["Common.Sprite"])
+			local commonRoutine = ReadU16BE(addressTbl["Common.Routine"])
 
 			RoboCollector:Show(
-				flagsStage == 2
-			and	entCommon == 0x2C
-			and	ReadU16BE(addressTbl["RoboBag.Ent"]) == 0x48
+				stageRoutine == 2
+			and	commonSprite == 0x2C
+			and	ReadU16BE(addressTbl["RoboBag.Sprite"]) == 0x48
 			and	(
-					flagsCommon == 6
-				or	flagsCommon == 0xC
+					commonRoutine == 6
+				or	commonRoutine == 0xC
 			)
-			and	ReadU16BE(addressTbl["RoboBag.Flags"]) < 2
+			and	ReadU16BE(addressTbl["RoboBag.Routine"]) < 2
 			)
 
 			TroubleBruin:Show(
-				flagsStage == 0x12
-			and	entCommon == 0x80
-			and	flagsCommon >= 0xA
-			and	flagsCommon < 0x2E
+				stageRoutine == 0x12
+			and	commonSprite == 0x80
+			and	commonRoutine >= 0xA
+			and	commonRoutine < 0x2E
 			)
 		end)
 	end,

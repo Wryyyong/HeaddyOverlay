@@ -47,27 +47,27 @@ LevelMonitor.LevelData[0x32] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
-			["Puppeteer.Flags"] = 0xFFD142,
-			["GentlemanJim.Flags"] = 0xFFD15E,
+			["Stage.Routine"] = 0xFFE850,
+			["Puppeteer.Routine"] = 0xFFD142,
+			["GentlemanJim.Routine"] = 0xFFD15E,
 		},function(addressTbl)
-			local flagsPuppeteer = ReadU16BE(addressTbl["Puppeteer.Flags"])
-			local flagsJim = ReadU16BE(addressTbl["GentlemanJim.Flags"])
+			local puppeteerRoutine = ReadU16BE(addressTbl["Puppeteer.Routine"])
+			local jimRoutine = ReadU16BE(addressTbl["GentlemanJim.Routine"])
 
-			if ReadU16BE(addressTbl["Stage.Flags"]) < 0xC then
+			if ReadU16BE(addressTbl["Stage.Routine"]) < 0xC then
 				Puppeteer:Show(false)
 				GentlemanJim:Show(false)
-			elseif (flagsPuppeteer << 8) + flagsJim == 0xC06 then
+			elseif (puppeteerRoutine << 8) + jimRoutine == 0xC06 then
 				Puppeteer:Show(true)
 				GentlemanJim:Show(true)
 			else
-				if flagsJim >= 8 then
+				if jimRoutine >= 8 then
 					Puppeteer:Show(false)
 				end
 
 				if
-					flagsPuppeteer >= 0xE
-				or	flagsJim >= 0xC
+					puppeteerRoutine >= 0xE
+				or	jimRoutine >= 0xC
 				then
 					GentlemanJim:Show(false)
 				end

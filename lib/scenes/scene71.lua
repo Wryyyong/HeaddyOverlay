@@ -54,36 +54,36 @@ LevelMonitor.LevelData[0x20] = {
 		}
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
-			["NastyGatekeeper.Flags"] = 0xFFD132,
-			["Gatekeeper.Flags"] = 0xFFD152,
+			["Stage.Routine"] = 0xFFE850,
+			["NastyGatekeeper.Routine"] = 0xFFD132,
+			["Gatekeeper.Routine"] = 0xFFD152,
 		},function(addressTbl)
-			local flagsNastyGatekeeper = ReadU16BE(addressTbl["NastyGatekeeper.Flags"])
-			local flagsGatekeeper = ReadU16BE(addressTbl["Gatekeeper.Flags"])
+			local nastyRoutine = ReadU16BE(addressTbl["NastyGatekeeper.Routine"])
+			local gatekeeperRoutine = ReadU16BE(addressTbl["Gatekeeper.Routine"])
 			local bossData,checkLowerVal,checkLowerThres,checkUpperThres
 
-			if flagsNastyGatekeeper >= 0x1A then
+			if nastyRoutine >= 0x1A then
 				bossData = DataNastyGatekeeper
-				checkLowerVal = flagsGatekeeper
+				checkLowerVal = gatekeeperRoutine
 				checkLowerThres = 0x16
 				checkUpperThres = 0x80
 			else
 				bossData = DataGatekeeper
-				checkLowerVal = flagsNastyGatekeeper
+				checkLowerVal = nastyRoutine
 				checkLowerThres = 0x12
 				checkUpperThres = 0x40
 			end
 
 			Gatekeeper:UpdateBoss(bossData)
 			Gatekeeper:Show(
-				ReadU16BE(addressTbl["Stage.Flags"]) == 4
+				ReadU16BE(addressTbl["Stage.Routine"]) == 4
 			and	checkLowerVal >= checkLowerThres
-			and	flagsGatekeeper < checkUpperThres
+			and	gatekeeperRoutine < checkUpperThres
 			)
 
 			DebrisPickup.Enable(
 				bossData == DataNastyGatekeeper
-			and	flagsGatekeeper >= 0x80
+			and	gatekeeperRoutine >= 0x80
 			)
 		end)
 	end,

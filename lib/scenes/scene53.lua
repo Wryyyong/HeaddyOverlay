@@ -62,40 +62,40 @@ LevelMonitor.LevelData[0x1C] = {
 
 		local BossLookup = {
 			[ChainA] = {
-				["Sprite"] = {
+				["Properties"] = {
 					["Address"] = 0xFFD078,
 				},
-				["Ent"] = {
+				["Sprite"] = {
 					["Address"] = 0xFFD178,
 					["Target"] = 0x37C,
 				},
-				["Flags"] = {
+				["Routine"] = {
 					["Address"] = 0xFFD17A,
 					["Target"] = 0xA,
 				},
 			},
 			[ChainB] = {
-				["Sprite"] = {
+				["Properties"] = {
 					["Address"] = 0xFFD090,
 				},
-				["Ent"] = {
+				["Sprite"] = {
 					["Address"] = 0xFFD190,
 					["Target"] = 0x37C,
 				},
-				["Flags"] = {
+				["Routine"] = {
 					["Address"] = 0xFFD192,
 					["Target"] = 0xA,
 				},
 			},
 			[Armordillo] = {
-				["Sprite"] = {
+				["Properties"] = {
 					["Address"] = 0xFFD080,
 				},
-				["Ent"] = {
+				["Sprite"] = {
 					["Address"] = 0xFFD180,
 					["Target"] = 0x39C,
 				},
-				["Flags"] = {
+				["Routine"] = {
 					["Address"] = 0xFFD182,
 					["Target"] = 8,
 				},
@@ -103,22 +103,23 @@ LevelMonitor.LevelData[0x1C] = {
 		}
 
 		LevelMonitor.SetSceneMonitor({
-			BossLookup[ChainA].Ent.Address,
-			BossLookup[ChainA].Flags.Address,
+			BossLookup[ChainA].Sprite.Address,
+			BossLookup[ChainA].Routine.Address,
 
-			BossLookup[ChainB].Ent.Address,
-			BossLookup[ChainB].Flags.Address,
+			BossLookup[ChainB].Sprite.Address,
+			BossLookup[ChainB].Routine.Address,
 
-			BossLookup[Armordillo].Ent.Address,
-			BossLookup[Armordillo].Flags.Address,
+			BossLookup[Armordillo].Sprite.Address,
+			BossLookup[Armordillo].Routine.Address,
 		},function()
 			for bossBar,addrTbl in pairs(BossLookup) do
-				local bossSprite,bossEnt,bossFlags = addrTbl["Sprite"],addrTbl["Ent"],addrTbl["Flags"]
+				local bossSprite = addrTbl["Sprite"]
+				local bossRoutine = addrTbl["Routine"]
 
 				bossBar:Show(
-					ReadU16BE(bossSprite["Address"]) ~= 0
-				and	ReadU16BE(bossEnt["Address"]) == bossEnt["Target"]
-				and	ReadU16BE(bossFlags["Address"]) >= bossFlags["Target"]
+					ReadU16BE(addrTbl["Properties"]["Address"]) ~= 0
+				and	ReadU16BE(bossSprite["Address"]) == bossSprite["Target"]
+				and	ReadU16BE(bossRoutine["Address"]) >= bossRoutine["Target"]
 				)
 			end
 		end)

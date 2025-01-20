@@ -33,19 +33,19 @@ LevelMonitor.LevelData[4] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
+			["Stage.Routine"] = 0xFFE850,
 
-			["MonsMeg.Ent"] = 0xFFD174,
-			["MonsMeg.Flags"] = 0xFFD176,
+			["MonsMeg.Sprite"] = 0xFFD174,
+			["MonsMeg.Routine"] = 0xFFD176,
 		},function(addressTbl)
-			if ReadU16BE(addressTbl["MonsMeg.Ent"]) ~= 0x134 then return end
+			if ReadU16BE(addressTbl["MonsMeg.Sprite"]) ~= 0x134 then return end
 
-			local flags = ReadU16BE(addressTbl["MonsMeg.Flags"])
+			local routine = ReadU16BE(addressTbl["MonsMeg.Routine"])
 
 			MonsMeg:Show(
-				ReadU16BE(addressTbl["Stage.Flags"]) == 0xC
-			and	flags >= 6
-			and	flags < 0xC
+				ReadU16BE(addressTbl["Stage.Routine"]) == 0xC
+			and	routine >= 6
+			and	routine < 0xC
 			)
 		end)
 	end,

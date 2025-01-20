@@ -49,23 +49,23 @@ LevelMonitor.LevelData[0x26] = {
 		}
 
 		LevelMonitor.SetSceneMonitor({
-			["Tarot.Ent"] = 0xFFD130,
-			["Tarot.Flags"] = 0xFFD132,
+			["Tarot.Sprite"] = 0xFFD130,
+			["Tarot.Routine"] = 0xFFD132,
 
-			["Rope.Ent"] = 0xFFD138,
-			["Rope.Flags"] = 0xFFD13A,
+			["Rope.Sprite"] = 0xFFD138,
+			["Rope.Routine"] = 0xFFD13A,
 		},function(addressTbl)
-			local tarotFlags = ReadU16BE(addressTbl["Tarot.Flags"])
+			local tarotRoutine = ReadU16BE(addressTbl["Tarot.Routine"])
 
 			local tarotCheck =
-				ReadU16BE(addressTbl["Tarot.Ent"]) == 0x454
-			and	tarotFlags >= 4
+				ReadU16BE(addressTbl["Tarot.Sprite"]) == 0x454
+			and	tarotRoutine >= 4
 			and	(
-					ReadU16BE(addressTbl["Rope.Ent"]) ~= 0x458
-				or	ReadU16BE(addressTbl["Rope.Flags"]) < 2
+					ReadU16BE(addressTbl["Rope.Sprite"]) ~= 0x458
+				or	ReadU16BE(addressTbl["Rope.Routine"]) < 2
 			)
 
-			Tarot:UpdateBoss(tarotCheck and (tarotFlags >= 6 and DataTarotB or DataTarotA) or nil)
+			Tarot:UpdateBoss(tarotCheck and (tarotRoutine >= 6 and DataTarotB or DataTarotA) or nil)
 			Tarot:Show(tarotCheck)
 		end)
 	end,

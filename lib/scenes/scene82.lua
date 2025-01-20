@@ -33,12 +33,12 @@ LevelMonitor.LevelData[0x24] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
-			["Stage.Flags"] = 0xFFE850,
-			["MissileMan.Flags"] = 0xFFD14A,
+			["Stage.Routine"] = 0xFFE850,
+			["MissileMan.Routine"] = 0xFFD14A,
 		},function(addressTbl)
 			MissileMan:Show(
-				ReadU16BE(addressTbl["Stage.Flags"]) >= 2
-			and	ReadU16BE(addressTbl["MissileMan.Flags"]) == 2
+				ReadU16BE(addressTbl["Stage.Routine"]) >= 2
+			and	ReadU16BE(addressTbl["MissileMan.Routine"]) == 2
 			)
 		end)
 	end,
