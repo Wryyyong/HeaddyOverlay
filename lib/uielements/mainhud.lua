@@ -12,7 +12,7 @@ GUI.Elements.MainHud = MainHud
 local HeightRatio = 210 / 224
 local OffsetY = {
 	["Min"] = 0,
-	["Max"] = 30 * 2.5,
+	["Max"] = 30 * 4,
 	["Inc"] = 1,
 }
 
@@ -21,20 +21,33 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 function MainHud.UpdateOffsetY()
-	local diff
+	local pos,inc = MainHud.OffsetY,OffsetY.Inc
+	local thres,diff
 
 	if
 		MainHud.ForceDisable
 	or	GUI.IsMenuOrLoadingScreen
 	or	GUI.ScoreTallyActive
 	then
-		if MainHud.OffsetY >= OffsetY.Max then return end
+		thres = OffsetY.Max
 
-		diff = OffsetY.Inc
+		if pos == thres then
+			return
+		elseif pos > thres then
+			diff = -inc
+		else
+			diff = inc
+		end
 	else
-		if MainHud.OffsetY <= OffsetY.Min then return end
+		thres = OffsetY.Min
 
-		diff = -OffsetY.Inc * .5
+		if pos == thres then
+			return
+		elseif pos < thres then
+			diff = inc
+		else
+			diff = -inc
+		end
 	end
 
 	MainHud.OffsetY = MainHud.OffsetY + diff
