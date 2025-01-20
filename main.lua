@@ -15,15 +15,8 @@ Cleanup()
 event.onexit(Cleanup,"HeaddyOverlay.Cleanup")
 
 -- Set up global table
-local Overlay = {
-	["Debug"] = false,
-}
+local Overlay = {}
 HeaddyOverlay = Overlay
-
--- Debugging
-if Overlay.Debug then
-	console.clear()
-end
 
 local RecognizedROMs = {
 	["D11EC9B230E88403CD75EF186A884C97"]         = "Int", -- International release
@@ -44,7 +37,7 @@ Overlay.LangFallback = {
 }
 
 -- Commonly-used functions
-local EmuFrameAdvance = Overlay.Debug and emu.yield or emu.frameadvance
+local EmuFrameAdvance = emu.frameadvance
 local GuiClearGraphics = gui.clearGraphics
 
 -- Include sub-scripts
