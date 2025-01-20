@@ -67,7 +67,7 @@ MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
 	then return end
 
 	PopUpString = ReadU16BE(addressTbl[1]) .. " / " .. totalBonuses
-	PopUpCounter = 300
+	PopUpCounter = 180
 
 	Hook.Set("DrawCustomElements","SecretBonusPopUp",DrawPopup)
 end,true)
