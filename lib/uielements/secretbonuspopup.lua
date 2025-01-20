@@ -5,8 +5,22 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local LevelMonitor = Overlay.LevelMonitor
 
-local PopUpCounter = 0
+local Counters = {
+	["PopUp"] = {
+		["Init"] = 180,
+		["Value"] = 0,
+	},
+	["FadeOut"] = {
+		["Init"] = 30,
+		["Value"] = 0,
+	},
+}
+
+local CPopUp = Counters.PopUp
+local CFadeOut = Counters.FadeOut
+
 local PopUpString = ""
+
 local BonusPointsBySceneMajor = {
 	["1"] = 1,
 	["2"] = 8,
@@ -20,30 +34,46 @@ local BonusPointsBySceneMajor = {
 }
 
 -- Commonly-used functions
+local MathFloor = math.floor
+
 local ReadU16BE = memory.read_u16_be
 
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
-local function DrawPopup(width,height)
+local function DrawPopUp(width,height)
 	local height125 = height * .125
 	local height175 = height * .175
+	local transparency = 0xFF
+
+	local newPopUp = CPopUp.Value - 1
+	CPopUp.Value = newPopUp
+
+	if newPopUp <= 0 then
+		local newFadeOut = CFadeOut.Value - 1
+		CFadeOut.Value = newFadeOut
+
+		transparency = MathFloor((newFadeOut / CFadeOut.Init) * transparency)
+	end
+
+	local transHalf = (transparency >> 1) << 24
+	local transMain = transparency << 24
 
 	DrawRectangle(
 		width * .4,
 		height175,
 		width * .2,
 		height125,
-		0x7F000000,
-		0x7F000000
+		transHalf,
+		transHalf
 	)
 
 	DrawString(
 		width * .5,
 		height175 + height125 * .5 + 2,
 		PopUpString,
-		nil,
-		0xFF000000,
+		transMain + 0xFFFFFF,
+		transMain,
 		16,
 		"MS Gothic",
 		nil,
@@ -51,8 +81,7 @@ local function DrawPopup(width,height)
 		"middle"
 	)
 
-	PopUpCounter = PopUpCounter - 1
-	if PopUpCounter > 0 then return end
+	if CFadeOut.Value > 0 then return end
 
 	Hook.Set("DrawCustomElements","SecretBonusPopUp")
 end
@@ -67,7 +96,8 @@ MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
 	then return end
 
 	PopUpString = ReadU16BE(addressTbl[1]) .. " / " .. totalBonuses
-	PopUpCounter = 180
+	CPopUp.Value = CPopUp.Init
+	CFadeOut.Value = CFadeOut.Init
 
-	Hook.Set("DrawCustomElements","SecretBonusPopUp",DrawPopup)
+	Hook.Set("DrawCustomElements","SecretBonusPopUp",DrawPopUp)
 end,true)
