@@ -10,6 +10,7 @@ local DebrisPickup = {
 GUI.Elements.DebrisPickup = DebrisPickup
 
 local Render
+local Count = 0
 local OffsetY
 local OffsetYData = {
 	["Min"] = -29,
@@ -39,13 +40,17 @@ function DebrisPickup.Enable(newVal)
 	or	newVal == Render
 	then return end
 
+	if newVal then
+		Count = 0
+	end
+
 	Render = newVal
 end
 
-MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
-	local newVal = DebrisPickup.Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
+MemoryMonitor.Register("Count",0xFFE93A,function(addressTbl)
+	local newVal = Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
 
-	DebrisPickup.Count = newVal
+	Count = newVal
 	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
 	TextColour = newVal == PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
 end)
