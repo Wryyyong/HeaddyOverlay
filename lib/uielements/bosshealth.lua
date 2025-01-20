@@ -257,7 +257,6 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 		end
 
 		bossBar:UpdateOffsetY()
-		print(_,bossBar.MaxPosY)
 
 		if bossBar.PosY > GPosYInit.Min then
 			bossBar:Draw()
