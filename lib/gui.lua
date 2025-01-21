@@ -12,11 +12,6 @@ GUI.Elements = Elements
 local CustomElements = {}
 
 -- Commonly-used functions
-local type = type
-local next = next
-local pairs = pairs
-local tostring = tostring
-
 local ReadU16BE = memory.read_u16_be
 local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
 
