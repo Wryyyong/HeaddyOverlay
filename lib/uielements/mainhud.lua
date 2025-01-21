@@ -9,12 +9,14 @@ local LevelMonitor = Overlay.LevelMonitor
 local MainHud = {}
 GUI.Elements.MainHud = MainHud
 
-local HeightRatio = 210 / 224
+local ElementHeight = 28
+local ElementHeightQuart1 = ElementHeight * .25
+local ElementHeightQuart3 = ElementHeight * .75
 
 local OffsetY
 local OffsetYData = {
-	["Min"] = 0,
-	["Max"] = 30 * 4,
+	["Min"] = -ElementHeight,
+	["Max"] = ElementHeight * 3,
 	["Inc"] = 1,
 }
 
@@ -40,17 +42,17 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 	then return end
 
 	local widthHalf = width * .5
+	local heightBase = OffsetY + height
 
-	local stringHeightBase = OffsetY - 1
-	local stringHeightUpper = stringHeightBase + height * HeightRatio
-	local stringHeightLower = stringHeightBase + height
+	local stringHeightUpper = heightBase + ElementHeightQuart1
+	local stringHeightLower = heightBase + ElementHeightQuart3
 
 	-- Background
 	DrawRectangle(
 		0,
-		OffsetY + height - 28,
+		heightBase,
 		width,
-		28,
+		ElementHeight,
 		0x7F000000,
 		0x7F000000
 	)
@@ -66,7 +68,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 		"MS Gothic",
 		nil,
 		"center",
-		"bottom"
+		"middle"
 	)
 
 	-- Health
@@ -80,7 +82,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 		"MS Gothic",
 		nil,
 		"left",
-		"bottom"
+		"middle"
 	)
 
 	-- Score
@@ -94,7 +96,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 		"MS Gothic",
 		nil,
 		"center",
-		"bottom"
+		"middle"
 	)
 
 	-- Lives
@@ -108,7 +110,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 		"MS Gothic",
 		nil,
 		"right",
-		"bottom"
+		"middle"
 	)
 end)
 
