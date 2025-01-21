@@ -16,12 +16,13 @@ local ElementHeight = 28
 local ElementHeightQuart1 = ElementHeight * .25
 local ElementHeightQuart3 = ElementHeight * .75
 
-local OffsetY
 local OffsetYData = {
 	["Min"] = -(ElementHeight + 1),
 	["Max"] = 0,
 	["Inc"] = 1,
 }
+local OffsetYInit = OffsetYData.Min
+local OffsetY = OffsetYInit
 
 local ContinueReqByVersion = {
 	["Int"] = 13,
@@ -115,5 +116,5 @@ end)
 
 Hook.Set("LevelChange","DebrisPickup",function()
 	DebrisPickup.Enable(false)
-	OffsetY = OffsetYData.Min
+	OffsetY = OffsetYInit
 end)

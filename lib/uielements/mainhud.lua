@@ -13,12 +13,13 @@ local ElementHeight = 28
 local ElementHeightQuart1 = ElementHeight * .25
 local ElementHeightQuart3 = ElementHeight * .75
 
-local OffsetY
 local OffsetYData = {
 	["Min"] = -ElementHeight,
-	["Max"] = ElementHeight * 3,
+	["Max"] = 60,
 	["Inc"] = 1,
 }
+local OffsetYInit = OffsetYData.Max
+local OffsetY = OffsetYInit
 
 -- Commonly-used functions
 local DrawRectangle = gui.drawRectangle
@@ -116,5 +117,5 @@ end)
 
 Hook.Set("LevelChange","MainHud",function()
 	MainHud.ForceDisable = false
-	OffsetY = OffsetYData.Max
+	OffsetY = OffsetYInit
 end)
