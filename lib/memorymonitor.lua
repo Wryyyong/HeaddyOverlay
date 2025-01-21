@@ -17,13 +17,13 @@ local tostring = tostring
 local tonumber = tonumber
 
 --[[
-	As of writing, the Genplus-gx core only returns '0' for all read/write/exec
-	callbacks.
+	As of writing, both Mega Drive cores in BizHawk only return 0 for all
+	read/write/exec callbacks.
 
-	[TODO: Explain this better]
 	To work around this limitation, we set up a monitoring system utilizing a
 	global on_bus_write event that fills a table with callback functions to be
-	executed on the following frame.
+	executed on the following frame, if the modified address matches with our
+	active monitors.
 --]]
 
 -- Create global memory monitor
@@ -53,10 +53,6 @@ event.onloadstate(function()
 		end
 	end
 end,"HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
-
---[[
-	[TODO: Explain this]
---]]
 
 local function UnregisterInternal(id,monitorData)
 	for _,address in ipairs(monitorData.AddressTbl) do

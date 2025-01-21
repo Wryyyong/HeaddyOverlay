@@ -76,12 +76,11 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	UpdateLevelNameString()
 
 	MemoryMonitor.Unregister("SceneMonitor")
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health")
 
 	Hook.Run("LevelChange")
 
 	newLevel.LevelScript()
-
-	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health")
 end)
 
 Hook.Set("FinalizeSetup","ExecuteSceneScripts",function()
