@@ -11,9 +11,14 @@ GUI.Elements.DebrisPickup = DebrisPickup
 
 local Render
 local Count = 0
+
+local ElementHeight = 28
+local ElementHeightQuart1 = ElementHeight * .25
+local ElementHeightQuart3 = ElementHeight * .75
+
 local OffsetY
 local OffsetYData = {
-	["Min"] = -29,
+	["Min"] = -(ElementHeight + 1),
 	["Max"] = 0,
 	["Inc"] = 1,
 }
@@ -76,14 +81,14 @@ Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 		width * .3,
 		OffsetY,
 		width * .4,
-		28,
+		ElementHeight,
 		0x7F000000,
 		0x7F000000
 	)
 
 	DrawString(
 		widthHalf,
-		OffsetY + height * .01,
+		OffsetY + ElementHeightQuart1,
 		"Debris Collected:",
 		nil,
 		0xFF000000,
@@ -91,12 +96,12 @@ Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 		"MS Gothic",
 		nil,
 		"center",
-		"top"
+		"middle"
 	)
 
 	DrawString(
 		widthHalf,
-		OffsetY + height * .07,
+		OffsetY + ElementHeightQuart3,
 		PickupString,
 		TextColour,
 		0xFF000000,
@@ -104,7 +109,7 @@ Hook.Set("DrawGUI","DebrisPickup",function(width,height)
 		"MS Gothic",
 		nil,
 		"center",
-		"top"
+		"middle"
 	)
 end)
 

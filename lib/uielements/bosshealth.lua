@@ -11,11 +11,13 @@ GUI.Elements.BossHealth = BossHealth
 local ActiveBars = {}
 BossHealth.ActiveBars = ActiveBars
 
+local ElementHeight = 16
+
 local BossGlobals = {
 	["Multipliers"] = {
 		["PosX"] = 68 / 320,
 		["ElementWidth"] = 184 / 320,
-		["ElementHeight"] = 16 / 224,
+		["ElementHeight"] = ElementHeight / 224,
 		["BarWidth"] = 68 / 184,
 		["BarHeight"] = 1 / 2,
 	},
@@ -24,7 +26,7 @@ local BossGlobals = {
 	},
 	["Bar"] = {},
 	["PosYInit"] = {
-		["Min"] = -18,
+		["Min"] = -(ElementHeight + 1),
 		["Max"] = 0,
 		["Inc"] = 1,
 	},
