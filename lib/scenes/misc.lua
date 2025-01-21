@@ -114,11 +114,6 @@ for sceneID,sceneData in pairs({
 			["Jpn"] = [["PUPPET TOWER"]],
 		},
 	},
-	[0x44] = {
-		["Name"] = {
-			["Int"] = [[Intermission]],
-		},
-	},
 	[0x54] = {
 		["SceneNumbers"] = {
 			["Major"] = "6",
