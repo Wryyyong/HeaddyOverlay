@@ -31,18 +31,17 @@ LevelMonitor.LevelData[0x3A] = {
 			if GUI.IsMenuOrLoadingScreen then return end
 
 			local posX = width * .425
-			local width = width * .25
 
 			DrawRectangle(
 				posX,
 				OffsetY.Prev,
-				width,
+				width * .25,
 				47,
 				0xFF2244EE,
 				0xFF000000
 			)
 
-			local stringPosX = posX + width * .5
+			local stringPosX = posX + width * .125
 
 			DrawString(
 				stringPosX,
