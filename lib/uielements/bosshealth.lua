@@ -54,7 +54,6 @@ local BossDataDefault = {
 	["ID"] = "DEFAULT",
 	["PrintName"] = {
 		["Int"] = "N/A",
-		["Jpn"] = "N/A",
 	},
 	["Address"] = 0xFFFFFF,
 	["HealthInit"] = {
@@ -87,9 +86,7 @@ setmetatable(BossHealth,{
 		newBar.PosY = GPosYInit.Min
 		newBar.MaxPosY = GPosYInit.Max
 
-		local activeIndex = #ActiveBars + 1
-		newBar.ActiveIndex = activeIndex
-		ActiveBars[activeIndex] = newBar
+		ActiveBars[#ActiveBars + 1] = newBar
 
 		return newBar
 	end,
@@ -245,11 +242,11 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 end)
 
 Hook.Set("LevelChange","BossHealth",function()
-	if #ActiveBars <= 0 then return end
+	if next(ActiveBars) == nil then return end
 
-	for _,bossbar in ipairs(ActiveBars) do
+	for idx,bossbar in ipairs(ActiveBars) do
 		MemoryMonitor.Unregister(bossbar.MonitorID)
 
-		ActiveBars[bossbar.ActiveIndex] = nil
+		ActiveBars[idx] = nil
 	end
 end)
