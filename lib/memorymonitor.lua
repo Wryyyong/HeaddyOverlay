@@ -122,7 +122,7 @@ function MemoryMonitor.ExecuteCallbacks()
 end
 
 function MemoryMonitor.ManuallyExecuteByIDs(...)
-	for _,arg in ipairs{(...)} do
+	for _,arg in ipairs({...}) do
 		local id = tostring(arg)
 
 		local monitorData = ActiveByID[id]
