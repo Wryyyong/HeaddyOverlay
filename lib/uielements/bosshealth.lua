@@ -9,7 +9,6 @@ BossHealth.__index = BossHealth
 GUI.Elements.BossHealth = BossHealth
 
 local ActiveBars = {}
-BossHealth.ActiveBars = ActiveBars
 
 local ElementHeight = 16
 
