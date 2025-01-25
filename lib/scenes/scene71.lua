@@ -60,7 +60,7 @@ LevelMonitor.LevelData[0x20] = {
 		},function(addressTbl)
 			local unkRoutine = ReadU16BE(addressTbl["Unknown.Routine"])
 			local gatekeeperRoutine = ReadU16BE(addressTbl["Gatekeeper.Routine"])
-			local bossData,checkLowerVal,checkLowerThres,checkUpperThres
+			local bossData,checkLowerThres,checkUpperThres
 
 			if unkRoutine >= 0x32 then
 				bossData = DataNastyGatekeeper

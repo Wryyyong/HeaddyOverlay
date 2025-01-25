@@ -61,7 +61,7 @@ MemoryMonitor.Register("Count",0xFFE93A,function(addressTbl)
 	TextColour = newVal == PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
 end)
 
-Hook.Set("DrawGUI","DebrisPickup",function(width,height)
+Hook.Set("DrawGUI","DebrisPickup",function(width)
 	OffsetY = GUI.LerpOffset(
 		OffsetY,
 		OffsetYData.Inc,

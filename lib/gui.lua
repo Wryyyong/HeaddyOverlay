@@ -9,8 +9,6 @@ Overlay.GUI = GUI
 local Elements = {}
 GUI.Elements = Elements
 
-local CustomElements = {}
-
 -- Commonly-used functions
 local ReadU16BE = memory.read_u16_be
 local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight

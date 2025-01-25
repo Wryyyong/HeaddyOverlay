@@ -16,9 +16,6 @@ local setmetatable = setmetatable
 
 local ReadU16BE = memory.read_u16_be
 
-local DrawRectangle = gui.drawRectangle
-local DrawString = gui.drawString
-
 -- Default/fallback values for LevelData entries so we
 -- don't need to specify them in every single subtable
 local LevelDataDefault = {

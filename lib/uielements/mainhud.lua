@@ -1,7 +1,6 @@
 -- Set up globals and local references
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
-local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor

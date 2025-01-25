@@ -27,7 +27,7 @@ LevelMonitor.LevelData[0x3A] = {
 			["Cur"] = 0xFFFF,
 		}
 
-		Hook.Set("DrawCustomElements","GameOverRemainingContinues",function(width,height)
+		Hook.Set("DrawCustomElements","GameOverRemainingContinues",function(width)
 			if GUI.IsMenuOrLoadingScreen then return end
 
 			local posX = width * .425

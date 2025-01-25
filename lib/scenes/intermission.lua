@@ -37,10 +37,8 @@ LevelMonitor.LevelData[0x44] = {
 				GUI.IsMenuOrLoadingScreen
 			)
 
-			local widthHalf = width * .5
 			local heightBase = OffsetY + height
-
-			local stringHeight = heightBase + ElementHeightHalf
+			local heightString = heightBase + ElementHeightHalf
 
 			-- Background
 			DrawRectangle(
@@ -55,7 +53,7 @@ LevelMonitor.LevelData[0x44] = {
 			-- Health
 			DrawString(
 				1,
-				stringHeight,
+				heightString,
 				Headdy.StatStrings.Health,
 				nil,
 				0xFF000000,
@@ -69,7 +67,7 @@ LevelMonitor.LevelData[0x44] = {
 			-- LevelName
 			DrawString(
 				width - 1,
-				stringHeight,
+				heightString,
 				LevelMonitor.LevelNameString,
 				nil,
 				0xFF000000,
