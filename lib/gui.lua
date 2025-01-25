@@ -34,24 +34,15 @@ function GUI.Draw()
 end
 
 function GUI.LerpOffset(oldPos,inc,thresTrue,thresFalse,check)
+	local thresUse = check and thresTrue or thresFalse
 	local diff
 
-	if check then
-		if oldPos == thresTrue then
-			return oldPos
-		elseif oldPos > thresTrue then
-			diff = -inc
-		else
-			diff = inc
-		end
+	if oldPos == thresUse then
+		return oldPos
+	elseif oldPos > thresUse then
+		diff = -inc
 	else
-		if oldPos == thresFalse then
-			return oldPos
-		elseif oldPos < thresFalse then
-			diff = inc
-		else
-			diff = -inc
-		end
+		diff = inc
 	end
 
 	return oldPos + diff
