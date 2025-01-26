@@ -45,7 +45,7 @@ LevelMonitor.LevelData[0x1A] = {
 			KeepOn =
 				ReadU16BE(addressTbl["FlyingScythe.Properties"]) ~= 0
 			and	routine >= 2
-			and (
+			and	(
 					KeepOn
 				or	routine >= 8
 			)

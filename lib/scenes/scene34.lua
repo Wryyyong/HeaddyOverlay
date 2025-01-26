@@ -43,7 +43,7 @@ LevelMonitor.LevelData[0x14] = {
 
 			KeepOn =
 				newVal >= 8
-			and (
+			and	(
 					KeepOn
 				or	newVal >= 0xA
 			)

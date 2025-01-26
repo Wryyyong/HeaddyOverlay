@@ -45,7 +45,7 @@ LevelMonitor.LevelData[0x28] = {
 
 			KeepOn =
 				ReadU16BE(addressTbl["Stage.Routine"]) == 2
-			and ReadU16BE(addressTbl["Ball.Sprite"]) == 0x498
+			and	ReadU16BE(addressTbl["Ball.Sprite"]) == 0x498
 			and	routine >= 2
 			and	(
 					KeepOn
