@@ -3,7 +3,6 @@ local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local LevelMonitor = Overlay.LevelMonitor
-local MainHud = GUI.Elements.MainHud
 
 -- Cache commonly-used functions and constants
 local ReadU8 = memory.read_u8
@@ -15,10 +14,9 @@ LevelMonitor.LevelData[0x4C] = {
 	["Name"] = {
 		["Int"] = [[Input Secret Number]],
 	},
+	["DisableMainHud"] = true,
 
 	["LevelScript"] = function()
-		MainHud.ForceDisable = true
-
 		local GuiData = {
 			["String"] = "",
 			["Size"] = 16,

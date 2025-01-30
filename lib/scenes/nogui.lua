@@ -1,11 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
-local MainHud = Overlay.GUI.Elements.MainHud
-
-local function LevelScriptCommon()
-	MainHud.ForceDisable = true
-end
 
 -- Disable the GUI elements on these maps
 for sceneID,sceneName in pairs({
@@ -37,6 +32,6 @@ for sceneID,sceneName in pairs({
 }) do
 	LevelMonitor.LevelData[sceneID] = {
 		["Name"] = sceneName,
-		["LevelScript"] = LevelScriptCommon,
+		["DisableMainHud"] = true,
 	}
 end

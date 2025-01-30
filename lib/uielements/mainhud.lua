@@ -5,9 +5,6 @@ local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
 
-local MainHud = {}
-GUI.Elements.MainHud = MainHud
-
 local ElementHeight = 28
 local ElementHeightQuart1 = ElementHeight * .25
 local ElementHeightQuart3 = ElementHeight * .75
@@ -25,19 +22,21 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 Hook.Set("DrawGUI","MainHud",function(width,height)
+	local isDisabled = LevelMonitor.CurrentLevel.DisableMainHud
+
 	OffsetY = GUI.LerpOffset(
 		OffsetY,
 		OffsetYData.Inc,
 		OffsetYData.Max,
 		OffsetYData.Min,
 
-			MainHud.ForceDisable
+			isDisabled
 		or	GUI.IsMenuOrLoadingScreen
 		or	GUI.ScoreTallyActive
 	)
 
 	if
-		MainHud.ForceDisable
+		isDisabled
 	or	GUI.ScoreTallyActive
 	then return end
 
@@ -115,6 +114,5 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 end)
 
 Hook.Set("LevelChange","MainHud",function()
-	MainHud.ForceDisable = false
 	OffsetY = OffsetYInit
 end)

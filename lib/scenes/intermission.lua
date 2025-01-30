@@ -4,7 +4,6 @@ local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
-local MainHud = GUI.Elements.MainHud
 
 -- Cache commonly-used functions and constants
 local DrawRectangle = gui.drawRectangle
@@ -14,10 +13,9 @@ LevelMonitor.LevelData[0x44] = {
 	["Name"] = {
 		["Int"] = [[Intermission]],
 	},
+	["DisableMainHud"] = true,
 
 	["LevelScript"] = function()
-		MainHud.ForceDisable = true
-
 		local ElementHeight = 14
 		local ElementHeightHalf = ElementHeight * .5
 

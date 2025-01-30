@@ -4,7 +4,6 @@ local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
-local MainHud = GUI.Elements.MainHud
 
 -- Cache commonly-used functions and constants
 local ReadU16BE = memory.read_u16_be
@@ -16,10 +15,9 @@ LevelMonitor.LevelData[0x3A] = {
 	["Name"] = {
 		["Int"] = [[Game Over]],
 	},
+	["DisableMainHud"] = true,
 
 	["LevelScript"] = function()
-		MainHud.ForceDisable = true
-
 		if Overlay.Lang == "Jpn" then return end
 
 		local OffsetY = {

@@ -26,6 +26,7 @@ local LevelDataDefault = {
 	["Name"] = {
 		["Int"] = [[!! UNRECOGNISED LEVEL !!]],
 	},
+	["DisableMainHud"] = false,
 	["ScoreTallyThres"] = math.huge,
 
 	["LevelScript"] = function()
