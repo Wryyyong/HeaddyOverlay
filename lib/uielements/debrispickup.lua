@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
@@ -33,7 +33,7 @@ local TextColour = 0xFFFFFFFF
 local PickupString = ""
 local PickupGoal = ContinueReqByVersion[Overlay.Lang]
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local PadStart = bizstring.pad_start
 local ReadU16BE = memory.read_u16_be
 

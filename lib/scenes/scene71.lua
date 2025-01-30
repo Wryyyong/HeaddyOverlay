@@ -1,11 +1,11 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
 local Elements = Overlay.GUI.Elements
 local BossHealth = Elements.BossHealth
 local DebrisPickup = Elements.DebrisPickup
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local ReadU16BE = memory.read_u16_be
 
 LevelMonitor.LevelData[0x20] = {

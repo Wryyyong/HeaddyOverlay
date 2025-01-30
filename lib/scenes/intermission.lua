@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local GUI = Overlay.GUI
@@ -6,7 +6,7 @@ local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
 local MainHud = GUI.Elements.MainHud
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 

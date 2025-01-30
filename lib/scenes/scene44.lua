@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local LevelMonitor = HeaddyOverlay.LevelMonitor
 
 LevelMonitor.LevelData[0x34] = {

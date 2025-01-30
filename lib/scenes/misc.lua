@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local LevelData = HeaddyOverlay.LevelMonitor.LevelData
 
 -- Add barebones LevelData entries for all maps

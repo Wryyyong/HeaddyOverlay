@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
@@ -9,11 +9,7 @@ Overlay.GUI = GUI
 local Elements = {}
 GUI.Elements = Elements
 
--- Commonly-used functions
-local ReadU16BE = memory.read_u16_be
-local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
-
--- Include sub-scripts
+-- Execute sub-scripts
 local LibPath = "lib/"
 dofile(LibPath .. "headdystats.lua")
 dofile(LibPath .. "levelmonitor.lua")
@@ -25,6 +21,10 @@ dofile(UiElemPath .. "debrispickup.lua")
 dofile(UiElemPath .. "secretbonuspopup.lua")
 
 local LevelMonitor = Overlay.LevelMonitor
+
+-- Cache commonly-used functions and constants
+local ReadU16BE = memory.read_u16_be
+local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
 
 function GUI.Draw()
 	local width,height = ClientBufferWidth(),ClientBufferHeight()

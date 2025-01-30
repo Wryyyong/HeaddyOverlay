@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
@@ -11,7 +11,7 @@ Overlay.LevelMonitor = LevelMonitor
 local LevelData = {}
 LevelMonitor.LevelData = LevelData
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local setmetatable = setmetatable
 
 local ReadU16BE = memory.read_u16_be
@@ -82,7 +82,6 @@ end)
 
 Hook.Set("FinalizeSetup","ExecuteSceneScripts",function()
 	local ScenePath = "lib/scenes/"
-
 	dofile(ScenePath .. "scene11.lua")
 	dofile(ScenePath .. "scene22.lua")
 	dofile(ScenePath .. "scene23.lua")

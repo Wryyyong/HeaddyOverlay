@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
@@ -37,7 +37,7 @@ local GBar = BossGlobals.Bar
 local GPosYInit = BossGlobals.PosYInit
 local GInnerPadding = GElement.InnerPadding
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local type = type
 local next = next
 local ipairs = ipairs

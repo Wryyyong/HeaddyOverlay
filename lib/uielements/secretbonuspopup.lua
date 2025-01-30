@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
@@ -33,7 +33,7 @@ local BonusPointsBySceneMajor = {
 	["9"] = 4,
 }
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local MathFloor = math.floor
 
 local ReadU16BE = memory.read_u16_be

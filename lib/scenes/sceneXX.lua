@@ -1,10 +1,10 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local pairs = pairs
 
 local ReadU16BE = memory.read_u16_be

@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local LevelMonitor = Overlay.LevelMonitor
 local MainHud = Overlay.GUI.Elements.MainHud

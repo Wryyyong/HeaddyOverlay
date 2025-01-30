@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
@@ -21,7 +21,7 @@ local ScoreStore = {
 	["Secret"] = 0,
 }
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local MathHuge = math.huge
 
 local PadStart = bizstring.pad_start
@@ -39,8 +39,9 @@ function Headdy.SetInfiniteLives(newVal)
 end
 
 MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
-	-- Headdy technically has a max health of 32, but this only ever gets
-	-- incremented/decremented in multiples of 2, effectively halving this value.
+	-- Headdy technically has a max health of 32, but this value only ever gets
+	-- incremented/decremented in multiples of 2 -- therefore, we can represent
+	-- this value as a number out of 16 rather than 32
 	local newVal = ReadU16BE(addressTbl[1]) >> 1
 
 	Headdy.Health = newVal

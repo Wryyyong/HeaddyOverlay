@@ -1,4 +1,4 @@
--- Set up onexit event before doing anything else
+-- Set up onexit cleanup event before doing anything else
 local function Cleanup()
 	HeaddyOverlay = nil
 
@@ -14,7 +14,8 @@ end
 Cleanup()
 event.onexit(Cleanup,"HeaddyOverlay.Cleanup")
 
--- Set up global table
+-- Set up global "namespace" table
+-- This helps keep the global environment organized
 local Overlay = {}
 HeaddyOverlay = Overlay
 
@@ -36,24 +37,28 @@ Overlay.LangFallback = {
 	end
 }
 
--- Commonly-used functions
-local EmuFrameAdvance = emu.frameadvance
-local GuiClearGraphics = gui.clearGraphics
-
--- Include sub-scripts
+-- Execute sub-scripts
 local LibPath = "lib/"
 dofile(LibPath .. "hook.lua")
 dofile(LibPath .. "memorymonitor.lua")
 dofile(LibPath .. "gui.lua")
 
-Overlay.Hook.Run("FinalizeSetup")
+local Hook = Overlay.Hook
+local MemoryMonitor = Overlay.MemoryMonitor
+local GUI = Overlay.GUI
 
--- Main loop
+-- Cache commonly-used functions and constants
+local EmuFrameAdvance = emu.frameadvance
+local GuiClearGraphics = gui.clearGraphics
+
+Hook.Run("FinalizeSetup")
+
+-- Our main loop
 while true do
 	GuiClearGraphics()
 
-	Overlay.MemoryMonitor.ExecuteCallbacks()
-	Overlay.GUI.Draw()
+	MemoryMonitor.ExecuteCallbacks()
+	GUI.Draw()
 
 	EmuFrameAdvance()
 end

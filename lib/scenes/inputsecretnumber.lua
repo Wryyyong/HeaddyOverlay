@@ -1,11 +1,11 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local GUI = Overlay.GUI
 local LevelMonitor = Overlay.LevelMonitor
 local MainHud = GUI.Elements.MainHud
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local ReadU8 = memory.read_u8
 local ReadU16BE = memory.read_u16_be
 

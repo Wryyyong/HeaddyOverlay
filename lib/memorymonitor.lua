@@ -1,4 +1,4 @@
--- Set up globals and local references
+-- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 
 local MemoryMonitor = {}
@@ -8,7 +8,7 @@ local ActiveByID = {}
 local ActiveByAddress = {}
 local CallbacksToExec = {}
 
--- Commonly-used functions
+-- Cache commonly-used functions and constants
 local type = type
 local next = next
 local pairs = pairs
