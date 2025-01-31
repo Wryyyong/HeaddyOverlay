@@ -72,15 +72,18 @@ LevelMonitor.LevelData[0x20] = {
 				checkUpperThres = 0x40
 			end
 
+			local isBossArena = ReadU16BE(addressTbl["Stage.Routine"]) == 4
+
 			Gatekeeper:UpdateBoss(bossData)
 			Gatekeeper:Show(
-				ReadU16BE(addressTbl["Stage.Routine"]) == 4
+				isBossArena
 			and	gatekeeperRoutine >= checkLowerThres
 			and	gatekeeperRoutine < checkUpperThres
 			)
 
 			DebrisPickup.Enable(
-				bossData == DataNastyGatekeeper
+				isBossArena
+			and	bossData == DataNastyGatekeeper
 			and	gatekeeperRoutine >= 0x80
 			)
 		end)
