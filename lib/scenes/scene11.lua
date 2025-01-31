@@ -74,7 +74,7 @@ LevelMonitor.LevelData[0] = {
 			)
 
 			TroubleBruin:Show(
-				stageRoutine == 0x12
+				stageRoutine >= 0x12
 			and	commonSprite == 0x80
 			and	commonRoutine >= 0xA
 			and	commonRoutine < 0x2E
