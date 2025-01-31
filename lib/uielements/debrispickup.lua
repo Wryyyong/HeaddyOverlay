@@ -47,13 +47,13 @@ function DebrisPickup.Enable(newVal)
 	then return end
 
 	if newVal then
-		Count = 0
+		MemoryMonitor.ManuallyExecuteByIDs("DebrisPickup.Count")
 	end
 
 	Render = newVal
 end
 
-MemoryMonitor.Register("Count",0xFFE93A,function(addressTbl)
+MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
 	local newVal = Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
 
 	Count = newVal
