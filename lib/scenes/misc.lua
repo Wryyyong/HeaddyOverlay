@@ -124,16 +124,6 @@ for sceneID,sceneData in pairs({
 			["Jpn"] = [["LIGHT VELOCITY"]],
 		},
 	},
-	[0x58] = {
-		["Name"] = {
-			["Int"] = [["FLYI NGIA"]],
-		},
-	},
-	[0x5A] = {
-		["Name"] = {
-			["Int"] = [["FLYI NGIA"]],
-		},
-	},
 }) do
 	LevelData[sceneID] = sceneData
 end
