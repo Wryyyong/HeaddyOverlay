@@ -55,9 +55,13 @@ MemoryMonitor.Register("Headdy.Score",{
 },function(addressTbl)
 	if GUI.ScoreTallyActive then return end
 
-	ScoreStore.Stage = ReadU16BE(addressTbl["Score.Stage"])
-	ScoreStore.Time = ReadU16BE(addressTbl["Score.Time"])
-	ScoreStore.Secret = ReadU16BE(addressTbl["Score.Secret"])
+	for scoreKey in pairs(ScoreStore) do
+		local address = addressTbl["Score." .. scoreKey]
+
+		if address then
+			ScoreStore[scoreKey] = ReadU16BE(address)
+		end
+	end
 
 	local newScore =
 		(
