@@ -79,6 +79,8 @@ MemoryMonitor.Register("Headdy.LivesContinues",{
 
 	local newStr = "Lives: "
 
+	-- I COULD make this statement more compact, but I feel it's one of those
+	-- situations where it'd negatively impact readability a little TOO much
 	if Headdy.InfiniteLives then
 		newStr = newStr .. MathHuge
 	else
