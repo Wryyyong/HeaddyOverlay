@@ -13,7 +13,7 @@ local Invalidated = true
 
 -- Execute sub-scripts
 local LibPath = "lib/"
-dofile(LibPath .. "headdystats.lua")
+dofile(LibPath .. "headdy.lua")
 dofile(LibPath .. "levelmonitor.lua")
 
 local UiElemPath = LibPath .. "uielements/"
