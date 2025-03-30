@@ -26,6 +26,7 @@ LevelMonitor.LevelData[0x4C] = {
 				["Prev"] = 0,
 			},
 		}
+		local GuiColors = GuiData.Colors
 
 		Hook.Set("DrawCustomElements","SecretNumberDisplay",function(width,height)
 			if GUI.IsMenuOrLoadingScreen then return end
@@ -82,15 +83,17 @@ LevelMonitor.LevelData[0x4C] = {
 					newStr = newStr .. (newVal >= 0xA and "-" or newVal)
 				end
 
+				GUI.InvalidateCheck(GuiData.String ~= newStr)
+
 				GuiData.String = newStr
 			end
 
 			-- Color
 			local routine = ReadU16BE(addressTbl["Routine"])
-			local newColor
+			local prevColor,newColor = GuiColors.Prev
 
 			if routine >= 0xE then
-				newColor = GuiData.Colors.Prev
+				newColor = prevColor
 			elseif routine >= 0xC then
 				newColor = 0xFF00
 			elseif routine >= 8 then
@@ -99,9 +102,11 @@ LevelMonitor.LevelData[0x4C] = {
 				newColor = 0xFFFFFF
 			end
 
-			GuiData.Colors.Prev = newColor
-			GuiData.Colors.Current = transparency + newColor
-			GuiData.Colors.Header = transparency + 0xFFFFFF
+			GUI.InvalidateCheck(prevColor ~= newColor)
+
+			GuiColors.Prev = newColor
+			GuiColors.Current = transparency + newColor
+			GuiColors.Header = transparency + 0xFFFFFF
 		end)
 	end,
 }

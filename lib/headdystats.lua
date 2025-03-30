@@ -43,9 +43,13 @@ MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	-- incremented/decremented in multiples of 2 -- therefore, we can represent
 	-- this value as a number out of 16 rather than 32
 	local newVal = ReadU16BE(addressTbl[1]) >> 1
-
 	Headdy.Health = newVal
-	StatStrings.Health = "Health: " .. PadStart(newVal,2,0) .. " / 16"
+
+	local newStr = "Health: " .. PadStart(newVal,2,0) .. " / 16"
+
+	GUI.InvalidateCheck(StatStrings.Health ~= newStr)
+
+	StatStrings.Health = newStr
 end)
 
 MemoryMonitor.Register("Headdy.Score",{
@@ -71,7 +75,11 @@ MemoryMonitor.Register("Headdy.Score",{
 		+	ScoreStore.Secret
 	) * 100
 
-	StatStrings.Score = "Score: " .. PadStart(newScore,6,0)
+	local newStr = "Score: " .. PadStart(newScore,6,0)
+
+	GUI.InvalidateCheck(StatStrings.Score ~= newStr)
+
+	StatStrings.Score = newStr
 end)
 
 MemoryMonitor.Register("Headdy.LivesContinues",{
@@ -90,6 +98,8 @@ MemoryMonitor.Register("Headdy.LivesContinues",{
 	else
 		newStr = newStr .. Headdy.Lives .. (Headdy.Continues > 0 and " (+" .. Headdy.Continues * 3 .. ")" or "")
 	end
+
+	GUI.InvalidateCheck(StatStrings.Lives ~= newStr)
 
 	StatStrings.Lives = newStr
 end)

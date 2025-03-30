@@ -2,6 +2,7 @@
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
+local GUI = Overlay.GUI
 
 local LevelMonitor = {
 	["LevelNameString"] = "",
@@ -59,6 +60,8 @@ local function UpdateLevelNameString()
 	if #name > 0 then
 		newStr = newStr .. (#newStr > 0 and " — " or "") .. name
 	end
+
+	GUI.InvalidateCheck(LevelMonitor.LevelNameString ~= newStr)
 
 	LevelMonitor.LevelNameString = newStr
 end

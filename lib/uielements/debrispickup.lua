@@ -56,6 +56,8 @@ end
 MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
 	local newVal = Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
 
+	GUI.InvalidateCheck(Count ~= newVal)
+
 	Count = newVal
 	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
 	TextColour = newVal == PickupGoal and 0xFF00FF00 or 0xFFFFFFFF

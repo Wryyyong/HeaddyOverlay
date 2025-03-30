@@ -44,21 +44,18 @@ dofile(LibPath .. "memorymonitor.lua")
 dofile(LibPath .. "gui.lua")
 
 local Hook = Overlay.Hook
-local MemoryMonitor = Overlay.MemoryMonitor
-local GUI = Overlay.GUI
+local MemoryMonitorExecuteCallbacks = Overlay.MemoryMonitor.ExecuteCallbacks
+local GUIDraw = Overlay.GUI.Draw
 
 -- Cache commonly-used functions and constants
 local EmuFrameAdvance = emu.frameadvance
-local GuiClearGraphics = gui.clearGraphics
 
 Hook.Run("FinalizeSetup")
 
 -- Our main loop
 while true do
-	GuiClearGraphics()
-
-	MemoryMonitor.ExecuteCallbacks()
-	GUI.Draw()
+	MemoryMonitorExecuteCallbacks()
+	GUIDraw()
 
 	EmuFrameAdvance()
 end

@@ -75,7 +75,11 @@ LevelMonitor.LevelData[0x3A] = {
 
 			-- The game only applies the new position on the frame following
 			-- the value change, this mimics the result of that behaviour
-			OffsetY.Prev = OffsetY.Cur
+			local newPrev = OffsetY.Cur
+
+			GUI.InvalidateCheck(OffsetY.Prev ~= newPrev)
+
+			OffsetY.Prev = newPrev
 			OffsetY.Cur = ReadU16BE(addressTbl["Sprite.OffsetY"]) - 152
 		end)
 	end,

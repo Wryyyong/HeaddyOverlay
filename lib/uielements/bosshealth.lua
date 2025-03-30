@@ -111,6 +111,7 @@ function BossHealth:UpdateBoss(bossData)
 	then return end
 
 	MemoryMonitor.Unregister(self.MonitorID)
+	GUI.InvalidateCheck(true)
 
 	self.BossData = bossData
 	setmetatable(bossData.PrintName,Overlay.LangFallback)
@@ -129,8 +130,11 @@ end
 
 function BossHealth:UpdateHealth()
 	local bossData = self.BossData
+	local newHealth = self.ReadFunc(bossData.Address) - bossData.HealthDeath[Overlay.Lang]
 
-	self.Health = self.ReadFunc(bossData.Address) - bossData.HealthDeath[Overlay.Lang]
+	GUI.InvalidateCheck(self.Health ~= newHealth)
+
+	self.Health = newHealth
 	self.HealthPercent = self.Health / self.HealthTotal
 	self:UpdateColor()
 end
@@ -150,7 +154,11 @@ function BossHealth:UpdateColor()
 		newColor = 0xFF0000
 	end
 
-	self.HealthColor = newColor + 0xFF000000
+	newColor = newColor + 0xFF000000
+
+	GUI.InvalidateCheck(self.HealthColor ~= newColor)
+
+	self.HealthColor = newColor
 	--self.HealthColor = (HealthColorVals.Max - (self.HealthPercent * (HealthColorVals.Min - HealthColorVals.Max))) & 0xFFFFFF00
 end
 
