@@ -1,3 +1,13 @@
+--[[
+	As of writing, both Mega Drive cores in BizHawk only return 0 for all
+	read/write/exec callbacks.
+
+	To work around this limitation, we set up a monitoring system utilizing a
+	global on_bus_write event that fills a table with callback functions to be
+	executed on the following frame, if the modified address matches with our
+	active monitors.
+--]]
+
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
 
@@ -16,22 +26,8 @@ local ipairs = ipairs
 local tostring = tostring
 local tonumber = tonumber
 
---[[
-	As of writing, both Mega Drive cores in BizHawk only return 0 for all
-	read/write/exec callbacks.
-
-	To work around this limitation, we set up a monitoring system utilizing a
-	global on_bus_write event that fills a table with callback functions to be
-	executed on the following frame, if the modified address matches with our
-	active monitors.
---]]
-
 -- Create global memory monitor
 event.on_bus_write(function(address)
-	-- read/write/exec callbacks return 32-bit address values
-	-- We only want the 24 least-significant bits of that address
-	address = address & 0xFFFFFF
-
 	local monitors = ActiveByAddress[address]
 
 	if
@@ -55,7 +51,7 @@ event.onloadstate(function()
 end,"HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
 
 local function UnregisterInternal(id,monitorData)
-	for _,address in ipairs(monitorData.AddressTbl) do
+	for _,address in ipairs(monitorData.AddressTblPadded) do
 		ActiveByAddress[address][id] = nil
 	end
 
@@ -77,22 +73,36 @@ function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
 		addressTbl = {addressTbl}
 	end
 
+	local addressTblPadded = {}
+
 	local monitorData = {
 		["AddressTbl"] = addressTbl,
+		["AddressTblPadded"] = addressTblPadded,
 		["Callback"] = callback,
 		["SkipInit"] = skipInit,
 	}
 
-	for idx,address in pairs(addressTbl) do
-		local addressConv = tonumber(address)
+	ActiveByID[id] = monitorData
 
-		if not ActiveByAddress[addressConv] then
-			ActiveByAddress[addressConv] = {}
+	for idx,address in pairs(addressTbl) do
+		-- read/write/exec callbacks return 32-bit address values, but the 68K
+		-- memory bus is only 0xFFFFFF bytes long, so our input addresses are
+		-- going to be only 24-bit values at most
+		--
+		-- Instead of bitmasking 32-bit values down to 24 bits everytime our
+		-- on_bus_write callback is executed, we'll pad out 24-bit input
+		-- addresses to 32-bit to accommodate
+		local addressConv = tonumber(address)
+		local addressPad = addressConv | 0xFF000000
+
+		if not ActiveByAddress[addressPad] then
+			ActiveByAddress[addressPad] = {}
 		end
 
 		addressTbl[idx] = addressConv
-		ActiveByID[id] = monitorData
-		ActiveByAddress[addressConv][id] = monitorData
+		addressTblPadded[idx] = addressPad
+
+		ActiveByAddress[addressPad][id] = monitorData
 	end
 
 	if skipInit then return end
