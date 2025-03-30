@@ -2,7 +2,7 @@
 local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local GUI = Overlay.GUI
-local Headdy = Overlay.Headdy
+local HeaddyStatStrings = Overlay.Headdy.StatStrings
 local LevelMonitor = Overlay.LevelMonitor
 
 local ElementHeight = 28
@@ -74,7 +74,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 	DrawString(
 		1,
 		stringHeightUpper,
-		Headdy.StatStrings.Health,
+		HeaddyStatStrings.Health,
 		nil,
 		0xFF000000,
 		10,
@@ -88,7 +88,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 	DrawString(
 		widthHalf,
 		stringHeightUpper,
-		Headdy.StatStrings.Score,
+		HeaddyStatStrings.Score,
 		nil,
 		0xFF000000,
 		10,
@@ -102,7 +102,7 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 	DrawString(
 		width - 1,
 		stringHeightUpper,
-		Headdy.StatStrings.Lives,
+		HeaddyStatStrings.Lives,
 		nil,
 		0xFF000000,
 		10,
