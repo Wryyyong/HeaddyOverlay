@@ -38,10 +38,13 @@ Overlay.LangFallback = {
 }
 
 -- Execute sub-scripts
-local LibPath = "lib/"
-dofile(LibPath .. "hook.lua")
-dofile(LibPath .. "memorymonitor.lua")
-dofile(LibPath .. "gui.lua")
+for _,script in ipairs({
+	"hook",
+	"memorymonitor",
+	"gui",
+}) do
+	dofile("lib/" .. script .. ".lua")
+end
 
 local Hook = Overlay.Hook
 local MemoryMonitorExecuteCallbacks = Overlay.MemoryMonitor.ExecuteCallbacks

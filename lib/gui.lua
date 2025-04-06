@@ -12,15 +12,21 @@ GUI.Elements = Elements
 local Invalidated = true
 
 -- Execute sub-scripts
-local LibPath = "lib/"
-dofile(LibPath .. "headdy.lua")
-dofile(LibPath .. "levelmonitor.lua")
+for _,script in ipairs({
+	"headdy",
+	"levelmonitor",
+}) do
+	dofile("lib/" .. script .. ".lua")
+end
 
-local UiElemPath = LibPath .. "uielements/"
-dofile(UiElemPath .. "mainhud.lua")
-dofile(UiElemPath .. "bosshealth.lua")
-dofile(UiElemPath .. "debrispickup.lua")
-dofile(UiElemPath .. "secretbonuspopup.lua")
+for _,script in ipairs({
+	"mainhud",
+	"bosshealth",
+	"debrispickup",
+	"secretbonuspopup",
+}) do
+	dofile("lib/uielements/" .. script .. ".lua")
+end
 
 local LevelMonitor = Overlay.LevelMonitor
 

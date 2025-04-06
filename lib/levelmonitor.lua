@@ -85,33 +85,36 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 end)
 
 Hook.Set("FinalizeSetup","ExecuteSceneScripts",function()
-	local ScenePath = "lib/scenes/"
-	dofile(ScenePath .. "scene11.lua")
-	dofile(ScenePath .. "scene22.lua")
-	dofile(ScenePath .. "scene23.lua")
-	dofile(ScenePath .. "Scene32.lua")
-	dofile(ScenePath .. "scene33.lua")
-	dofile(ScenePath .. "scene34.lua")
-	dofile(ScenePath .. "scene41.lua")
-	dofile(ScenePath .. "scene44.lua")
-	dofile(ScenePath .. "scene52.lua")
-	dofile(ScenePath .. "scene53.lua")
-	dofile(ScenePath .. "scene54.lua")
-	dofile(ScenePath .. "scene61.lua")
-	dofile(ScenePath .. "scene62.lua")
-	dofile(ScenePath .. "scene64.lua")
-	dofile(ScenePath .. "scene71.lua")
-	dofile(ScenePath .. "scene82.lua")
-	dofile(ScenePath .. "scene83.lua")
-	dofile(ScenePath .. "scene84.lua")
-	dofile(ScenePath .. "scene85.lua")
-	dofile(ScenePath .. "scene93.lua")
-	dofile(ScenePath .. "sceneXX.lua")
-	dofile(ScenePath .. "intermission.lua")
-	dofile(ScenePath .. "inputsecretnumber.lua")
-	dofile(ScenePath .. "gameover.lua")
-	dofile(ScenePath .. "nogui.lua")
-	dofile(ScenePath .. "misc.lua")
+	for _,script in ipairs({
+		"scene11",
+		"scene22",
+		"scene23",
+		"scene32",
+		"scene33",
+		"scene34",
+		"scene41",
+		"scene44",
+		"scene52",
+		"scene53",
+		"scene54",
+		"scene61",
+		"scene62",
+		"scene64",
+		"scene71",
+		"scene82",
+		"scene83",
+		"scene84",
+		"scene85",
+		"scene93",
+		"sceneXX",
+		"intermission",
+		"inputsecretnumber",
+		"gameover",
+		"nogui",
+		"misc",
+	}) do
+		dofile("lib/scenes/" .. script .. ".lua")
+	end
 
 	local LevelDataMeta = {
 		["__index"] = LevelDataDefault,
