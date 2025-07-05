@@ -3,6 +3,7 @@ local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
+local Headdy = Overlay.Headdy
 
 local DebrisPickup = {
 	["Count"] = 0,
@@ -29,6 +30,7 @@ local ContinueReqByVersion = {
 	["Jpn"] = 10,
 }
 
+local SavedContinues = 0
 local TextColour = 0xFFFFFFFF
 local PickupString = ""
 local PickupGoal = ContinueReqByVersion[Overlay.Lang]
@@ -47,6 +49,8 @@ function DebrisPickup.Enable(newVal)
 	then return end
 
 	if newVal then
+		SavedContinues = Headdy.Continues
+
 		MemoryMonitor.ManuallyExecuteByIDs("DebrisPickup.Count")
 	end
 
@@ -54,13 +58,13 @@ function DebrisPickup.Enable(newVal)
 end
 
 MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
-	local newVal = Count >= (PickupGoal - 1) and PickupGoal or ReadU16BE(addressTbl[1])
+	local newVal = ReadU16BE(addressTbl[1]) + (PickupGoal * (Headdy.Continues - SavedContinues))
 
 	GUI.InvalidateCheck(Count ~= newVal)
 
 	Count = newVal
 	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
-	TextColour = newVal == PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
+	TextColour = newVal >= PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
 end)
 
 Hook.Set("DrawGUI","DebrisPickup",function(width)
