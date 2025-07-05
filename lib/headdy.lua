@@ -5,6 +5,9 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 
 local Headdy = {
+	["Health"] = 0,
+	["Lives"] = 0,
+	["Continues"] = 0,
 	["StatStrings"] = {
 		["Health"] = "",
 		["Score"] = "",

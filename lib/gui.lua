@@ -3,7 +3,10 @@ local Overlay = HeaddyOverlay
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 
-local GUI = {}
+local GUI = {
+	["Width"] = client.bufferwidth(),
+	["Height"] = client.bufferheight(),
+}
 Overlay.GUI = GUI
 
 local Elements = {}
@@ -33,8 +36,6 @@ local LevelMonitor = Overlay.LevelMonitor
 -- Cache commonly-used functions and constants
 local ReadU16BE = memory.read_u16_be
 local GuiClearGraphics = gui.clearGraphics
-
-GUI.Width,GUI.Height = client.bufferwidth(),client.bufferheight()
 
 function GUI.InvalidateCheck(check)
 	if Invalidated or not check then return end
