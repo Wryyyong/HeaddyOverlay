@@ -33,7 +33,8 @@ local LevelMonitor = Overlay.LevelMonitor
 -- Cache commonly-used functions and constants
 local ReadU16BE = memory.read_u16_be
 local GuiClearGraphics = gui.clearGraphics
-local ClientBufferWidth,ClientBufferHeight = client.bufferwidth,client.bufferheight
+
+GUI.Width,GUI.Height = client.bufferwidth(),client.bufferheight()
 
 function GUI.InvalidateCheck(check)
 	if Invalidated or not check then return end
@@ -49,7 +50,7 @@ function GUI.Draw()
 
 	GuiClearGraphics()
 
-	local width,height = ClientBufferWidth(),ClientBufferHeight()
+	local width,height = GUI.Width,GUI.Height
 
 	Hook.Run("DrawGUI",width,height)
 	Hook.Run("DrawCustomElements",width,height)
