@@ -35,6 +35,7 @@ LevelMonitor.LevelData[0x56] = {
 		})
 
 		LevelMonitor.SetSceneMonitor({
+			["Key.Routine"] = 0xFFD14E,
 			["BabyFace.Routine"] = 0xFFD132,
 			["BabyFace.State"] = 0xFFDB64,
 			["BabyFace.EarlyEnd"] = 0xFFD030,
@@ -58,7 +59,10 @@ LevelMonitor.LevelData[0x56] = {
 
 			BabyFace:Show(doShow)
 
-			DebrisPickup.Enable(routine >= 0x1C)
+			DebrisPickup.Enable(
+				routine >= 0xE
+			and ReadU16BE(addressTbl["Key.Routine"]) > 0
+			)
 		end)
 	end,
 }
