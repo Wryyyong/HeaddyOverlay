@@ -35,13 +35,13 @@ LevelMonitor.LevelData[0x30] = {
 
 		LevelMonitor.SetSceneMonitor({
 			["Stage.Routine"] = 0xFFE850,
-			["DarkDemon.Routine"] = 0xFFD106,
-			["Smiley.Routine"] = 0xFFD10A,
+			["HeaddyHead.Routine"] = 0xFFD106,
+			["DarkDemon.Routine"] = 0xFFD132,
 		},function(addressTbl)
 			DarkDemon:Show(
-				ReadU16BE(addressTbl["Stage.Routine"]) == 4
-			and	ReadU16BE(addressTbl["DarkDemon.Routine"]) ~= 0x10
-			and	ReadU16BE(addressTbl["Smiley.Routine"]) >= 4
+				ReadU16BE(addressTbl["Stage.Routine"]) >= 2
+			and	ReadU16BE(addressTbl["HeaddyHead.Routine"]) ~= 0x10
+			and	ReadU16BE(addressTbl["DarkDemon.Routine"]) >= 2
 			)
 		end)
 	end,
