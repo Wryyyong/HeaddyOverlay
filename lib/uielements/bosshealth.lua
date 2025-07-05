@@ -101,6 +101,8 @@ function BossHealth:Show(newVal)
 		self:UpdateHealth()
 	end
 
+	GUI.InvalidateCheck(true)
+
 	self.Render = newVal
 end
 
@@ -207,11 +209,8 @@ function BossHealth:Draw()
 	)
 end
 
-Hook.Set("DrawGUI","BossHealth",function(width,height)
-	if
-		GUI.IsMenuOrLoadingScreen
-	or	next(ActiveBars) == nil
-	then return end
+Hook.Set("FinalizeSetup","PopulateBossGlobals",function()
+   	local width,height = GUI.Width,GUI.Height
 
 	GElement.PosX = width * GMultipliers.PosX
 
@@ -224,6 +223,13 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 	GBar.Width = GElement.Width * GMultipliers.BarWidth
 	GBar.Height = GElement.Height * GMultipliers.BarHeight
 	GBar.HeightHalf = GBar.Height * .5
+end)
+
+Hook.Set("DrawGUI","BossHealth",function(width,height)
+	if
+		GUI.IsMenuOrLoadingScreen
+	or	next(ActiveBars) == nil
+	then return end
 
 	local posInc,posMin = GPosYInit.Inc,GPosYInit.Min
 	local barCounter = 0
@@ -242,7 +248,7 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 			bossBar.Render
 		)
 
-		if bossBar.PosY > GPosYInit.Min then
+		if bossBar.PosY > posMin then
 			bossBar:Draw()
 		end
 	end
