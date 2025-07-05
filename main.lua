@@ -9,6 +9,8 @@ local function Cleanup()
 	}) do
 		event.unregisterbyname("HeaddyOverlay." .. eventName)
 	end
+
+	gui.clearGraphics()
 end
 
 Cleanup()
