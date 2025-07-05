@@ -108,5 +108,5 @@ Hook.Set("LevelChange","Headdy",function()
 	Headdy.SetInfiniteLives(false)
 
 	ScoreStore.Total = ReadU16BE(0xFFE8FA)
-	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Score")
+	MemoryMonitor.ManuallyExecuteByIDs("Headdy.Health","Headdy.Score")
 end)
