@@ -31,7 +31,7 @@ local ContinueReqByVersion = {
 }
 
 local SavedContinues = 0
-local TextColour = 0xFFFFFFFF
+local TextColor = 0xFFFFFFFF
 local PickupString = ""
 local PickupGoal = ContinueReqByVersion[Overlay.Lang]
 
@@ -64,7 +64,7 @@ MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
 
 	Count = newVal
 	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
-	TextColour = newVal >= PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
+	TextColor = newVal >= PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
 end)
 
 Hook.Set("DrawGUI","DebrisPickup",function(width)
@@ -110,7 +110,7 @@ Hook.Set("DrawGUI","DebrisPickup",function(width)
 		widthHalf,
 		OffsetY + ElementHeightQuart3,
 		PickupString,
-		TextColour,
+		TextColor,
 		0xFF000000,
 		12,
 		"MS Gothic",
