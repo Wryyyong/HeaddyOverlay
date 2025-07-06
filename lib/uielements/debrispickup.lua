@@ -5,13 +5,8 @@ local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
 local Headdy = Overlay.Headdy
 
-local DebrisPickup = {
-	["Count"] = 0,
-}
+local DebrisPickup = {}
 GUI.Elements.DebrisPickup = DebrisPickup
-
-local Render
-local Count = 0
 
 local ElementHeight = 28
 local ElementHeightQuart1 = ElementHeight * .25
@@ -30,10 +25,12 @@ local ContinueReqByVersion = {
 	["Jpn"] = 10,
 }
 
+local Render
+local Count = 0
 local SavedContinues = 0
+local PickupGoal = ContinueReqByVersion[Overlay.Lang]
 local TextColor = 0xFFFFFFFF
 local PickupString = ""
-local PickupGoal = ContinueReqByVersion[Overlay.Lang]
 
 -- Cache commonly-used functions and constants
 local PadStart = bizstring.pad_start
@@ -68,16 +65,18 @@ MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
 end)
 
 Hook.Set("DrawGUI","DebrisPickup",function(width)
+	local yMin = OffsetYData.Min
+
 	OffsetY = GUI.LerpOffset(
 		OffsetY,
 		OffsetYData.Inc,
 		OffsetYData.Max,
-		OffsetYData.Min,
+		yMin,
 		Render
 	)
 
 	if
-		OffsetY <= OffsetYData.Min
+		OffsetY <= yMin
 	or	GUI.IsMenuOrLoadingScreen
 	or	GUI.ScoreTallyActive
 	then return end
@@ -122,5 +121,6 @@ end)
 
 Hook.Set("LevelChange","DebrisPickup",function()
 	DebrisPickup.Enable(false)
+
 	OffsetY = OffsetYInit
 end)
