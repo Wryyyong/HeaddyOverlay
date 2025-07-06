@@ -71,8 +71,6 @@ LevelMonitor.LevelData[0x3A] = {
 			["Sprite.Routine"] = 0xFFD132,
 			["Sprite.OffsetY"] = 0xFFD530,
 		},function(addressTbl)
-			if ReadU16BE(addressTbl["Sprite.Routine"]) < 6 then return end
-
 			-- The game only applies the new position on the frame following
 			-- the value change, this mimics the result of that behaviour
 			local newPrev = OffsetY.Cur
