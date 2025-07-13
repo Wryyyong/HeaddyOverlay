@@ -5,6 +5,7 @@
 
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 
 local Hook = {}
 Overlay.Hook = Hook
@@ -12,18 +13,11 @@ Overlay.Hook = Hook
 local HookTable = {}
 
 -- Cache commonly-used functions and constants
-local type = type
-local next = next
 local pairs = pairs
 local tostring = tostring
 
 function Hook.Set(event,id,func)
-	local funcType = type(func)
-
-	if
-		funcType ~= "nil"
-	and	funcType ~= "function"
-	then return end
+	if not Util.IsTypeMulti(func,"nil","function") then return end
 
 	event = tostring(event)
 
@@ -39,7 +33,7 @@ function Hook.ClearAll(event)
 
 	if
 		not eventTbl
-	or	next(eventTbl) == nil
+	or	Util.IsTableEmpty(eventTbl)
 	then return end
 
 	for id in pairs(eventTbl) do
@@ -52,7 +46,7 @@ function Hook.Run(event,...)
 
 	if
 		not eventTbl
-	or	next(eventTbl) == nil
+	or	Util.IsTableEmpty(eventTbl)
 	then return end
 
 	for _,func in pairs(eventTbl) do

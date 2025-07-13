@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local Elements = Overlay.GUI.Elements
 local BossHealth = Elements.BossHealth
@@ -44,8 +45,7 @@ LevelMonitor.LevelData[0x56] = {
 
 			local doShow =
 				ReadU16BE(addressTbl["BabyFace.EarlyEnd"]) ~= 0
-			and	routine >= 0xC
-			and	routine < 0x1C
+			and	Util.IsInRange(routine,0xC,0x1A)
 
 			if doShow then
 				local newStr = "Baby Face"
@@ -61,7 +61,7 @@ LevelMonitor.LevelData[0x56] = {
 
 			DebrisPickup.Enable(
 				routine >= 0xE
-			and ReadU16BE(addressTbl["Key.Routine"]) > 0
+			and	ReadU16BE(addressTbl["Key.Routine"]) > 0
 			)
 		end)
 	end,

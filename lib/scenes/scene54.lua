@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local Elements = Overlay.GUI.Elements
 local BossHealth = Elements.BossHealth
@@ -42,16 +43,15 @@ LevelMonitor.LevelData[0x1E] = {
 			local newVal = ReadU16BE(addressTbl[1])
 
 			KeepOn =
-				newVal >= 8
+				Util.IsInRange(newVal,8,0x1C)
 			and	(
 					KeepOn
 				or	newVal >= 0xC
 			)
-			and	newVal < 0x1E
 
 			Spinderella:Show(KeepOn)
 
-			DebrisPickup.Enable(newVal >= 0x1E)
+			DebrisPickup.Enable(newVal > 0x1C)
 		end)
 	end,
 }

@@ -22,7 +22,9 @@ local DrawRectangle = gui.drawRectangle
 local DrawString = gui.drawString
 
 Hook.Set("DrawGUI","MainHud",function(width,height)
-	local isDisabled = LevelMonitor.CurrentLevel.DisableMainHud
+	local isDisabled =
+		LevelMonitor.CurrentLevel.DisableMainHud
+	or	GUI.ScoreTallyActive
 
 	OffsetY = GUI.LerpOffset(
 		OffsetY,
@@ -32,13 +34,9 @@ Hook.Set("DrawGUI","MainHud",function(width,height)
 
 			isDisabled
 		or	GUI.IsMenuOrLoadingScreen
-		or	GUI.ScoreTallyActive
 	)
 
-	if
-		isDisabled
-	or	GUI.ScoreTallyActive
-	then return end
+	if isDisabled then return end
 
 	local widthHalf = width * .5
 	local heightBase = OffsetY + height

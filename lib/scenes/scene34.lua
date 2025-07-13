@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local Elements = Overlay.GUI.Elements
 local BossHealth = Elements.BossHealth
@@ -42,16 +43,15 @@ LevelMonitor.LevelData[0x14] = {
 			local newVal = ReadU16BE(addressTbl[1])
 
 			KeepOn =
-				newVal >= 8
+				Util.IsInRange(newVal,8,0x26)
 			and	(
 					KeepOn
 				or	newVal >= 0xA
 			)
-			and	newVal < 0x28
 
 			WoodenDresser:Show(KeepOn)
 
-			DebrisPickup.Enable(newVal >= 0x28)
+			DebrisPickup.Enable(newVal > 0x26)
 		end)
 	end,
 }

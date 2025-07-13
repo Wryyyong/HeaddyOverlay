@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local Elements = Overlay.GUI.Elements
 local BossHealth = Elements.BossHealth
@@ -39,12 +40,9 @@ LevelMonitor.LevelData[0x2A] = {
 		LevelMonitor.SetSceneMonitor(0xFFD142,function(addressTbl)
 			local newVal = ReadU16BE(addressTbl[1])
 
-			TwinFreaks:Show(
-				newVal >= 6
-			and	newVal < 0x10
-			)
+			TwinFreaks:Show(Util.IsInRange(newVal,6,0xE))
 
-			DebrisPickup.Enable(newVal >= 0x10)
+			DebrisPickup.Enable(newVal > 0xE)
 		end)
 	end,
 }

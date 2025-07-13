@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
 
@@ -40,12 +41,9 @@ LevelMonitor.LevelData[4] = {
 		},function(addressTbl)
 			if ReadU16BE(addressTbl["MonsMeg.Sprite"]) ~= 0x134 then return end
 
-			local routine = ReadU16BE(addressTbl["MonsMeg.Routine"])
-
 			MonsMeg:Show(
 				ReadU16BE(addressTbl["Stage.Routine"]) == 0xC
-			and	routine >= 6
-			and	routine < 0xC
+			and	Util.IsInRange(ReadU16BE(addressTbl["MonsMeg.Routine"]),6,0xA)
 			)
 		end)
 	end,

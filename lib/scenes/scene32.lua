@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
 
@@ -32,12 +33,7 @@ LevelMonitor.LevelData[0x12] = {
 		})
 
 		LevelMonitor.SetSceneMonitor(0xFFD186,function(addressTbl)
-			local newVal = ReadU16BE(addressTbl[1])
-
-			RocketGrappler:Show(
-				newVal >= 8
-			and	newVal < 0x20
-			)
+			RocketGrappler:Show(Util.IsInRange(ReadU16BE(addressTbl[1]),8,0x1E))
 		end)
 	end,
 }

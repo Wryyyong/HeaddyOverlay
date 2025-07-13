@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local Headdy = Overlay.Headdy
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
@@ -67,12 +68,7 @@ LevelMonitor.LevelData[0x38] = {
 			[TheatreOwner] = 0xFFD136,
 		},function(addressTbl)
 			for bossBar,address in pairs(addressTbl) do
-				local routine = ReadU16BE(address)
-
-				bossBar:Show(
-					routine >= 8
-				and	routine < 0x18
-				)
+				bossBar:Show(Util.IsInRange(ReadU16BE(address),8,0x16))
 			end
 		end)
 	end,

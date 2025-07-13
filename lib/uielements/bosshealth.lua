@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local Hook = Overlay.Hook
 local MemoryMonitor = Overlay.MemoryMonitor
 local GUI = Overlay.GUI
@@ -38,8 +39,6 @@ local GPosYInit = BossGlobals.PosYInit
 local GInnerPadding = GElement.InnerPadding
 
 -- Cache commonly-used functions and constants
-local type = type
-local next = next
 local ipairs = ipairs
 local setmetatable = setmetatable
 
@@ -108,7 +107,7 @@ end
 
 function BossHealth:UpdateBoss(bossData)
 	if
-		type(bossData) ~= "table"
+		not Util.IsTable(bossData)
 	or	self.BossData == bossData
 	then return end
 
@@ -210,7 +209,7 @@ function BossHealth:Draw()
 end
 
 Hook.Set("FinalizeSetup","PopulateBossGlobals",function()
-   	local width,height = GUI.Width,GUI.Height
+	local width,height = GUI.Width,GUI.Height
 
 	GElement.PosX = width * GMultipliers.PosX
 
@@ -225,10 +224,10 @@ Hook.Set("FinalizeSetup","PopulateBossGlobals",function()
 	GBar.HeightHalf = GBar.Height * .5
 end)
 
-Hook.Set("DrawGUI","BossHealth",function(width,height)
+Hook.Set("DrawGUI","BossHealth",function()
 	if
 		GUI.IsMenuOrLoadingScreen
-	or	next(ActiveBars) == nil
+	or	Util.IsTableEmpty(ActiveBars)
 	then return end
 
 	local posInc,posMin = GPosYInit.Inc,GPosYInit.Min
@@ -255,7 +254,7 @@ Hook.Set("DrawGUI","BossHealth",function(width,height)
 end)
 
 Hook.Set("LevelChange","BossHealth",function()
-	if next(ActiveBars) == nil then return end
+	if Util.IsTableEmpty(ActiveBars) then return end
 
 	for idx,bossbar in ipairs(ActiveBars) do
 		MemoryMonitor.Unregister(bossbar.MonitorID)

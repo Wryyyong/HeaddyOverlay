@@ -1,6 +1,5 @@
 -- Set up and/or create local references to our "namespaces"
-local Overlay = HeaddyOverlay
-local LevelMonitor = Overlay.LevelMonitor
+local LevelMonitor = HeaddyOverlay.LevelMonitor
 
 -- Disable the GUI elements on these maps
 for sceneID,sceneName in pairs({

@@ -10,6 +10,7 @@
 
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 
 local MemoryMonitor = {}
 Overlay.MemoryMonitor = MemoryMonitor
@@ -19,8 +20,6 @@ local ActiveByAddress = {}
 local CallbacksToExec = {}
 
 -- Cache commonly-used functions and constants
-local type = type
-local next = next
 local pairs = pairs
 local ipairs = ipairs
 local tostring = tostring
@@ -32,7 +31,7 @@ event.on_bus_write(function(address)
 
 	if
 		not monitors
-	or	next(monitors) == nil
+	or	Util.IsTableEmpty(monitors)
 	then return end
 
 	for _,data in pairs(monitors) do
@@ -60,7 +59,7 @@ local function UnregisterInternal(id,monitorData)
 end
 
 function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
-	if type(callback) ~= "function" then return end
+	if not Util.IsFunction(callback) then return end
 
 	id = tostring(id)
 
@@ -69,7 +68,7 @@ function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
 	end
 
 	-- Backwards-compat with non-table arguments
-	if type(addressTbl) ~= "table" then
+	if not Util.IsTable(addressTbl) then
 		addressTbl = {addressTbl}
 	end
 
@@ -122,7 +121,7 @@ function MemoryMonitor.Unregister(id)
 end
 
 function MemoryMonitor.ExecuteCallbacks()
-	if next(CallbacksToExec) == nil then return end
+	if Util.IsTableEmpty(CallbacksToExec) then return end
 
 	for callback,addressTbl in pairs(CallbacksToExec) do
 		callback(addressTbl)

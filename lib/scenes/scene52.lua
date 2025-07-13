@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
 
@@ -44,12 +45,11 @@ LevelMonitor.LevelData[0x1A] = {
 
 			KeepOn =
 				ReadU16BE(addressTbl["FlyingScythe.Properties"]) ~= 0
-			and	routine >= 2
+			and	Util.IsInRange(routine,2,0x18)
 			and	(
 					KeepOn
 				or	routine >= 8
 			)
-			and	routine < 0x1A
 
 			FlyingScythe:Show(KeepOn)
 		end)

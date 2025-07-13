@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local Elements = Overlay.GUI.Elements
 local BossHealth = Elements.BossHealth
@@ -65,11 +66,11 @@ LevelMonitor.LevelData[0x20] = {
 			if unkRoutine >= 0x32 then
 				bossData = DataNastyGatekeeper
 				checkLowerThres = 0x24
-				checkUpperThres = 0x80
+				checkUpperThres = 0x7E
 			else
 				bossData = DataGatekeeper
 				checkLowerThres = 0x12
-				checkUpperThres = 0x40
+				checkUpperThres = 0x3E
 			end
 
 			local isBossArena = ReadU16BE(addressTbl["Stage.Routine"]) == 4
@@ -77,14 +78,13 @@ LevelMonitor.LevelData[0x20] = {
 			Gatekeeper:UpdateBoss(bossData)
 			Gatekeeper:Show(
 				isBossArena
-			and	gatekeeperRoutine >= checkLowerThres
-			and	gatekeeperRoutine < checkUpperThres
+			and	Util.IsInRange(gatekeeperRoutine,checkLowerThres,checkUpperThres)
 			)
 
 			DebrisPickup.Enable(
 				isBossArena
 			and	bossData == DataNastyGatekeeper
-			and	gatekeeperRoutine >= 0x80
+			and	gatekeeperRoutine > checkUpperThres
 			)
 		end)
 	end,

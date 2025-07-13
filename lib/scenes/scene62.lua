@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
 
@@ -39,12 +40,11 @@ LevelMonitor.LevelData[0x52] = {
 			local newVal = ReadU16BE(addressTbl[1])
 
 			KeepOn =
-				newVal >= 2
+				Util.IsInRange(newVal,2,0xE)
 			and	(
 					KeepOn
 				or	newVal >= 6
 			)
-			and	newVal < 0x10
 
 			WheelerDealer:Show(KeepOn)
 		end)

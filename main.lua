@@ -41,6 +41,7 @@ Overlay.LangFallback = {
 
 -- Execute sub-scripts
 for _,script in ipairs({
+	"util",
 	"hook",
 	"memorymonitor",
 	"gui",

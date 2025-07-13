@@ -1,5 +1,6 @@
 -- Set up and/or create local references to our "namespaces"
 local Overlay = HeaddyOverlay
+local Util = Overlay.Util
 local LevelMonitor = Overlay.LevelMonitor
 local BossHealth = Overlay.GUI.Elements.BossHealth
 
@@ -76,8 +77,7 @@ LevelMonitor.LevelData[0] = {
 			TroubleBruin:Show(
 				stageRoutine >= 0x12
 			and	commonSprite == 0x80
-			and	commonRoutine >= 0xA
-			and	commonRoutine < 0x2E
+			and	Util.IsInRange(commonRoutine,0xA,0x2C)
 			)
 		end)
 	end,
