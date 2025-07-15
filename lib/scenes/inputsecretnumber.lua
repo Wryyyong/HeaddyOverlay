@@ -20,6 +20,7 @@ LevelMonitor.LevelData[0x4C] = {
 		local GuiData = {
 			["String"] = "",
 			["Size"] = 16,
+			["PrevTrans"] = 0,
 			["Colors"] = {
 				["Header"] = 0,
 				["Current"] = 0,
@@ -38,7 +39,7 @@ LevelMonitor.LevelData[0x4C] = {
 				posX,
 				posY,
 				"Your Secret Number is...",
-				GuiData.Colors.Header,
+				GuiColors.Header,
 				0,
 				GuiData.Size - 6,
 				"MS Gothic",
@@ -50,7 +51,7 @@ LevelMonitor.LevelData[0x4C] = {
 				posX,
 				posY + GuiData.Size + 4,
 				GuiData.String,
-				GuiData.Colors.Current,
+				GuiColors.Current,
 				0,
 				GuiData.Size,
 				"MS Gothic",
@@ -68,13 +69,13 @@ LevelMonitor.LevelData[0x4C] = {
 			["Transparency"] = 0xFFB30C,
 			["Routine"] = 0xFFD132,
 		},function(addressTbl)
-			local transparency = (ReadU8(addressTbl["Transparency"] + 1) << 24)
+			local transparency = ReadU8(addressTbl["Transparency"] + 1)
+			local transparencyShift = transparency << 24
+			local transUpdated = GuiData.PrevTrans ~= transparency
+			local stringUpdated
 
 			-- String
-			if
-				transparency == 0
-			or	transparency >= 0xEE
-			then
+			if transUpdated then
 				local newStr = ""
 
 				for idx = 1,4 do
@@ -83,7 +84,7 @@ LevelMonitor.LevelData[0x4C] = {
 					newStr = newStr .. (newVal >= 0xA and "-" or newVal)
 				end
 
-				GUI.InvalidateCheck(GuiData.String ~= newStr)
+				stringUpdated = GuiData.String ~= newStr
 
 				GuiData.String = newStr
 			end
@@ -102,11 +103,16 @@ LevelMonitor.LevelData[0x4C] = {
 				newColor = 0xFFFFFF
 			end
 
-			GUI.InvalidateCheck(prevColor ~= newColor)
+			GUI.InvalidateCheck(
+				transUpdated
+			or	stringUpdated
+			or	prevColor ~= newColor
+			)
 
+			GuiData.PrevTrans = transparency
+			GuiColors.Header = transparencyShift + 0xFFFFFF
+			GuiColors.Current = transparencyShift + newColor
 			GuiColors.Prev = newColor
-			GuiColors.Current = transparency + newColor
-			GuiColors.Header = transparency + 0xFFFFFF
 		end)
 	end,
 }
