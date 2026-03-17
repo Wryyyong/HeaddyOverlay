@@ -80,7 +80,7 @@ MemoryMonitor.Register("GUI.StageRoutineScoreTally",0xFFE850,function(addressTbl
 	GUI.InvalidateCheck(GUI.ScoreTallyActive ~= newVal)
 
 	GUI.ScoreTallyActive = newVal
-end)
+end,MemoryMonitor.Priority.Global)
 
 MemoryMonitor.Register("GUI.IsMenuOrLoadingScreen",{
 	["Game.State"] = 0xFFE802,
@@ -95,7 +95,7 @@ MemoryMonitor.Register("GUI.IsMenuOrLoadingScreen",{
 	GUI.InvalidateCheck(GUI.IsMenuOrLoadingScreen ~= newVal)
 
 	GUI.IsMenuOrLoadingScreen = newVal
-end)
+end,MemoryMonitor.Priority.Global)
 
 Hook.Set("LevelChange","GUI",function()
 	GUI.ScoreTallyActive = false

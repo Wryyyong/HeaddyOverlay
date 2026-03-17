@@ -12,11 +12,15 @@
 local Overlay = HeaddyOverlay
 local Util = Overlay.Util
 
-local MemoryMonitor = {}
+local MemoryMonitor = {
+	["Priority"] = {},
+}
 Overlay.MemoryMonitor = MemoryMonitor
 
 local ActiveByID = {}
 local ActiveByAddress = {}
+local ActiveByPriority = {}
+
 local CallbacksToExec = {}
 
 -- Cache commonly-used functions and constants
@@ -25,43 +29,40 @@ local ipairs = ipairs
 local tostring = tostring
 local tonumber = tonumber
 
--- Create global memory monitor
-event.on_bus_write(function(address)
-	local monitors = ActiveByAddress[address]
+-- Create priority tables in CallbacksToExec
+for idx,priority in ipairs({
+	"Global",
+	"Entity",
+	"Scene",
+}) do
+	MemoryMonitor.Priority[priority] = idx
 
-	if
-		not monitors
-	or	Util.IsTableEmpty(monitors)
-	then return end
+	ActiveByPriority[idx] = {}
+	CallbacksToExec[idx] = {}
+end
 
-	for _,data in pairs(monitors) do
-		CallbacksToExec[data.Callback] = data.AddressTbl
-	end
-end,nil,"HeaddyOverlay.MemoryMonitor.Main")
-
--- Force-refresh all active monitors upon loading a savestate,
--- skipping CallbacksToExec entirely
-event.onloadstate(function()
-	for _,data in pairs(ActiveByID) do
-		if not data.SkipInit then
-			data.Callback(data.AddressTbl)
-		end
-	end
-end,"HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")
+local function QueueCallback(monitorData)
+	CallbacksToExec[monitorData.Priority][monitorData.Callback] = monitorData.AddressTbl
+end
 
 local function UnregisterInternal(id,monitorData)
 	for _,address in ipairs(monitorData.AddressTblPadded) do
 		ActiveByAddress[address][id] = nil
 	end
 
+	local priority = monitorData.Priority
+
 	ActiveByID[id] = nil
-	CallbacksToExec[monitorData.Callback] = nil
+	ActiveByPriority[priority][id] = nil
+
+	CallbacksToExec[priority][monitorData.Callback] = nil
 end
 
-function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
+function MemoryMonitor.Register(id,addressTbl,callback,priority,skipInit)
 	if not Util.IsFunction(callback) then return end
 
 	id = tostring(id)
+	priority = tonumber(priority)
 
 	if ActiveByID[id] then
 		UnregisterInternal(id,ActiveByID[id])
@@ -78,10 +79,12 @@ function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
 		["AddressTbl"] = addressTbl,
 		["AddressTblPadded"] = addressTblPadded,
 		["Callback"] = callback,
-		["SkipInit"] = skipInit,
+		["Priority"] = CallbacksToExec[priority] and priority or 1,
+		["SkipInit"] = Util.ToBool(skipInit),
 	}
 
 	ActiveByID[id] = monitorData
+	ActiveByPriority[priority][id] = monitorData
 
 	for idx,address in pairs(addressTbl) do
 		-- read/write/exec callbacks return 32-bit address values, but the 68K
@@ -108,7 +111,7 @@ function MemoryMonitor.Register(id,addressTbl,callback,skipInit)
 
 	-- Queue the callback up to be executed immediately after registering,
 	-- to help with initialisation
-	CallbacksToExec[monitorData.Callback] = addressTbl
+	QueueCallback(monitorData)
 end
 
 function MemoryMonitor.Unregister(id)
@@ -121,12 +124,16 @@ function MemoryMonitor.Unregister(id)
 end
 
 function MemoryMonitor.ExecuteCallbacks()
-	if Util.IsTableEmpty(CallbacksToExec) then return end
+	for _,callbackList in ipairs(CallbacksToExec) do
+		if Util.IsTableEmpty(callbackList) then goto continue end
 
-	for callback,addressTbl in pairs(CallbacksToExec) do
-		callback(addressTbl)
+		for callback,addressTbl in pairs(callbackList) do
+			callback(addressTbl)
 
-		CallbacksToExec[callback] = nil
+			callbackList[callback] = nil
+		end
+
+		::continue::
 	end
 end
 
@@ -137,7 +144,33 @@ function MemoryMonitor.ManuallyExecuteByIDs(...)
 		local monitorData = ActiveByID[id]
 
 		if monitorData then
-			CallbacksToExec[monitorData.Callback] = monitorData.AddressTbl
+			QueueCallback(monitorData)
 		end
 	end
 end
+
+-- Create global memory monitor
+event.on_bus_write(function(address)
+	local monitors = ActiveByAddress[address]
+
+	if
+		not monitors
+	or	Util.IsTableEmpty(monitors)
+	then return end
+
+	for _,data in pairs(monitors) do
+		QueueCallback(data)
+	end
+end,nil,"HeaddyOverlay.MemoryMonitor.Main")
+
+-- Force-refresh all active monitors upon loading a savestate,
+-- skipping CallbacksToExec entirely
+event.onloadstate(function()
+	for _,priorityTbl in ipairs(ActiveByPriority) do
+		for _,data in pairs(priorityTbl) do
+			if not data.SkipInit then
+				data.Callback(data.AddressTbl)
+			end
+		end
+	end
+end,"HeaddyOverlay.MemoryMonitor.ForceRefreshAllMonitors")

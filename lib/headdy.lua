@@ -53,7 +53,7 @@ MemoryMonitor.Register("Headdy.Health",0xFFD200,function(addressTbl)
 	GUI.InvalidateCheck(StatStrings.Health ~= newStr)
 
 	StatStrings.Health = newStr
-end)
+end,MemoryMonitor.Priority.Entity)
 
 MemoryMonitor.Register("Headdy.Score",{
 	["Score.Stage"] = 0xFFE8F0,
@@ -83,7 +83,7 @@ MemoryMonitor.Register("Headdy.Score",{
 	GUI.InvalidateCheck(StatStrings.Score ~= newStr)
 
 	StatStrings.Score = newStr
-end)
+end,MemoryMonitor.Priority.Entity)
 
 MemoryMonitor.Register("Headdy.LivesContinues",{
 	["Lives"] = 0xFFE8EC,
@@ -105,7 +105,7 @@ MemoryMonitor.Register("Headdy.LivesContinues",{
 	GUI.InvalidateCheck(StatStrings.Lives ~= newStr)
 
 	StatStrings.Lives = newStr
-end)
+end,MemoryMonitor.Priority.Entity)
 
 Hook.Set("LevelChange","Headdy",function()
 	Headdy.SetInfiniteLives(false)

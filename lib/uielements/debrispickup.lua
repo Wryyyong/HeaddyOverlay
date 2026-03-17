@@ -62,7 +62,7 @@ MemoryMonitor.Register("DebrisPickup.Count",0xFFE93A,function(addressTbl)
 	Count = newVal
 	PickupString = PadStart(newVal,2,0) .. " / " .. PickupGoal
 	TextColor = newVal >= PickupGoal and 0xFF00FF00 or 0xFFFFFFFF
-end)
+end,MemoryMonitor.Priority.Scene)
 
 Hook.Set("DrawGUI","DebrisPickup",function(width)
 	local yMin = OffsetYData.Min

@@ -115,4 +115,4 @@ MemoryMonitor.Register("GUI.SecretBonusPoints",0xFFE8F6,function(addressTbl)
 	Hook.Set("DrawCustomElements","SecretBonusPopUp",DrawPopUp)
 
 	GUI.InvalidateCheck(true)
-end,true)
+end,MemoryMonitor.Priority.Global,true)

@@ -13,6 +13,18 @@ end
 local next = next
 local tonumber = tonumber
 
+function Util.ToBool(obj)
+	return
+		not (
+			obj == nil
+		or	obj == false
+		or	obj == 0
+		or	obj == "nil"
+		or	obj == "false"
+		or	obj == "0"
+	)
+end
+
 function Util.IsTableEmpty(tbl)
 	return next(tbl) == nil
 end

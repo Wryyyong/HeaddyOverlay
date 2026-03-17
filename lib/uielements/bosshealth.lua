@@ -126,7 +126,7 @@ function BossHealth:UpdateBoss(bossData)
 
 	MemoryMonitor.Register(monitorID,bossData.Address,function()
 		self:UpdateHealth()
-	end)
+	end,MemoryMonitor.Priority.Entity)
 end
 
 function BossHealth:UpdateHealth()

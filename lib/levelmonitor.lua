@@ -67,7 +67,7 @@ local function UpdateLevelNameString()
 end
 
 function LevelMonitor.SetSceneMonitor(addressTbl,callback)
-	MemoryMonitor.Register("SceneMonitor",addressTbl,callback)
+	MemoryMonitor.Register("SceneMonitor",addressTbl,callback,MemoryMonitor.Priority.Scene)
 end
 
 MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
@@ -81,7 +81,7 @@ MemoryMonitor.Register("LevelMonitor.CurrentLevel",0xFFE8AA,function(addressTbl)
 	Hook.Run("LevelChange")
 
 	newLevel.LevelScript()
-end)
+end,MemoryMonitor.Priority.Global)
 
 Hook.Set("FinalizeSetup","ExecuteSceneScripts",function()
 	for _,script in ipairs({
