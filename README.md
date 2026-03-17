@@ -4,9 +4,9 @@ A HUD overlay script for _Dynamite Headdy_, written for [**BizHawk**](https://gi
 ## Supported ROMs
 | Title | Hash |
 | - | - |
-| _Dynamite Headdy_ (UE) | `D11EC9B230E88403CD75EF186A884C97` (MD5) |
-| _Dynamite Headdy_ (J) | `CDB36911439289D3453060F58682057C` (MD5) |
-| _Dynamite Headdy_ (J), [MIJET fan translation patch v. 070428](https://archive.org/details/dynamite-headdy-jap-eng-translation) | `241D076E6CAF02496A916AF30C009A5279E0832E` (SHA1) |
+| _Dynamite Headdy_ (USA, Europe) | `D11EC9B230E88403CD75EF186A884C97` (MD5) |
+| _Dynamite Headdy_ (Japan) | `CDB36911439289D3453060F58682057C` (MD5) |
+| _Dynamite Headdy_ (Japan), [MIJET fan translation patch v. 070428](https://archive.org/details/dynamite-headdy-jap-eng-translation) | `241D076E6CAF02496A916AF30C009A5279E0832E` (SHA1) |
 
 ## Features
 - A small HUD that displays:
@@ -35,7 +35,7 @@ A HUD overlay script for _Dynamite Headdy_, written for [**BizHawk**](https://gi
 
 - Automatic setting of names and values depending on what version of the game you're playing
 
-| _Dynamite Headdy_ (UE) | _Dynamite Headdy_ (J) |
+| _Dynamite Headdy_ (USA, Europe) | _Dynamite Headdy_ (Japan) |
 | :-: | :-: |
 | ![](repoAssets/readme_versioncomp_01_u.png) | ![](repoAssets/readme_versioncomp_01_j.png) |
 | ![](repoAssets/readme_versioncomp_02_u.png) | ![](repoAssets/readme_versioncomp_02_j.png) |
