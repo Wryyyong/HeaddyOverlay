@@ -36,7 +36,7 @@ end
 Overlay.LangFallback = {
 	["__index"] = function(tbl)
 		return tbl["Int"]
-	end
+	end,
 }
 
 -- Execute sub-scripts
